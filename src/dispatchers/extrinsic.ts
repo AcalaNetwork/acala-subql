@@ -1,6 +1,7 @@
 import type { SubstrateExtrinsic } from '@subql/types'
 
 import { ExtrinsicHandler, ExtrinsicInfo } from '../handlers/types'
+import { tcWrapper } from '../helpers'
 import { checkIfExtrinsicSuccess } from '../helpers/extrinsic'
 
 export class ExtrinsicDispatcher {
@@ -11,7 +12,7 @@ export class ExtrinsicDispatcher {
     }
 
     public add (section: string, method: string, callback: ExtrinsicHandler) {
-        this.handlers.set(`${section}_${method}`, callback)
+        this.handlers.set(`${section}_${method}`, tcWrapper<any>(callback))
     }
 
     public emit (extrinsic: SubstrateExtrinsic) {
@@ -41,7 +42,7 @@ export class ExtrinsicDispatcher {
         }
     }
 
-    private _emit (
+    private async _emit (
         section: string,
         method: string,
         extrinsic: SubstrateExtrinsic,
@@ -51,7 +52,9 @@ export class ExtrinsicDispatcher {
         const handler = this.handlers.get(key)
         const isSuccess = checkIfExtrinsicSuccess(extrinsic)
 
-        if (handler) handler(extrinsic, { ...info, isSuccess })
+        if (handler) {
+            await handler(extrinsic, { ...info, isSuccess })
+        }
     }
 
     private sudoHandler (extrinsic: SubstrateExtrinsic) {

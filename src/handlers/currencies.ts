@@ -1,4 +1,4 @@
-import { applyDataToEntity, getCommonExtrinsicData } from '../helpers/extrinsic'
+import { applyDataToEntity, getCommonExtrinsicData } from '../helpers'
 import { TransferEntity } from '../types/models/TransferEntity'
 import { ExtrinsicHandler } from './types'
 

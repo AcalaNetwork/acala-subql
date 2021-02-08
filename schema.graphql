@@ -4,16 +4,6 @@ type BlockEntity @entity {
   timestamp: Date! #the block timestamp
 }
 
-type Extrinsic {
-  id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
-  isBatch: Int!
-  isSudo: Int!
-  isSuccess: Int!
-
-  block: String! #the block which the extrinsic send hash
-  blockNumber: BigInt! #the block which the extrinsic send number
-}
-
 type ExtrinsicEntity @entity {
   id: ID! #id is a required filed
   hash: String! #extrinsic hash
@@ -21,7 +11,7 @@ type ExtrinsicEntity @entity {
   timestamp: Date! #extrinsic timestamp
 }
 
-type TransferEntity implements Extrinsic @entity {
+type TransferEntity @entity {
   id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
   isBatch: Int!
   isSudo: Int!
@@ -36,7 +26,7 @@ type TransferEntity implements Extrinsic @entity {
   amount: String! #the amount of the transfer
 }
 
-type LoanHistoryEntity implements Extrinsic @entity {
+type LoanHistoryEntity @entity {
   id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
   isBatch: Int!
   isSudo: Int!
@@ -50,4 +40,64 @@ type LoanHistoryEntity implements Extrinsic @entity {
   collateralAdjustment: String! #the amount of collateral adjustment
   debitAdjustment: String! #the amount of debit adjustment
   debitExchangeRate: String! #the debit amount exchange rate
+}
+
+type SwapHistoryEntity @entity {
+  id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
+  isBatch: Int!
+  isSudo: Int!
+  isSuccess: Int!
+
+  block: String! #the block which the extrinsic send hash
+  timestamp: Date! #the block which the extrinsic send number
+
+  account: String! #signer of the swap
+  type: String! #type of swap
+  path: String! #exchange path
+  params1: String!
+  params2: String!
+  
+  supplyAmount: String! #supply amount in the swap
+  targetAmount: String! #target amount in the swap
+}
+
+type AddLiquidityHistoryEntity @entity {
+  id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
+  isBatch: Int!
+  isSudo: Int!
+  isSuccess: Int!
+
+  block: String! #the block which the extrinsic send hash
+  timestamp: Date! #the block which the extrinsic send number
+
+  account: String! #account
+  token1: String! #token1
+  token2: String! #token2
+
+  token1MaxAmount: String! #max supply amount of token1
+  token2MaxMaount: String! #max supply amount of token2
+
+  token1Amount: String! #actural token1 amount
+  token2Amount: String! #actural token2 amount
+
+  receivedShare: String #actural received share amount
+}
+
+type RemoveLiquidityHistoryEntity @entity {
+  id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
+  isBatch: Int!
+  isSudo: Int!
+  isSuccess: Int!
+
+  block: String! #the block which the extrinsic send hash
+  timestamp: Date! #the block which the extrinsic send number
+
+  account: String! #account
+  token1: String! #token1
+  token2: String! #token2
+
+  removedShare: String! #removed share amount of token1
+
+  token1Amount: String! #actural removed token1 amount
+  token2Amount: String! #actural removed token2 amount
 }
