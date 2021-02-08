@@ -1,0 +1,53 @@
+type BlockEntity @entity {
+  id: ID! #id is a required field
+  number: BigInt! #the block number
+  timestamp: Date! #the block timestamp
+}
+
+type Extrinsic {
+  id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
+  isBatch: Int!
+  isSudo: Int!
+  isSuccess: Int!
+
+  block: String! #the block which the extrinsic send hash
+  blockNumber: BigInt! #the block which the extrinsic send number
+}
+
+type ExtrinsicEntity @entity {
+  id: ID! #id is a required filed
+  hash: String! #extrinsic hash
+  author: String! #extrinsic author
+  timestamp: Date! #extrinsic timestamp
+}
+
+type TransferEntity implements Extrinsic @entity {
+  id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
+  isBatch: Int!
+  isSudo: Int!
+  isSuccess: Int!
+
+  block: String! #the block which the extrinsic send hash
+  timestamp: Date! #the block which the extrinsic send number
+
+  from: String! #transfer from
+  to: String! #transfer to
+  currency: String! #the currency of the transfer
+  amount: String! #the amount of the transfer
+}
+
+type LoanHistoryEntity implements Extrinsic @entity {
+  id: ID! #extrinsic hash or `${extrinsic hash}-${batch index}`
+  isBatch: Int!
+  isSudo: Int!
+  isSuccess: Int!
+
+  block: String! #the block which the extrinsic send hash
+  timestamp: Date! #the block which the extrinsic send number
+
+  account: String #the loan owner
+  currency: String! #the currency of update loan
+  collateralAdjustment: String! #the amount of collateral adjustment
+  debitAdjustment: String! #the amount of debit adjustment
+  debitExchangeRate: String! #the debit amount exchange rate
+}

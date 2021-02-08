@@ -1,0 +1,35 @@
+{
+  "name": "acala-subql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "rm -rf dist && npm build",
+    "test": "jest",
+    "codegen": "./node_modules/.bin/subql codegen",
+    "patch:types": "node scripts/patch-types.js",
+    "start": "./node_modules/.bin/subql-node -f . --local"
+  },
+  "files": [
+    "dist",
+    "schema.graphql",
+    "project.yaml"
+  ],
+  "author": "qwer951123",
+  "license": "Apache-2.0",
+  "resolutions": {
+    "**/@polkadot/api": "3.7.1"
+  },
+  "devDependencies": {
+    "@subql/cli": "^0.7.3",
+    "@subql/types": "^0.6.0",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "@acala-network/types": "^0.6.2-12",
+    "@polkadot/api": "3.6.4",
+    "@subql/node": "^0.7.1-1",
+    "yaml": "^1.10.0"
+  }
+}
