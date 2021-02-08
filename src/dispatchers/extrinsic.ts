@@ -21,6 +21,7 @@ export class ExtrinsicDispatcher {
 
         switch (section) {
             case 'utility': {
+                // TODO: support utility
                 const { data } = _extrinsic
 
                 for (const item of data) {
@@ -31,6 +32,7 @@ export class ExtrinsicDispatcher {
             }
 
             case 'sudo': {
+                // TODO: support sudo
                 this.sudoHandler(extrinsic)
 
                 break;

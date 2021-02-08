@@ -32,9 +32,9 @@ export class RemoveLiquidityHistoryEntity implements Entity {
 
     public removedShare: string;
 
-    public token1Amount: string;
+    public token1Amount?: string;
 
-    public token2Amount: string;
+    public token2Amount?: string;
 
 
     async save(): Promise<void>{

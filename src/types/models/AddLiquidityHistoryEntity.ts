@@ -34,9 +34,9 @@ export class AddLiquidityHistoryEntity implements Entity {
 
     public token2MaxMaount: string;
 
-    public token1Amount: string;
+    public token1Amount?: string;
 
-    public token2Amount: string;
+    public token2Amount?: string;
 
     public receivedShare?: string;
 

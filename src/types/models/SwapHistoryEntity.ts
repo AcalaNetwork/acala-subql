@@ -34,9 +34,9 @@ export class SwapHistoryEntity implements Entity {
 
     public params2: string;
 
-    public supplyAmount: string;
+    public supplyAmount?: string;
 
-    public targetAmount: string;
+    public targetAmount?: string;
 
 
     async save(): Promise<void>{

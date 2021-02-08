@@ -9,7 +9,8 @@ import {
     updateLoanHander,
     swapWithExactSupplyHandler,
     swapWithExactTargetHandler,
-    addLiquidityHandler
+    addLiquidityHandler,
+    removeLiquidityHandler
 } from '../handlers'
 
 export async function handleBlock(block: SignedBlock): Promise<void> {
@@ -32,10 +33,13 @@ const extrinsicDispatcher = new ExtrinsicDispatcher()
 
 // apply extrinsic handler
 extrinsicDispatcher.add('currencies', 'transfer', transferHandler)
+
 extrinsicDispatcher.add('honzon', 'adjustLoan', updateLoanHander)
+
 extrinsicDispatcher.add('dex', 'swapWithExactSupply', swapWithExactSupplyHandler)
 extrinsicDispatcher.add('dex', 'swapWithExactTarget', swapWithExactTargetHandler)
 extrinsicDispatcher.add('dex', 'addLiquidity', addLiquidityHandler)
+extrinsicDispatcher.add('dex', 'removeLiquidity', removeLiquidityHandler)
 
 export async function handleCall(extrinsic: SubstrateExtrinsic): Promise<void> {
     await extrinsicDispatcher.emit(extrinsic)
