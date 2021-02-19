@@ -1,17 +1,17 @@
-import { applyDataToEntity, getCommonExtrinsicData } from '../helpers'
+import { insertDataToEntity, getCommonExtrinsicData } from '../helpers'
 import { TransferEntity } from '../types/models/TransferEntity'
 import { ExtrinsicHandler } from './types'
 
-export const transferHandler: ExtrinsicHandler = async (extrinsic, info): Promise<void> => {
+export const transferHandler: ExtrinsicHandler = async (call, extrinsic): Promise<void> => {
     const { extrinsic: _extrinsic } = extrinsic
 
     const signer = _extrinsic.signer.toString()
-    const [to, currency, amount] = _extrinsic.args
-    const commonExtrinsicData = getCommonExtrinsicData(extrinsic, info)
+    const [to, currency, amount] = call.args
+    const commonExtrinsicData = getCommonExtrinsicData(call, extrinsic)
     const transferRecord = new TransferEntity(commonExtrinsicData.hash)
 
     // apply common extrinsic data to record
-    applyDataToEntity(transferRecord, commonExtrinsicData)
+    insertDataToEntity(transferRecord, commonExtrinsicData)
 
     transferRecord.from = signer.toString()
     transferRecord.to = to.toString()

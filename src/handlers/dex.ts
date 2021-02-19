@@ -1,18 +1,18 @@
 import { SubstrateExtrinsic } from '@subql/types'
-import { applyDataToEntity, getCommonExtrinsicData, findEvent } from '../helpers'
+import { insertDataToEntity, getCommonExtrinsicData, findEvent } from '../helpers'
 import { AddLiquidityHistoryEntity } from '../types/models/AddLiquidityHistoryEntity'
 import { RemoveLiquidityHistoryEntity } from '../types/models/RemoveLiquidityHistoryEntity'
 import { SwapHistoryEntity } from '../types/models/SwapHistoryEntity'
-import { ExtrinsicHandler, ExtrinsicInfo } from './types'
+import { ExtrinsicHandler, ExtrinsicData, CallData } from './types'
 
-export const addLiquidityHandler: ExtrinsicHandler = async (extrinsic, info) => {
+export const addLiquidityHandler: ExtrinsicHandler = async (call, extrinsic) => {
     const { extrinsic: _extrinsic, events } = extrinsic
     const signer = _extrinsic.signer.toString()
-    const [token1, token2, token1MaxAmount ,token2MaxAmount] = _extrinsic.args
-    const commonExtrinsicData = getCommonExtrinsicData(extrinsic, info)
+    const [token1, token2, token1MaxAmount ,token2MaxAmount] = call.args
+    const commonExtrinsicData = getCommonExtrinsicData(call, extrinsic)
     const record = new AddLiquidityHistoryEntity(commonExtrinsicData.hash)
 
-    applyDataToEntity(record, commonExtrinsicData)
+    insertDataToEntity(record, commonExtrinsicData)
 
     record.account = signer
     record.token1 = token1.toString()
@@ -41,15 +41,15 @@ export const addLiquidityHandler: ExtrinsicHandler = async (extrinsic, info) => 
     await record.save()
 }
 
-export const removeLiquidityHandler: ExtrinsicHandler = async (extrinsic, info) => {
+export const removeLiquidityHandler: ExtrinsicHandler = async (call, extrinsic) => {
     const { extrinsic: _extrinsic, events } = extrinsic
     const signer = _extrinsic.signer.toString()
-    const [token1, token2, removedShare] = _extrinsic.args
-    const commonExtrinsicData = getCommonExtrinsicData(extrinsic, info)
+    const [token1, token2, removedShare] = call.args
+    const commonExtrinsicData = getCommonExtrinsicData(call, extrinsic)
 
     const record = new RemoveLiquidityHistoryEntity(commonExtrinsicData.hash)
 
-    applyDataToEntity(record, commonExtrinsicData)
+    insertDataToEntity(record, commonExtrinsicData)
 
     record.account = signer
     record.token1 = token1.toString()
@@ -78,17 +78,17 @@ export const removeLiquidityHandler: ExtrinsicHandler = async (extrinsic, info) 
 }
 
 const baseSwapHandler = async (
-    extrinsic: SubstrateExtrinsic,
-    info: ExtrinsicInfo,
+    call: CallData,
+    extrinsic: ExtrinsicData,
     type: 'swapWithExactSupply' | 'swapWithExactTarget'
 ) => {
     const { extrinsic: _extrinsic, events } = extrinsic
     const signer = _extrinsic.signer.toString()
-    const [path, params1, params2] =  _extrinsic.args
-    const commonExtrinsicData = getCommonExtrinsicData(extrinsic, info)
+    const [path, params1, params2] =  call.args
+    const commonExtrinsicData = getCommonExtrinsicData(call, extrinsic)
     const record = new SwapHistoryEntity(commonExtrinsicData.hash)
 
-    applyDataToEntity(record, commonExtrinsicData)
+    insertDataToEntity(record, commonExtrinsicData)
 
     record.account = signer.toString()
     record.type = type
@@ -106,10 +106,10 @@ const baseSwapHandler = async (
     await record.save()
 }
 
-export const swapWithExactSupplyHandler: ExtrinsicHandler = async (extrinsic, info) => {
-    await baseSwapHandler(extrinsic, info, 'swapWithExactSupply')
+export const swapWithExactSupplyHandler: ExtrinsicHandler = async (call, extrinsic) => {
+    await baseSwapHandler(call, extrinsic, 'swapWithExactSupply')
 }
 
-export const swapWithExactTargetHandler: ExtrinsicHandler = async (extrinsic, info) => {
-    await baseSwapHandler(extrinsic, info, 'swapWithExactTarget')
+export const swapWithExactTargetHandler: ExtrinsicHandler = async (call, extrinsic) => {
+    await baseSwapHandler(call, extrinsic, 'swapWithExactTarget')
 }

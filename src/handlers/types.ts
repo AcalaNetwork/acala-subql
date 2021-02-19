@@ -1,13 +1,21 @@
-import { SubstrateExtrinsic } from '@subql/types';
+import { SubstrateExtrinsic } from '@subql/types'
 
-export interface ExtrinsicInfo {
+export interface CallData {
+    batchIndex?: number // for batch call
+
+    section: string
+    method: string
+    args: any[]
+}
+
+// expand the SubstrateExtrinsic data, add some status
+export interface ExtrinsicData extends SubstrateExtrinsic {
     isSudo?: boolean
     isBatch?: boolean
-    isSuccess: boolean
-    batchIndex?: number
+    isExcuteSuccess: boolean
 }
 
 export type ExtrinsicHandler = (
-    extrinsic: SubstrateExtrinsic,
-    info?: ExtrinsicInfo
+    call: CallData,
+    extrinsic: ExtrinsicData,
 ) => Promise<void>

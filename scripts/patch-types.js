@@ -1,4 +1,5 @@
 const { typesAlias, types } = require('@acala-network/types')
+const compose = require('lodash/fp/compose')
 const yaml = require('yaml')
 const fs = require('fs')
 const path = require('path')
@@ -8,30 +9,29 @@ function getConfigPath (configPath = 'project.yaml') {
 }
 
 function readConfig (configPath = 'project.yaml') {
-    const content = fs.readFileSync(getConfigPath(), 'utf-8')
+    const content = fs.readFileSync(getConfigPath(configPath), 'utf-8')
 
     return yaml.parse(content)
 }
 
 function patchTypesToConfig (config) {
-    config['network'] = {
+    const _config = {...config}
+
+    _config['network'] = {
         ...config['network'],
         types,
         typesAlias
     }
+
+    return _config
 }
 
 function writeConfig (config, configPath = 'project.yaml') {
-    const _config = yaml.stringify(config, { })
+    const _config = yaml.stringify(config, undefined)
 
-    fs.writeFileSync(getConfigPath(), _config, { encoding: 'utf-8' })
+    fs.writeFileSync(getConfigPath(configPath), _config, { encoding: 'utf-8' })
 }
 
-// run
-(() => {
-    const config = readConfig()
+const run = compose(writeConfig, patchTypesToConfig, readConfig)
 
-    patchTypesToConfig(config)
-
-    writeConfig(config)
-})()
+run()

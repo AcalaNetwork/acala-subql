@@ -33,9 +33,7 @@ const extrinsicDispatcher = new ExtrinsicDispatcher()
 
 // apply extrinsic handler
 extrinsicDispatcher.add('currencies', 'transfer', transferHandler)
-
 extrinsicDispatcher.add('honzon', 'adjustLoan', updateLoanHander)
-
 extrinsicDispatcher.add('dex', 'swapWithExactSupply', swapWithExactSupplyHandler)
 extrinsicDispatcher.add('dex', 'swapWithExactTarget', swapWithExactTargetHandler)
 extrinsicDispatcher.add('dex', 'addLiquidity', addLiquidityHandler)

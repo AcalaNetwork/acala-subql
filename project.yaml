@@ -3,7 +3,7 @@ description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: ws://127.0.0.1:9944
+  endpoint: wss://mandala.laminar.codes/ws
   types:
     CallOf: Call
     DispatchTime:
