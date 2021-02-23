@@ -11,24 +11,24 @@ services:
       POSTGRES_PASSWORD: postgres
 
   graphql-engine:
-    image: hasura/graphql-engine:v1.3.3
+    image: onfinality/subql-query:v0.2.0
     ports:
-      - "8080:8080"
+      - 3000:3000
     depends_on:
       - "postgres"
     restart: always
     environment:
-      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-      ## enable the console served by server
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
-      ## enable debugging mode. It is recommended to disable this in production
-      HASURA_GRAPHQL_DEV_MODE: "true"
-      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-      ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_DATABASE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+    command:
+      - '--name=acala'
+      - '--playground'
 
   subquery-node:
-    image: onfinality/subql-node:v0.7.0
+    image: onfinality/subql-node:v0.9.1
     depends_on:
       - "postgres"
     restart: always
@@ -41,7 +41,7 @@ services:
     volumes:
       - ./:/app
     command:
-      - '-f'
-      - '/app'
-      - '--local'
+      - '-f=/app'
+      - '--subquery-name=acala'
+      - '--migrate'
 
