@@ -1,12 +1,12 @@
 {
   "name": "acala-subql",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -b",
-    "prepack": "rm -rf dist && npm build",
     "test": "jest",
+    "prepack": "rm -rf dist && npm build",
     "codegen": "./node_modules/.bin/subql codegen",
     "patch:types": "node scripts/patch-types.js",
     "start": "./node_modules/.bin/subql-node -f . --local"
@@ -19,11 +19,11 @@
   "author": "qwer951123",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@acala-network/types": "^0.6.2-12",
+    "@acala-network/types": "^0.7.1",
     "@polkadot/api": "^3",
     "@subql/cli": "^0.7.3",
-    "@subql/node": "^0.9.1",
-    "@subql/types": "^0.6.0",
+    "@subql/node": "^0.10.2",
+    "@subql/types": "^0.6.1",
     "typescript": "^4.1.3",
     "yaml": "^1.10.0"
   }

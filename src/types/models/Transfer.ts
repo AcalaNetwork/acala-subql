@@ -5,7 +5,7 @@
 import {Entity} from "@subql/types";
 import assert from 'assert';
 
-export class TransferEntity implements Entity {
+export class Transfer implements Entity {
 
     constructor(id: string) {
         this.id = id;
@@ -24,37 +24,39 @@ export class TransferEntity implements Entity {
 
     public timestamp: Date;
 
+    public extrinsicHash: string;
+
     public from: string;
 
     public to: string;
 
-    public currency: string;
+    public token: string;
 
     public amount: string;
 
 
     async save(): Promise<void>{
         let id = this.id;
-        assert(id !== null, "Cannot save TransferEntity entity without an ID");
-        await store.set('TransferEntity', id.toString(), this);
+        assert(id !== null, "Cannot save Transfer entity without an ID");
+        await store.set('Transfer', id.toString(), this);
     }
     static async remove(id:string): Promise<void>{
-        assert(id !== null, "Cannot remove TransferEntity entity without an ID");
-        await store.remove('TransferEntity', id.toString());
+        assert(id !== null, "Cannot remove Transfer entity without an ID");
+        await store.remove('Transfer', id.toString());
     }
 
-    static async get(id:string): Promise<TransferEntity>{
-        assert(id !== null, "Cannot get TransferEntity entity without an ID");
-        const record = await store.get('TransferEntity', id.toString());
+    static async get(id:string): Promise<Transfer>{
+        assert(id !== null, "Cannot get Transfer entity without an ID");
+        const record = await store.get('Transfer', id.toString());
         if (record){
-            return TransferEntity.create(record);
+            return Transfer.create(record);
         }else{
             return;
         }
     }
 
     static create(record){
-        let entity = new TransferEntity(record.id);
+        let entity = new Transfer(record.id);
         Object.assign(entity,record);
         return entity;
     }

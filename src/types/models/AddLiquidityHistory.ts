@@ -5,7 +5,7 @@
 import {Entity} from "@subql/types";
 import assert from 'assert';
 
-export class RemoveLiquidityHistoryEntity implements Entity {
+export class AddLiquidityHistory implements Entity {
 
     constructor(id: string) {
         this.id = id;
@@ -22,6 +22,8 @@ export class RemoveLiquidityHistoryEntity implements Entity {
 
     public block: string;
 
+    public extrinsicHash: string;
+
     public timestamp: Date;
 
     public account: string;
@@ -30,35 +32,39 @@ export class RemoveLiquidityHistoryEntity implements Entity {
 
     public token1: string;
 
-    public removedShare: bigint;
+    public token0Input: bigint;
+
+    public token1Input: bigint;
 
     public token0Amount: bigint;
 
     public token1Amount: bigint;
 
+    public receivedShare: bigint;
+
 
     async save(): Promise<void>{
         let id = this.id;
-        assert(id !== null, "Cannot save RemoveLiquidityHistoryEntity entity without an ID");
-        await store.set('RemoveLiquidityHistoryEntity', id.toString(), this);
+        assert(id !== null, "Cannot save AddLiquidityHistory entity without an ID");
+        await store.set('AddLiquidityHistory', id.toString(), this);
     }
     static async remove(id:string): Promise<void>{
-        assert(id !== null, "Cannot remove RemoveLiquidityHistoryEntity entity without an ID");
-        await store.remove('RemoveLiquidityHistoryEntity', id.toString());
+        assert(id !== null, "Cannot remove AddLiquidityHistory entity without an ID");
+        await store.remove('AddLiquidityHistory', id.toString());
     }
 
-    static async get(id:string): Promise<RemoveLiquidityHistoryEntity>{
-        assert(id !== null, "Cannot get RemoveLiquidityHistoryEntity entity without an ID");
-        const record = await store.get('RemoveLiquidityHistoryEntity', id.toString());
+    static async get(id:string): Promise<AddLiquidityHistory>{
+        assert(id !== null, "Cannot get AddLiquidityHistory entity without an ID");
+        const record = await store.get('AddLiquidityHistory', id.toString());
         if (record){
-            return RemoveLiquidityHistoryEntity.create(record);
+            return AddLiquidityHistory.create(record);
         }else{
             return;
         }
     }
 
     static create(record){
-        let entity = new RemoveLiquidityHistoryEntity(record.id);
+        let entity = new AddLiquidityHistory(record.id);
         Object.assign(entity,record);
         return entity;
     }

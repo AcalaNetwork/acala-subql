@@ -1,44 +1,40 @@
 import { SignedBlock } from '@polkadot/types/interfaces'
 import { SubstrateExtrinsic, SubstrateEvent } from '@subql/types'
 
-import { BlockEntity } from '../types/models/BlockEntity'
+import { BlockHandler } from '../handlers/Block'
 import { ExtrinsicDispatcher } from '../dispatchers'
-import { getBlockTimestamp } from '../helpers'
-import {
-    transferHandler,
-    updateLoanHander,
-    swapWithExactSupplyHandler,
-    swapWithExactTargetHandler,
-    addLiquidityHandler,
-    removeLiquidityHandler
-} from '../handlers'
+import { EventHandler } from '../handlers'
+// import {
+//     transferHandler,
+//     updateLoanHander,
+//     swapWithExactSupplyHandler,
+//     swapWithExactTargetHandler,
+//     addLiquidityHandler,
+//     removeLiquidityHandler
+// } from '../extrinsic-executors'
 
 export async function handleBlock(block: SignedBlock): Promise<void> {
-    const blockNumber = block.block.header.number.toBigInt()
-    const blockHash = block.block.hash.toString()
-    //Create a new blockEntity with ID using block hash
-    const record = new BlockEntity(blockHash)
+    const handler = new BlockHandler(block)
 
-    //Record block information
-    record.number = blockNumber
-    record.timestamp = getBlockTimestamp(block.block)
-
-    await record.save()
+    await handler.save()
 }
 
 export async function handleEvent(event: SubstrateEvent): Promise<void> {
+    const handler = new EventHandler(event)
+
+    await handler.save()
 }
 
 const extrinsicDispatcher = new ExtrinsicDispatcher()
 
 // apply extrinsic handler
-extrinsicDispatcher.add('currencies', 'transfer', transferHandler)
-extrinsicDispatcher.add('honzon', 'adjustLoan', updateLoanHander)
-extrinsicDispatcher.add('dex', 'swapWithExactSupply', swapWithExactSupplyHandler)
-extrinsicDispatcher.add('dex', 'swapWithExactTarget', swapWithExactTargetHandler)
-extrinsicDispatcher.add('dex', 'addLiquidity', addLiquidityHandler)
-extrinsicDispatcher.add('dex', 'removeLiquidity', removeLiquidityHandler)
+// extrinsicDispatcher.addExecutor('currencies', 'transfer', transferHandler)
+// extrinsicDispatcher.addExecutor('honzon', 'adjustLoan', updateLoanHander)
+// extrinsicDispatcher.addExecutor('dex', 'swapWithExactSupply', swapWithExactSupplyHandler)
+// extrinsicDispatcher.addExecutor('dex', 'swapWithExactTarget', swapWithExactTargetHandler)
+// extrinsicDispatcher.addExecutor('dex', 'addLiquidity', addLiquidityHandler)
+// extrinsicDispatcher.addExecutor('dex', 'removeLiquidity', removeLiquidityHandler)
 
 export async function handleCall(extrinsic: SubstrateExtrinsic): Promise<void> {
-    await extrinsicDispatcher.emit(extrinsic)
+    // await extrinsicDispatcher.dispatch(extrinsic)
 }

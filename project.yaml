@@ -1,9 +1,9 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: wss://mandala.laminar.codes/ws
+  endpoint: wss://mandala6.laminar.codes
   types:
     CallOf: Call
     DispatchTime:
@@ -60,6 +60,13 @@ network:
       totalRewards: Compact<Balance>
       totalWithdrawnRewards: Compact<Balance>
     Share: u128
+    ChainId:
+      _enum:
+        RelayChain: "Null"
+        ParaChain: ParaId
+    XCurrencyId:
+      chainId: ChainId
+      currencyId: Vec<u8>
     OracleValue: Price
     PalletBalanceOf: Balance
     CollateralAuctionItem:
@@ -185,12 +192,21 @@ network:
     AuctionIdOf: AuctionId
     TokenSymbol:
       _enum:
-        - ACA
-        - AUSD
-        - DOT
-        - XBTC
-        - LDOT
-        - RENBTC
+        ACA: 0
+        AUSD: 1
+        DOT: 2
+        LDOT: 3
+        XBTC: 4
+        RENBTC: 5
+        POLKABTC: 6
+        PLM: 7
+        PHA: 8
+        HDT: 9
+        KAR: 128
+        KUSD: 129
+        KSM: 130
+        LKSM: 131
+        SDN: 135
     CurrencyId:
       _enum:
         Token: TokenSymbol

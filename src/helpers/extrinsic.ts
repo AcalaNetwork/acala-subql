@@ -2,7 +2,7 @@ import { Entity, SubstrateExtrinsic } from '@subql/types';
 import { IEvent } from '@polkadot/types/types'
 import { u32 } from '@polkadot/types'
 import { DispatchError } from '@polkadot/types/interfaces'
-import { ExtrinsicData, CallData } from '../handlers/types';
+import { ExtrinsicData, CallData } from '../extrinsic-executors/types';
 
 export const checkIfExtrinsicExecuteSuccess = (extrinsic: SubstrateExtrinsic): boolean => {
     const { events } = extrinsic

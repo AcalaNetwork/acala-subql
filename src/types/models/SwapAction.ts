@@ -5,7 +5,7 @@
 import {Entity} from "@subql/types";
 import assert from 'assert';
 
-export class SwapHistoryEntity implements Entity {
+export class SwapAction implements Entity {
 
     constructor(id: string) {
         this.id = id;
@@ -22,6 +22,8 @@ export class SwapHistoryEntity implements Entity {
 
     public block: string;
 
+    public extrinsicHash: string;
+
     public timestamp: Date;
 
     public account: string;
@@ -30,37 +32,39 @@ export class SwapHistoryEntity implements Entity {
 
     public path: string;
 
-    public params1: string;
+    public token0: string;
 
-    public params2: string;
+    public token1: string;
 
-    public supplyAmount?: string;
+    public token0Input: string;
 
-    public targetAmount?: string;
+    public token1Input: string;
+
+    public result: string;
 
 
     async save(): Promise<void>{
         let id = this.id;
-        assert(id !== null, "Cannot save SwapHistoryEntity entity without an ID");
-        await store.set('SwapHistoryEntity', id.toString(), this);
+        assert(id !== null, "Cannot save SwapAction entity without an ID");
+        await store.set('SwapAction', id.toString(), this);
     }
     static async remove(id:string): Promise<void>{
-        assert(id !== null, "Cannot remove SwapHistoryEntity entity without an ID");
-        await store.remove('SwapHistoryEntity', id.toString());
+        assert(id !== null, "Cannot remove SwapAction entity without an ID");
+        await store.remove('SwapAction', id.toString());
     }
 
-    static async get(id:string): Promise<SwapHistoryEntity>{
-        assert(id !== null, "Cannot get SwapHistoryEntity entity without an ID");
-        const record = await store.get('SwapHistoryEntity', id.toString());
+    static async get(id:string): Promise<SwapAction>{
+        assert(id !== null, "Cannot get SwapAction entity without an ID");
+        const record = await store.get('SwapAction', id.toString());
         if (record){
-            return SwapHistoryEntity.create(record);
+            return SwapAction.create(record);
         }else{
             return;
         }
     }
 
     static create(record){
-        let entity = new SwapHistoryEntity(record.id);
+        let entity = new SwapAction(record.id);
         Object.assign(entity,record);
         return entity;
     }

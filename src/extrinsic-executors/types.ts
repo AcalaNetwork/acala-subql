@@ -15,7 +15,7 @@ export interface ExtrinsicData extends SubstrateExtrinsic {
     isExcuteSuccess: boolean
 }
 
-export type ExtrinsicHandler = (
+export type ExtrinsicExecutor = (
     call: CallData,
     extrinsic: ExtrinsicData,
 ) => Promise<void>
