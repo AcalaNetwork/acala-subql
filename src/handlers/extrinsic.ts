@@ -1,9 +1,18 @@
 import { SubstrateExtrinsic } from '@subql/types'
 import { Extrinsic } from '../types/models/Extrinsic'
+import { CallHandler } from './call'
 import { ensureBlock } from './utils'
 
 export class ExtrinsicHandler {
   private extrinsic: SubstrateExtrinsic
+
+  static async ensureExtrinsic(id: string): Promise<void> {
+    const extrinsic = await Extrinsic.get(id)
+  
+    if (!extrinsic) {
+      await new Extrinsic(id).save()
+    }
+  }
 
   constructor(extrinsic: SubstrateExtrinsic) {
     this.extrinsic = extrinsic
@@ -71,5 +80,10 @@ export class ExtrinsicHandler {
     record.blockId = this.blockHash
 
     await record.save()
+
+    // handle calls
+    const calls = new CallHandler(this.extrinsic)
+
+    await calls.save()
   }
 }

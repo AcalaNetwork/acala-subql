@@ -26,7 +26,7 @@ type Extrinsic @entity {
   block: Block #create relation to block
 
   events: [Event] @derivedFrom(field: "extrinsic")
-  calls: [Call] @derivedFrom(field: "parentCall")
+  calls: [Call] @derivedFrom(field: "extrinsic")
 }
 
 type Event @entity {
@@ -48,6 +48,7 @@ type Call @entity {
   method: String
   args: String
 
+  extrinsic: Extrinsic #create relation to extrinsic
   parentCall: Call #create relation to call
 
   calls: [Call] @derivedFrom(field: "parentCall")
@@ -59,6 +60,14 @@ type Account @entity {
   transfers: [Transfer] @derivedFrom(field: "account")
 }
 
+type Token @entity {
+  id: ID!
+
+  decimal: Int!
+  name: String!
+  totalIssued: BigInt!
+}
+
 type TransferDayData @entity {
   id: ID!
   date: Int!
@@ -66,20 +75,19 @@ type TransferDayData @entity {
   token: String!
   totalVolumn: BigInt!
   transferCount: Int!
-  transfers: [Transfer] @derivedFrom()
 }
 
 type Transfer @entity {
   id: ID!
 
-  extrinsic: Extrinsic @derivedFrom(field: "id")
-  call: Call @derivedFrom(field: "id")
+  account: Account
+  from: Account
+  to: Account
+  token: Token
+  amount: BigInt
 
-  account: String!
-  from: String!
-  to: String!
-  token: String!
-  amount: String!
+  extrinsic: Extrinsic
+  call: Call
 }
 
 type LoanDayData @entity {

@@ -3,6 +3,7 @@ import { SubstrateBlock, SubstrateExtrinsic, SubstrateEvent } from '@subql/types
 import { BlockHandler } from '../handlers/Block'
 import { ExtrinsicDispatcher } from '../dispatchers'
 import { EventHandler, ExtrinsicHandler } from '../handlers'
+import { CallHandler } from '../handlers/call'
 // import {
 //     transferHandler,
 //     updateLoanHander,
@@ -35,9 +36,9 @@ const extrinsicDispatcher = new ExtrinsicDispatcher()
 // extrinsicDispatcher.addExecutor('dex', 'removeLiquidity', removeLiquidityHandler)
 
 export async function handleCall(extrinsic: SubstrateExtrinsic): Promise<void> {
-    const handler = new ExtrinsicHandler(extrinsic);
+    const extrinsicHandler = new ExtrinsicHandler(extrinsic);
 
-    await handler.save()
+    await extrinsicHandler.save()
 
     // await extrinsicDispatcher.dispatch(extrinsic)
 }
