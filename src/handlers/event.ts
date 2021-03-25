@@ -1,7 +1,6 @@
-import { SignedBlock } from '@polkadot/types/interfaces'
 import { SubstrateEvent } from '@subql/types'
-import { getBlockTimestamp } from '../helpers'
 import { Event } from '../types/models/Event'
+import { ensureBlock, ensureExtrinsic } from './utils'
 
 export class EventHandler {
   private event: SubstrateEvent 
@@ -11,7 +10,7 @@ export class EventHandler {
   }
 
   get index () {
-    return this.event.idx;
+    return this.event.idx
   }
 
   get blockNumber () {
@@ -19,7 +18,7 @@ export class EventHandler {
   }
 
   get blockHash () {
-    return this.event.block.hash.toString()
+    return this.event.block.block.hash.toString()
   }
 
   get section () {
@@ -35,24 +34,34 @@ export class EventHandler {
   }
 
   get extrinsicHash () {
-    return this.event?.extrinsic?.extrinsic?.hash?.toString() || ''
+    const i = this.event?.extrinsic?.extrinsic?.hash?.toString()
+
+    return i === 'null' ? undefined : i
   }
 
   get id () {
-    return `${this.blockNumber}-${this.index}`;
+    return `${this.blockNumber}-${this.index}`
   }
 
   public async save () {
     const event = new Event(this.id)
 
-    event.blockNumber = this.blockNumber
-    event.blockHash = this.blockHash
-    event.extrinsicHash = this.extrinsicHash
+    await ensureBlock(this.blockHash)
+
+    if (this.extrinsicHash) {
+      await ensureExtrinsic(this.extrinsicHash)
+    }
 
     event.index = this.index
     event.section = this.section
     event.method = this.method
     event.data = this.data
+
+    event.blockId = this.blockHash
+
+    if (this.extrinsicHash) {
+      event.extrinsicId = this.extrinsicHash;
+    }
 
     await event.save()
   }

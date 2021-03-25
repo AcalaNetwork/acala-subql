@@ -21,7 +21,7 @@
   "devDependencies": {
     "@acala-network/types": "^0.7.1",
     "@polkadot/api": "^3",
-    "@subql/cli": "^0.7.3",
+    "@subql/cli": "^0.8.0",
     "@subql/node": "^0.10.2",
     "@subql/types": "^0.6.1",
     "typescript": "^4.1.3",

@@ -1,51 +1,81 @@
+type Block @entity {
+  id: ID!
+
+  number: BigInt
+  timestamp: Date
+  parentHash: String
+  specVersion: Int
+
+  extrinsics: [Extrinsic] @derivedFrom(field: "block")
+  events: [Event] @derivedFrom(field: "block")
+}
+
 type Extrinsic @entity {
   id: ID!
-  hash: String!
-  method: String!
-  section: String!
-  args: String!
-  signer: String!
-  index: Int!
-  timestamp: Date!
+
+  method: String
+  section: String
+  args: String
+  signer: String
+  nonce: BigInt
+  timestamp: Date
+  isSigned: Boolean
+  signature: String
+  tip: BigInt
+
+  block: Block #create relation to block
+
+  events: [Event] @derivedFrom(field: "extrinsic")
+  calls: [Call] @derivedFrom(field: "parentCall")
 }
 
 type Event @entity {
   id: ID!
-  blockHash: String!
-  blockNumber: BigInt!
-  extrinsicHash: String!
+
   index: Int!
   section: String!
   method: String!
   data: String!
+
+  block: Block #create relation to block
+  extrinsic: Extrinsic #create relation to extrins
 }
 
-type Block @entity {
+type Call @entity {
   id: ID!
-  blockNumber: BigInt!
-  blockHash: String!
-  timestamp: Date!
+
+  section: String
+  method: String
+  args: String
+
+  parentCall: Call #create relation to call
+
+  calls: [Call] @derivedFrom(field: "parentCall")
+}
+
+type Account @entity {
+  id: ID!
+
+  transfers: [Transfer] @derivedFrom(field: "account")
 }
 
 type TransferDayData @entity {
   id: ID!
   date: Int!
 
-  totalAmount: BigInt!
   token: String!
-  txCount: Int!
+  totalVolumn: BigInt!
+  transferCount: Int!
+  transfers: [Transfer] @derivedFrom()
 }
 
 type Transfer @entity {
   id: ID!
-  isBatch: Int!
-  isSudo: Int!
-  isSuccess: Int!
 
-  block: String!
-  timestamp: Date!
-  extrinsicHash: String!
+  extrinsic: Extrinsic @derivedFrom(field: "id")
+  call: Call @derivedFrom(field: "id")
 
+  account: String!
   from: String!
   to: String!
   token: String!

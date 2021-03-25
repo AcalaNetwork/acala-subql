@@ -1622,34 +1622,23 @@
     "@types/websocket" "^1.0.2"
     websocket "^1.0.33"
 
-"@subql/cli@^0.7.3":
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/@subql/cli/-/cli-0.7.3.tgz#1e05649011b5dfc664adfcb33948ff2b8e5f9ba0"
-  integrity sha512-qc9WPTN57FspXMJvqXkHejNck8FSbqfl57V+vKR9X/AjaeYTaFAq5xagDEHad3IGerR8Ra0VUPS3nsMyqhJSkQ==
+"@subql/cli@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@subql/cli/-/cli-0.8.0.tgz#54d81d9f748c67065788311b02bf461d95cd4297"
+  integrity sha512-xOePjtCiWkD4HJJ6hoOUJkyKhM7kY5ofcWSfQfv7IlusT8WNB+nztFmyHXS8ao+REM4yVb0jjpubEPSzv6mBzw==
   dependencies:
     "@oclif/command" "^1.8.0"
     "@oclif/config" "^1.17.0"
     "@oclif/plugin-help" "^3.2.1"
-    "@subql/common" "0.6.1"
+    "@subql/common" "0.7.0"
+    "@subql/validator" "0.1.0"
     "@types/ejs" "^3.0.5"
+    chalk "^4.1.0"
     cli-ux "^5.5.1"
     ejs "^3.1.5"
     rimraf "^3.0.2"
     simple-git "^2.31.0"
     tslib "^2.1.0"
-
-"@subql/common@0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@subql/common/-/common-0.6.1.tgz#5248f027759c66948e01463c7e36982521c0428a"
-  integrity sha512-22+greXh2YdVLoTyhUoVkjPNh7Vo5f6+zc9vZ5H4o75/JI/MnQgeRqoB8M5aKEsQC602IeCaAK16+wK+8A+MkQ==
-  dependencies:
-    class-transformer "0.3.1"
-    class-validator "^0.13.1"
-    graphql "^15.5.0"
-    graphql-tag "^2.12.0"
-    graphql-tools "^7.0.2"
-    js-yaml "^4.0.0"
-    reflect-metadata "^0.1.13"
 
 "@subql/common@0.7.0":
   version "0.7.0"
@@ -1700,6 +1689,15 @@
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@subql/types/-/types-0.6.1.tgz#8c5417c36b3602c66ed8f7900620e6886ca85433"
   integrity sha512-WcSg4cREzbEUj10KraCzMhbFsgkXRnt7BBcfUmfFljEII+C4uEzMvFwHH/3Vds1D6uCRXDourO5nIdrnLNBD8Q==
+
+"@subql/validator@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@subql/validator/-/validator-0.1.0.tgz#b6731a1f63d88a1b8ef973ced186806eeba0885a"
+  integrity sha512-mEjVwZ+Qmu4NlioTxXO3tDb2jA+DzMPoTkKAWK3YD/Vl33fLJm/m/AzCZv8dKCVpuhriwsu3IDI8jORCZe3Fyg==
+  dependencies:
+    axios "^0.21.1"
+    js-yaml "^4.0.0"
+    package-json-type "^1.0.3"
 
 "@types/bn.js@^4.11.6":
   version "4.11.6"
@@ -1901,7 +1899,7 @@ atomic-sleep@^1.0.0:
   resolved "https://registry.yarnpkg.com/atomic-sleep/-/atomic-sleep-1.0.0.tgz#eb85b77a601fc932cfe432c5acd364a9e2c9075b"
   integrity sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==
 
-axios@0.21.1:
+axios@0.21.1, axios@^0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
@@ -3693,6 +3691,11 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
+
+package-json-type@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/package-json-type/-/package-json-type-1.0.3.tgz#f869b8abb094ae0e5bdd7a01355eeddcdf3fb597"
+  integrity sha512-Bey4gdRuOwDbS8Fj1qA3/pTq5r8pqiI5E3tjSqCdhaLSsyGG364VFzXLTIexN5AaNGe/vgdBzLfoKdr7EVg2KQ==
 
 packet-reader@1.0.0:
   version "1.0.0"
