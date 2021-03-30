@@ -20,6 +20,8 @@ export class Call implements Entity {
 
     public args?: string;
 
+    public signerId?: string;
+
     public extrinsicId?: string;
 
     public parentCallId?: string;

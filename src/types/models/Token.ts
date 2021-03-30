@@ -14,11 +14,9 @@ export class Token implements Entity {
 
     public id: string;
 
-    public decimal: number;
+    public decimal?: number;
 
-    public name: string;
-
-    public totalIssued: bigint;
+    public name?: string;
 
 
     async save(): Promise<void>{

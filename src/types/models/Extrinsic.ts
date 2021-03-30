@@ -20,7 +20,7 @@ export class Extrinsic implements Entity {
 
     public args?: string;
 
-    public signer?: string;
+    public signerId?: string;
 
     public nonce?: bigint;
 

@@ -16,7 +16,7 @@ type Extrinsic @entity {
   method: String
   section: String
   args: String
-  signer: String
+  signer: Account #create relation to account
   nonce: BigInt
   timestamp: Date
   isSigned: Boolean
@@ -48,6 +48,7 @@ type Call @entity {
   method: String
   args: String
 
+  signer: Account #create ration to account
   extrinsic: Extrinsic #create relation to extrinsic
   parentCall: Call #create relation to call
 
@@ -57,30 +58,23 @@ type Call @entity {
 type Account @entity {
   id: ID!
 
-  transfers: [Transfer] @derivedFrom(field: "account")
+  extrinsics: [Extrinsic] @derivedFrom(field: "signer")
+  calls: [Call] @derivedFrom(field: "signer")
+
+  transferIn: [Transfer] @derivedFrom(field: "to")
+  transferOut: [Transfer] @derivedFrom(field: "from")
 }
 
 type Token @entity {
   id: ID!
 
-  decimal: Int!
-  name: String!
-  totalIssued: BigInt!
-}
-
-type TransferDayData @entity {
-  id: ID!
-  date: Int!
-
-  token: String!
-  totalVolumn: BigInt!
-  transferCount: Int!
+  decimal: Int
+  name: String
 }
 
 type Transfer @entity {
   id: ID!
 
-  account: Account
   from: Account
   to: Account
   token: Token
@@ -90,119 +84,129 @@ type Transfer @entity {
   call: Call
 }
 
-type LoanDayData @entity {
-  id: ID!
-
-  token: String!
-  timestamp: Date!
-
-  collateral: BigInt!
-  debit: BigInt!
-}
-
-type LoanPosition @entity {
-  id: ID!
-
-  account: String!
-  token: String!
-
-  debit: BigInt!
-  collateral: BigInt!
-  collateralRatio: BigInt!
-}
-
-type LoanAction @entity {
-  id: ID!
-  isBatch: Int!
-  isSudo: Int!
-  isSuccess: Int!
-
-  block: String!
-  extrinsicHash: String!
-  timestamp: Date!
-
-  account: String!
-  token: String!
-  collateralAdjustment: BigInt!
-  debitAdjustment: BigInt!
-  debitExchangeRate: BigInt!
-}
-
-type Pair @entity {
-  id: ID!
-
-  token0: String!
-  token1: String!
-  totalSupply: BigInt!
-
-  token0Volume: BigInt!
-  token1Volume: BigInt!
-
-  token0USD: BigInt!
-  token1USD: BigInt!
-
-  token0Price: BigInt!
-  token1Price: BigInt!
-
-  txCount: BigInt!
-}
-
-type SwapAction @entity {
-  id: ID!
-  isBatch: Int!
-  isSudo: Int!
-  isSuccess: Int!
-
-  block: String!
-  extrinsicHash: String!
-  timestamp: Date!
-
-  account: String!
-  type: String!
-  path: String!
-  token0: String!
-  token1: String!
-  token0Input: String!
-  token1Input: String!
-  result: String!
-}
-
-type AddLiquidityHistory @entity {
-  id: ID!
-  isBatch: Int!
-  isSudo: Int!
-  isSuccess: Int!
-
-  block: String!
-  extrinsicHash: String!
-  timestamp: Date!
-
-  account: String!
-  token0: String!
-  token1: String!
-
-  token0Input: BigInt!
-  token1Input: BigInt!
-
-  token0Amount: BigInt!
-  token1Amount: BigInt!
-  receivedShare: BigInt!
-}
-
-type RemoveLiquidityHistoryEntity @entity {
-  id: ID!
-  isBatch: Int!
-  isSudo: Int!
-  isSuccess: Int!
-
-  block: String!
-  timestamp: Date!
-
-  account: String!
-  token0: String!
-  token1: String!
-  removedShare: BigInt!
-
-  token0Amount: BigInt!
-  token1Amount: BigInt!
-}
+#type TransferDayData @entity {
+#  id: ID!
+#  date: Int!
+#
+#  token: String!
+#  totalVolumn: BigInt!
+#  transferCount: Int!
+#}
+#
+#type LoanDayData @entity {
+#  id: ID!
+#
+#  token: String!
+#  timestamp: Date!
+#
+#  collateral: BigInt!
+#  debit: BigInt!
+#}
+#
+#type LoanPosition @entity {
+#  id: ID!
+#
+#  account: String!
+#  token: String!
+#
+#  debit: BigInt!
+#  collateral: BigInt!
+#  collateralRatio: BigInt!
+#}
+#
+#type LoanAction @entity {
+#  id: ID!
+#  isBatch: Int!
+#  isSudo: Int!
+#  isSuccess: Int!
+#
+#  block: String!
+#  extrinsicHash: String!
+#  timestamp: Date!
+#
+#  account: String!
+#  token: String!
+#  collateralAdjustment: BigInt!
+#  debitAdjustment: BigInt!
+#  debitExchangeRate: BigInt!
+#}
+#
+#type Pair @entity {
+#  id: ID!
+#
+#  token0: String!
+#  token1: String!
+#  totalSupply: BigInt!
+#
+#  token0Volume: BigInt!
+#  token1Volume: BigInt!
+#
+#  token0USD: BigInt!
+#  token1USD: BigInt!
+#
+#  token0Price: BigInt!
+#  token1Price: BigInt!
+#
+#  txCount: BigInt!
+#}
+#
+#type SwapAction @entity {
+#  id: ID!
+#  isBatch: Int!
+#  isSudo: Int!
+#  isSuccess: Int!
+#
+#  block: String!
+#  extrinsicHash: String!
+#  timestamp: Date!
+#
+#  account: String!
+#  type: String!
+#  path: String!
+#  token0: String!
+#  token1: String!
+#  token0Input: String!
+#  token1Input: String!
+#  result: String!
+#}
+#
+#type AddLiquidityHistory @entity {
+#  id: ID!
+#  isBatch: Int!
+#  isSudo: Int!
+#  isSuccess: Int!
+#
+#  block: String!
+#  extrinsicHash: String!
+#  timestamp: Date!
+#
+#  account: String!
+#  token0: String!
+#  token1: String!
+#
+#  token0Input: BigInt!
+#  token1Input: BigInt!
+#
+#  token0Amount: BigInt!
+#  token1Amount: BigInt!
+#  receivedShare: BigInt!
+#}
+#
+#type RemoveLiquidityHistoryEntity @entity {
+#  id: ID!
+#  isBatch: Int!
+#  isSudo: Int!
+#  isSuccess: Int!
+#
+#  block: String!
+#  timestamp: Date!
+#
+#  account: String!
+#  token0: String!
+#  token1: String!
+#  removedShare: BigInt!
+#
+#  token0Amount: BigInt!
+#  token1Amount: BigInt!
+#}
+#

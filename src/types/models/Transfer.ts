@@ -14,8 +14,6 @@ export class Transfer implements Entity {
 
     public id: string;
 
-    public accountId?: string;
-
     public fromId?: string;
 
     public toId?: string;

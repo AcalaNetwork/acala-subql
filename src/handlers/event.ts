@@ -1,12 +1,28 @@
 import { SubstrateEvent } from '@subql/types'
 import { Event } from '../types/models/Event'
-import { ensureBlock, ensureExtrinsic } from './utils'
+import { BlockHandler } from './Block'
+import { ExtrinsicHandler } from './extrinsic'
+import { Dispatcher } from '../helpers/dispatcher'
+import { AccountHandler } from './sub-handlers/account'
+import { TransferHandler } from './sub-handlers/transfer'
+
+type EventDispatch = Dispatcher<SubstrateEvent>
 
 export class EventHandler {
   private event: SubstrateEvent 
+  private dispatcher: EventDispatch
 
   constructor(event: SubstrateEvent) {
     this.event = event
+    this.dispatcher = new Dispatcher<SubstrateEvent>()
+
+    this.registerDispatcherHandler()
+  }
+
+  private registerDispatcherHandler () {
+    this.dispatcher.batchRegist([
+      { key: 'currencies-Transferred', handler: TransferHandler.createFromCurrenciesModule},
+    ])
   }
 
   get index () {
@@ -46,10 +62,10 @@ export class EventHandler {
   public async save () {
     const event = new Event(this.id)
 
-    await ensureBlock(this.blockHash)
+    await BlockHandler.ensureBlock(this.blockHash)
 
     if (this.extrinsicHash) {
-      await ensureExtrinsic(this.extrinsicHash)
+      await ExtrinsicHandler.ensureExtrinsic(this.extrinsicHash)
     }
 
     event.index = this.index
@@ -62,6 +78,11 @@ export class EventHandler {
     if (this.extrinsicHash) {
       event.extrinsicId = this.extrinsicHash;
     }
+
+    await this.dispatcher.dispatch(
+      `${this.section}-${this.method}`,
+      this.event
+    );
 
     await event.save()
   }

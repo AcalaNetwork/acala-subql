@@ -1,9 +1,18 @@
 import { SubstrateBlock } from '@subql/types'
 import { getBlockTimestamp } from '../helpers'
 import { Block } from '../types/models/Block'
+import { TokenHandler } from './sub-handlers/token'
 
 export class BlockHandler {
   private block: SubstrateBlock
+
+  static async ensureBlock (id: string): Promise<void> {
+    const block = await Block.get(id)
+
+    if (!block) {
+      await new Block(id).save()
+    }
+  }
 
   constructor(block: SubstrateBlock) {
     this.block = block

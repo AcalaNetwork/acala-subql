@@ -1,7 +1,8 @@
 import { SubstrateExtrinsic } from '@subql/types'
 import { Extrinsic } from '../types/models/Extrinsic'
+import { BlockHandler } from './Block'
 import { CallHandler } from './call'
-import { ensureBlock } from './utils'
+import { AccountHandler } from './sub-handlers/account'
 
 export class ExtrinsicHandler {
   private extrinsic: SubstrateExtrinsic
@@ -65,12 +66,13 @@ export class ExtrinsicHandler {
   public async save () {
     const record = new Extrinsic(this.id)
 
-    await ensureBlock(this.blockHash)
+    await BlockHandler.ensureBlock(this.blockHash)
+    await AccountHandler.ensureAccount(this.signer)
 
     record.method = this.method
     record.section = this.section
     record.args = this.args
-    record.signer = this.signer
+    record.signerId = this.signer
     record.nonce = this.nonce
     record.isSigned = this.isSigned
     record.timestamp = this.timestamp
