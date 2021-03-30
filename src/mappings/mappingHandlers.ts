@@ -1,6 +1,6 @@
 import { SubstrateBlock, SubstrateExtrinsic, SubstrateEvent } from '@subql/types'
 
-import { BlockHandler } from '../handlers/Block'
+import { BlockHandler } from '../handlers/block'
 import { EventHandler, ExtrinsicHandler } from '../handlers'
 import { CallHandler } from '../handlers/call'
 
