@@ -1,6 +1,6 @@
 import { SubstrateExtrinsic } from '@subql/types'
 import { Extrinsic } from '../types/models/Extrinsic'
-import { BlockHandler } from './Block'
+import { BlockHandler } from './block'
 import { CallHandler } from './call'
 import { AccountHandler } from './sub-handlers/account'
 
