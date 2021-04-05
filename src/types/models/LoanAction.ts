@@ -5,7 +5,7 @@
 import {Entity} from "@subql/types";
 import assert from 'assert';
 
-export class Transfer implements Entity {
+export class LoanAction implements Entity {
 
     constructor(id: string) {
         this.id = id;
@@ -14,13 +14,15 @@ export class Transfer implements Entity {
 
     public id: string;
 
-    public fromId?: string;
-
-    public toId?: string;
+    public accountId?: string;
 
     public tokenId?: string;
 
-    public amount?: bigint;
+    public collateral?: bigint;
+
+    public debit?: bigint;
+
+    public exchangeRate?: bigint;
 
     public extrinsicId?: string;
 
@@ -33,26 +35,26 @@ export class Transfer implements Entity {
 
     async save(): Promise<void>{
         let id = this.id;
-        assert(id !== null, "Cannot save Transfer entity without an ID");
-        await store.set('Transfer', id.toString(), this);
+        assert(id !== null, "Cannot save LoanAction entity without an ID");
+        await store.set('LoanAction', id.toString(), this);
     }
     static async remove(id:string): Promise<void>{
-        assert(id !== null, "Cannot remove Transfer entity without an ID");
-        await store.remove('Transfer', id.toString());
+        assert(id !== null, "Cannot remove LoanAction entity without an ID");
+        await store.remove('LoanAction', id.toString());
     }
 
-    static async get(id:string): Promise<Transfer>{
-        assert(id !== null, "Cannot get Transfer entity without an ID");
-        const record = await store.get('Transfer', id.toString());
+    static async get(id:string): Promise<LoanAction>{
+        assert(id !== null, "Cannot get LoanAction entity without an ID");
+        const record = await store.get('LoanAction', id.toString());
         if (record){
-            return Transfer.create(record);
+            return LoanAction.create(record);
         }else{
             return;
         }
     }
 
     static create(record){
-        let entity = new Transfer(record.id);
+        let entity = new LoanAction(record.id);
         Object.assign(entity,record);
         return entity;
     }

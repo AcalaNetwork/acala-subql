@@ -19,9 +19,10 @@ type Extrinsic @entity {
   signer: Account #create relation to account
   nonce: BigInt
   timestamp: Date
-  isSigned: Boolean
   signature: String
   tip: BigInt
+  isSigned: Boolean
+  isSuccess: Boolean
 
   block: Block #create relation to block
 
@@ -47,6 +48,8 @@ type Call @entity {
   section: String
   method: String
   args: String
+  timestamp: Date
+  isSuccess: Boolean
 
   signer: Account #create ration to account
   extrinsic: Extrinsic #create relation to extrinsic
@@ -63,6 +66,7 @@ type Account @entity {
 
   transferIn: [Transfer] @derivedFrom(field: "to")
   transferOut: [Transfer] @derivedFrom(field: "from")
+  position: [LoanPosition] @derivedFrom(field: "account")
 }
 
 type Token @entity {
@@ -80,18 +84,12 @@ type Transfer @entity {
   token: Token
   amount: BigInt
 
-  extrinsic: Extrinsic
-  call: Call
+  extrinsic: Extrinsic #create relation to extrinsic
+  call: Call #create relation to call
+  timestamp: Date
+  isSuccess: Boolean
 }
 
-#type TransferDayData @entity {
-#  id: ID!
-#  date: Int!
-#
-#  token: String!
-#  totalVolumn: BigInt!
-#  transferCount: Int!
-#}
 #
 #type LoanDayData @entity {
 #  id: ID!
@@ -103,34 +101,32 @@ type Transfer @entity {
 #  debit: BigInt!
 #}
 #
-#type LoanPosition @entity {
-#  id: ID!
-#
-#  account: String!
-#  token: String!
-#
-#  debit: BigInt!
-#  collateral: BigInt!
-#  collateralRatio: BigInt!
-#}
-#
-#type LoanAction @entity {
-#  id: ID!
-#  isBatch: Int!
-#  isSudo: Int!
-#  isSuccess: Int!
-#
-#  block: String!
-#  extrinsicHash: String!
-#  timestamp: Date!
-#
-#  account: String!
-#  token: String!
-#  collateralAdjustment: BigInt!
-#  debitAdjustment: BigInt!
-#  debitExchangeRate: BigInt!
-#}
-#
+
+type LoanPosition @entity {
+  id: ID!
+
+  account: Account
+  token: Token
+
+  debit: BigInt
+  collateral: BigInt
+}
+
+type LoanAction @entity {
+  id: ID!
+
+  account: Account
+  token: Token
+  collateral: BigInt
+  debit: BigInt
+  exchangeRate: BigInt
+
+  extrinsic: Extrinsic #create relation to extrinsic
+  call: Call #create relation to call
+  timestamp: Date
+  isSuccess: Boolean
+}
+
 #type Pair @entity {
 #  id: ID!
 #

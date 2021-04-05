@@ -20,9 +20,7 @@ export class EventHandler {
   }
 
   private registerDispatcherHandler () {
-    this.dispatcher.batchRegist([
-      { key: 'currencies-Transferred', handler: TransferHandler.createFromCurrenciesModule},
-    ])
+    this.dispatcher.batchRegist([ ])
   }
 
   get index () {

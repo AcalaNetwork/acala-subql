@@ -1,4 +1,5 @@
 import { SubstrateExtrinsic } from '@subql/types'
+import { checkIfExtrinsicExecuteSuccess, getBatchInterruptedIndex } from '../helpers'
 import { Extrinsic } from '../types/models/Extrinsic'
 import { BlockHandler } from './Block'
 import { CallHandler } from './call'
@@ -63,6 +64,14 @@ export class ExtrinsicHandler {
     return this.extrinsic.extrinsic.tip.toBigInt() || BigInt(0)
   }
 
+  get isSuccess(): boolean {
+    return checkIfExtrinsicExecuteSuccess(this.extrinsic)
+  }
+
+  get batchInterruptedIndex(): number {
+    return getBatchInterruptedIndex(this.extrinsic)
+  }
+
   public async save () {
     const record = new Extrinsic(this.id)
 
@@ -78,7 +87,7 @@ export class ExtrinsicHandler {
     record.timestamp = this.timestamp
     record.signature = this.signature
     record.tip = this.tip
-
+    record.isSuccess = this.isSuccess
     record.blockId = this.blockHash
 
     await record.save()

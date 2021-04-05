@@ -26,11 +26,13 @@ export class Extrinsic implements Entity {
 
     public timestamp?: Date;
 
-    public isSigned?: boolean;
-
     public signature?: string;
 
     public tip?: bigint;
+
+    public isSigned?: boolean;
+
+    public isSuccess?: boolean;
 
     public blockId?: string;
 

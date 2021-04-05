@@ -1,8 +1,8 @@
-import { Account } from "../../types/models/Account";
+import { Account } from "../../types/models/Account"
 
 interface AccountData {
-  id: string;
-  address: string;
+  id: string
+  address: string
 }
 
 export class AccountHandler {

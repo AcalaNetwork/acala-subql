@@ -1,26 +1,21 @@
-import { SubstrateExtrinsic } from '@subql/types';
-import { Token } from '../../types/models/Token';
-import { Transfer } from "../../types/models/Transfer";
-import { AnyCall } from '../call';
-import { AccountHandler } from './account';
+import { SubstrateExtrinsic } from '@subql/types'
+import { resolveToken } from '../../helpers/token'
+import { Token } from '../../types/models/Token'
+import { Transfer } from "../../types/models/Transfer"
+import { AnyCall } from '../types'
+import { AccountHandler } from './account'
 
 export class TokenHandler {
-  static async ensureToken (id: string) {
+  static async ensureToken (id: string, decimal?: number) {
     const token = await Token.get(id)
 
     if (!token) {
-      await new Token(id).save()
+      const token = new Token(id)
+
+      token.name = id
+      token.decimal = decimal
+
+      await token.save()
     }
-  }
-
-  static async createToken (id: string, name: string, decimal: number) {
-    await this.ensureToken(id)
-
-    const token = await Token.get(id)
-
-    token.name = name
-    token.decimal = decimal
-
-    await token.save()
   }
 }

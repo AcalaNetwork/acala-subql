@@ -20,6 +20,10 @@ export class Call implements Entity {
 
     public args?: string;
 
+    public timestamp?: Date;
+
+    public isSuccess?: boolean;
+
     public signerId?: string;
 
     public extrinsicId?: string;

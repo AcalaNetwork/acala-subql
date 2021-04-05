@@ -1,39 +1,39 @@
-import { SubstrateEvent, SubstrateExtrinsic } from '@subql/types';
-import { Transfer } from "../../types/models/Transfer";
-import { AccountHandler } from './account';
-import { TokenHandler } from './token';
+import { SubstrateExtrinsic } from '@subql/types'
+import { resolveToken } from '../../helpers/token'
+import { Call } from '../../types/models/Call'
+import { Transfer } from "../../types/models/Transfer"
+import { CallHandler } from '../call'
+import { ExtrinsicHandler } from '../extrinsic'
+import { DispatchedCallData } from '../types'
+import { AccountHandler } from './account'
+import { TokenHandler } from './token'
 
 export class TransferHandler {
+  static async createFromCurrenciesModule ({ id, call, extrinsic, isSuccess } : DispatchedCallData) {
+    const args = call.args
+    const extrinsicHandler = new ExtrinsicHandler(extrinsic)
 
-
-  static async createFromCurrenciesModule (event: SubstrateEvent) {
-    const data = event.event.data;
-
-    const token = data[0].toString()
-    const from = data[1].toString()
-    const to = data[2].toString()
-    const amount = (data[3] as any).toBigInt() || BigInt(0)
-
-    const index = event.event.index.toString()
-    const extrinsicHash = event?.extrinsic?.extrinsic?.hash.toString()
-    const isSigned = event?.extrinsic?.extrinsic?.isSigned
-
-    if (!isSigned) return
+    const to = args[0].toString()
+    const token = resolveToken(args[1]);
+    const amount = (args[2] as any).toBigInt() || BigInt(0)
+    const from = extrinsicHandler.signer
+    const extrinsicHash = extrinsicHandler.id
 
     await AccountHandler.ensureAccount(to)
     await AccountHandler.ensureAccount(from)
-    await TokenHandler.ensureToken(token)
+    await CallHandler.ensureCall(id)
+    await TokenHandler.ensureToken(token.name, token.decimal)
 
-    const transfer = new Transfer(`${extrinsicHash}-${index}`)
+    const transfer = new Transfer(id)
 
     transfer.toId = to
     transfer.fromId = from
-    transfer.tokenId = token
+    transfer.tokenId = token.name
     transfer.amount = amount
-
-    if (extrinsicHash && extrinsicHash !== 'null') {
-      transfer.extrinsicId = extrinsicHash
-    }
+    transfer.extrinsicId = extrinsicHash
+    transfer.callId = id
+    transfer.timestamp = extrinsicHandler.timestamp
+    transfer.isSuccess = isSuccess
 
     await transfer.save()
   }
