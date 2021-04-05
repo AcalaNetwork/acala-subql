@@ -1,6 +1,6 @@
 import { SubstrateEvent } from '@subql/types'
 import { Event } from '../types/models/Event'
-import { BlockHandler } from './Block'
+import { BlockHandler } from './block'
 import { ExtrinsicHandler } from './extrinsic'
 import { Dispatcher } from '../helpers/dispatcher'
 import { AccountHandler } from './sub-handlers/account'
