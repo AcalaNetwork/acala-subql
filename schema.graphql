@@ -1,10 +1,26 @@
+type KVData @jsonField {
+  key: String
+  value: String
+  type: String
+}
+
+type SystemConsts @entity {
+  id: ID!
+  liquidToken: Token
+  stakignToken: Token
+  nativeToken: Token
+  stableToken: Token
+}
+
 type Block @entity {
   id: ID!
 
   number: BigInt
   timestamp: Date
   parentHash: String
-  specVersion: Int
+  specVersion: String
+  stateRoot: String
+  extrinsicRoot: String
 
   extrinsics: [Extrinsic] @derivedFrom(field: "block")
   events: [Event] @derivedFrom(field: "block")
@@ -15,16 +31,16 @@ type Extrinsic @entity {
 
   method: String
   section: String
-  args: String
-  signer: Account #create relation to account
+  args: [KVData]
+  signer: Account
   nonce: BigInt
   timestamp: Date
   signature: String
-  tip: BigInt
+  tip: String
   isSigned: Boolean
   isSuccess: Boolean
 
-  block: Block #create relation to block
+  block: Block
 
   events: [Event] @derivedFrom(field: "extrinsic")
   calls: [Call] @derivedFrom(field: "extrinsic")
@@ -33,13 +49,13 @@ type Extrinsic @entity {
 type Event @entity {
   id: ID!
 
-  index: Int!
-  section: String!
-  method: String!
-  data: String!
+  index: Int
+  section: String
+  method: String
+  data: [KVData]
 
-  block: Block #create relation to block
-  extrinsic: Extrinsic #create relation to extrins
+  block: Block
+  extrinsic: Extrinsic
 }
 
 type Call @entity {
@@ -47,13 +63,13 @@ type Call @entity {
 
   section: String
   method: String
-  args: String
+  args:[KVData] 
   timestamp: Date
   isSuccess: Boolean
 
-  signer: Account #create ration to account
-  extrinsic: Extrinsic #create relation to extrinsic
-  parentCall: Call #create relation to call
+  signer: Account
+  extrinsic: Extrinsic
+  parentCall: Call
 
   calls: [Call] @derivedFrom(field: "parentCall")
 }
@@ -61,19 +77,76 @@ type Call @entity {
 type Account @entity {
   id: ID!
 
+  txCount: Int
+  createAtBlock: Block
+
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   calls: [Call] @derivedFrom(field: "signer")
-
   transferIn: [Transfer] @derivedFrom(field: "to")
   transferOut: [Transfer] @derivedFrom(field: "from")
   position: [LoanPosition] @derivedFrom(field: "account")
 }
 
+type Price @entity {
+  id: ID!
+
+  price: String
+  token: String
+
+  createAtBlockNumber: BigInt
+}
+
 type Token @entity {
   id: ID!
 
+  symbol: String
   decimal: Int
-  name: String
+}
+
+type Asset @entity {
+  id: ID!
+
+  token: Token
+  account: Account
+
+  free: String
+  frozen: String
+  reserved: String
+
+  total: String
+  totalInUSD: String
+}
+
+type AccountAssetDayData @entity {
+  id: ID!
+
+  account: Account
+  totalInUSD: String
+  timestamp: Date
+}
+
+type OracleFeedRecord @entity {
+  id: ID!
+
+  token: Token
+  account: Account
+  provider: String
+
+  feedPrice: String
+
+  updateAtBlock: Block
+}
+
+type OracleFeedHourData @entity {
+  id: ID!
+
+  token: Token
+  account: Account
+  provider: String
+
+  averagePrice: String
+
+  timestamp: Date
 }
 
 type Transfer @entity {
@@ -82,10 +155,11 @@ type Transfer @entity {
   from: Account
   to: Account
   token: Token
-  amount: BigInt
+  amount: String
+  amountInUSD: String
 
-  extrinsic: Extrinsic #create relation to extrinsic
-  call: Call #create relation to call
+  extrinsic: Extrinsic
+  call: Call
   timestamp: Date
   isSuccess: Boolean
 }

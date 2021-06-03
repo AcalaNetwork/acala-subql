@@ -3,7 +3,7 @@ description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: wss://mandala6.laminar.codes
+  endpoint: wss://acala-testnet-1.polkawallet.io:9904
   types:
     CallOf: Call
     DispatchTime:
@@ -104,7 +104,7 @@ network:
         NewValue: Balance
     RiskManagementParams:
       maximumTotalDebitValue: Balance
-      stabilityFee: Option<Rate>
+      interestRatePerSec: Option<Rate>
       liquidationRatio: Option<Rate>
       liquidationPenalty: Option<Rate>
       requiredCollateralRatio: Option<Rate>
@@ -122,6 +122,15 @@ network:
         NotEnabled: "Null"
         Provisioning: TradingPairProvisionParameters
         Enabled: "Null"
+    Erc20Info:
+      address: EvmAddress
+      name: Vec<u8>
+      symbol: Vec<u8>
+      decimals: u8
+    EstimateResourcesResponse:
+      gas: u256
+      storage: i32
+      weightFee: u256
     EvmAccountInfo:
       nonce: Index
       contractInfo: Option<EvmContractInfo>
@@ -146,12 +155,24 @@ network:
         Immediately: "Null"
         Target: EraIndex
         WaitForUnbonding: "Null"
+    RelaychainAccountId: AccountId
+    SlashInfo:
+      validator: RelaychainAccountId
+      relaychainTokenAmount: Balance
+    ValidatorBacking:
+      totalInsurance: Balance
+      isFrozen: bool
+    Guarantee:
+      total: Balance
+      bonded: Balance
+      unbonding: Option<(Balance, BlockNumber)>
     PoolId:
       _enum:
-        Loans: CurrencyId
+        LoansIncentive: CurrencyId
         DexIncentive: CurrencyId
+        HomaIncentive: "Null"
         DexSaving: CurrencyId
-        Homa: "Null"
+        HomaValidatorAllowance: AccountId
     Position:
       collateral: Balance
       debit: Balance
@@ -179,13 +200,14 @@ network:
         _bitLength: 8
         Transferable: 1
         Burnable: 2
+    NomineeId: AccountId
     HomaUnlockChunk:
-      value: Compact<Balance>
-      era: Compact<EraIndex>
+      value: Balance
+      era: EraIndex
     BondingLedger:
-      total: Compact<Balance>
-      active: Compact<Balance>
-      unlocking: Vec<UnlockChunk>
+      total: Balance
+      active: Balance
+      unlocking: Vec<HomaUnlockChunk>
     Amount: i128
     AmountOf: Amount
     AuctionId: u32
@@ -196,22 +218,21 @@ network:
         AUSD: 1
         DOT: 2
         LDOT: 3
-        XBTC: 4
-        RENBTC: 5
-        POLKABTC: 6
-        PLM: 7
-        PHA: 8
-        HDT: 9
+        RENBTC: 4
         KAR: 128
         KUSD: 129
         KSM: 130
         LKSM: 131
-        SDN: 135
+    DexShare:
+      _enum:
+        Token: TokenSymbol
+        Erc20: EvmAddress
     CurrencyId:
       _enum:
         Token: TokenSymbol
-        DEXShare: (TokenSymbol, TokenSymbol)
+        DEXShare: (DexShare, DexShare)
         ERC20: EvmAddress
+        ChainSafe: "[u8; 32]"
     CurrencyIdOf: CurrencyId
     AirDropCurrencyId:
       _enum:
@@ -239,6 +260,12 @@ network:
       targetUnbondingToFreeRatio: Ratio
       unbondingToFreeAdjustment: Ratio
       baseFeeRate: Rate
+    StakingPoolPhase:
+      _enum:
+        - Started
+        - RelaychainUpdated
+        - LedgerUpdated
+        - Finished
     Ledger:
       bonded: Balance
       unbondingToFree: Balance
@@ -261,6 +288,9 @@ network:
     Ratio: FixedU128
     PublicKey: "[u8; 20]"
     DestAddress: Vec<u8>
+    DepositNonce: u64
+    ResourceId: "[u8; 32]"
+    ChainBridgeChainId: u8
     Keys: SessionKeys2
     PalletsOrigin:
       _enum:
@@ -332,10 +362,16 @@ network:
       ContractInfo: EvmContractInfo
     nomineesElection:
       UnlockChunk: HomaUnlockChunk
+    stakingPool:
+      Phase: StakingPoolPhase
+    chainBridge:
+      ChainId: ChainBridgeChainId
+    chainSafeTransfer:
+      ChainId: ChainBridgeChainId
 dataSources:
   - name: main
     kind: substrate/Runtime
-    startBlock: 261173
+    startBlock: 114075
     mapping:
       handlers:
         - handler: handleBlock

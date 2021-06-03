@@ -1,9 +1,11 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 // Auto-generated , DO NOT EDIT
 import {Entity} from "@subql/types";
 import assert from 'assert';
+
+import {
+    KVData,
+} from '../interfaces'
+
 
 export class Extrinsic implements Entity {
 
@@ -18,7 +20,7 @@ export class Extrinsic implements Entity {
 
     public section?: string;
 
-    public args?: string;
+    public args?: KVData[];
 
     public signerId?: string;
 
@@ -28,7 +30,7 @@ export class Extrinsic implements Entity {
 
     public signature?: string;
 
-    public tip?: bigint;
+    public tip?: string;
 
     public isSigned?: boolean;
 
@@ -47,8 +49,8 @@ export class Extrinsic implements Entity {
         await store.remove('Extrinsic', id.toString());
     }
 
-    static async get(id:string): Promise<Extrinsic>{
-        assert(id !== null, "Cannot get Extrinsic entity without an ID");
+    static async get(id:string): Promise<Extrinsic | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get Extrinsic entity without an ID");
         const record = await store.get('Extrinsic', id.toString());
         if (record){
             return Extrinsic.create(record);
@@ -56,6 +58,8 @@ export class Extrinsic implements Entity {
             return;
         }
     }
+
+
 
     static create(record){
         let entity = new Extrinsic(record.id);

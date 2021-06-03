@@ -1,9 +1,7 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 // Auto-generated , DO NOT EDIT
 import {Entity} from "@subql/types";
 import assert from 'assert';
+
 
 export class LoanAction implements Entity {
 
@@ -43,8 +41,8 @@ export class LoanAction implements Entity {
         await store.remove('LoanAction', id.toString());
     }
 
-    static async get(id:string): Promise<LoanAction>{
-        assert(id !== null, "Cannot get LoanAction entity without an ID");
+    static async get(id:string): Promise<LoanAction | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get LoanAction entity without an ID");
         const record = await store.get('LoanAction', id.toString());
         if (record){
             return LoanAction.create(record);
@@ -52,6 +50,8 @@ export class LoanAction implements Entity {
             return;
         }
     }
+
+
 
     static create(record){
         let entity = new LoanAction(record.id);
