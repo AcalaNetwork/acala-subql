@@ -9,7 +9,7 @@
     "prepack": "rm -rf dist && npm build",
     "codegen": "./node_modules/.bin/subql codegen",
     "patch:types": "node scripts/patch-types.js",
-    "start": "./node_modules/.bin/subql-node -f . --local"
+    "start": "./node_modules/.bin/subql-node -f . --local --timeout=512 --batch-size=100"
   },
   "files": [
     "dist",

@@ -2,6 +2,7 @@ import { Token as SDKToken, TokenPair } from "@acala-network/sdk-core"
 import { SystemConsts } from "../types"
 import { Token } from "../types"
 import { getChainName } from "./system"
+import { getTokenName } from "./utils/token"
 
 /**
  * token config from the chain config
@@ -22,13 +23,8 @@ import { getChainName } from "./system"
 		// Reserve for RENBTC = 132
 	}
  */
+
 export async function getToken(symbol: string) {
-    const token = await Token.get(symbol)
-
-    return token
-}
-
-export async function upsertToken(symbol: string) {
     const token = await Token.get(symbol)
 
     if (token) return token
@@ -62,7 +58,7 @@ export async function upsertToken(symbol: string) {
 export async function initSystemTokens () {
     const tokens = api.registry.chainTokens
 
-    await Promise.all(tokens.map((symbol) => upsertToken(symbol)))
+    await Promise.all(tokens.map((symbol) => getToken(symbol)))
 }
 
 export async function getNativeToken () {
@@ -70,7 +66,7 @@ export async function getNativeToken () {
 
     const systemConsts = await SystemConsts.get(chainName)
 
-    const token = await Token.get(systemConsts.stableTokenId)
+    const token = await Token.get(systemConsts.nativeTokenId)
 
     return token
 }

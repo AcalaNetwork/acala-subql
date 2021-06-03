@@ -1,13 +1,16 @@
 import { FixedPointNumber } from "@acala-network/sdk-core";
-import { getAccount } from "./account";
+import { ensureAccount, getAccount } from "./account";
 import { getNativeToken, getToken } from "./tokens";
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { getPrice } from "./price";
 import { Asset } from "../types/models/Asset";
 import { updateAccountAssetDayData } from "./accountAssetDayData";
+import { SubstrateEvent } from "@subql/types";
+import { getTokenName } from "./utils/token";
+import { DispatchedEventData } from "./types";
 
 export async function updateAccountAsset (address: string, symbol: string, timestamp: number) {
-    const account = await getAccount(address)
+    const account = await ensureAccount(address)
     const token = await getToken(symbol)
     const price = await getPrice(symbol)
     const nativeToken = await getNativeToken()
@@ -49,8 +52,17 @@ export async function updateAccountAsset (address: string, symbol: string, times
     asset.reserved = reserved.toChainData()
     asset.frozen = frozen.toChainData()
     asset.total = total.toChainData()
-    asset.totalInUSD = total.toString()
+    asset.totalInUSD = totalInUSD.toString()
 
     await updateAccountAssetDayData(asset, timestamp)
     await asset.save()
+}
+
+export async function handleBalanceUpdateEvent ({ event, rawEvent }: DispatchedEventData) {
+    const args = rawEvent.event.data;
+    const token = getTokenName(args[0])
+    const target = args[1].toString()
+    const timestamp = rawEvent.block.timestamp.getTime()
+
+    await updateAccountAsset(target, token, timestamp)
 }

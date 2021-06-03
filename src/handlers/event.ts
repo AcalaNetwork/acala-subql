@@ -3,23 +3,15 @@ import { Dispatcher } from './utils/dispatcher'
 import { ensureBlock } from './block'
 import { Event } from '../types'
 import { getKVData } from './utils'
-import { createExtrinsic, ensuerExtrinsic } from './extrinsic'
+import { ensuerExtrinsic } from './extrinsic'
+import { handleBalanceUpdateEvent } from './asset'
+import { DispatchedEventData } from './types'
 
-type EventDispatch = Dispatcher<SubstrateEvent>
 
-const dispatch = new Dispatcher<SubstrateEvent>()
-
-dispatch.regist('', async (event) => {
-
-})
+const dispatch = new Dispatcher<DispatchedEventData>()
 
 dispatch.batchRegist([
-  {
-    key: '',
-    handler: async (event) => {
-
-    }
-  }
+  { key: 'currencies-BalanceUpdated', handler: handleBalanceUpdateEvent }
 ])
 
 export async function ensureEvnet (event: SubstrateEvent) {
@@ -58,7 +50,7 @@ export async function createEvent (event: SubstrateEvent) {
     data.extrinsicId = extrinsic.id
   }
 
-  await dispatch.dispatch(`${section}-${data.method}`, event)
+  await dispatch.dispatch(`${section}-${data.method}`, { event: data, rawEvent: event } )
 
   await data.save()
 

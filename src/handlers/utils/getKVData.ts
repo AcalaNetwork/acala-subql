@@ -20,11 +20,9 @@ export const getKVData = (data: AnyTuple, keys?: ArgsDef) => {
     }
 
     return Object.keys(keys).map((_key, index) => {
-        const key = _key.toString()
-
         return {
             key: _key,
-            type: data[index].toRawType(),
+            type: (data[index] as any).type,
             value: data[index].toString()
         }
     })

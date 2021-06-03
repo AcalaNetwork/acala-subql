@@ -34,8 +34,8 @@ export async function createExtrinsic (extrinsic: SubstrateExtrinsic) {
   data.nonce = extrinsic.extrinsic.nonce.toBigInt() || BigInt(0)
   data.isSigned = extrinsic.extrinsic.isSigned
   data.timestamp = extrinsic.block.timestamp
-  data.signature = extrinsic.extrinsic.signature.toString()
-  data.tip = extrinsic.extrinsic.tip.toString()
+  data.signature = extrinsic.extrinsic.signature?.toString()
+  data.tip = extrinsic.extrinsic.tip?.toString()
   data.isSuccess = checkIfExtrinsicExecuteSuccess(extrinsic)
 
   data.blockId = block.id
@@ -43,7 +43,7 @@ export async function createExtrinsic (extrinsic: SubstrateExtrinsic) {
   await data.save()
 
   // divide the extrinsic into subcalls
-  await createCalls(extrinsic)
+  await createCalls(data, extrinsic)
 
   return data
 }

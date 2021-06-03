@@ -2,7 +2,7 @@
 import { get } from 'lodash'
 
 import { CurrencyId } from "@acala-network/types/interfaces"
-import{ upsertToken } from './tokens'
+import{ getToken } from './tokens'
 import { SystemConsts } from '../types'
 
 function getConsts<T> (path: string) {
@@ -26,10 +26,10 @@ export async function initSystemConsts () {
     const nativeTokenId = nativeToken.asToken.toString()
     const stableTokenId = stableToken.asToken.toString()
 
-    await upsertToken(liquidTokenId)
-    await upsertToken(stakingTokenId)
-    await upsertToken(stableTokenId)
-    await upsertToken(nativeTokenId)
+    await getToken(liquidTokenId)
+    await getToken(stakingTokenId)
+    await getToken(stableTokenId)
+    await getToken(nativeTokenId)
 
     const temp = new SystemConsts(chainName)
 

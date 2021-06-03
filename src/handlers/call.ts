@@ -1,9 +1,9 @@
 import type { Vec } from '@polkadot/types'
-import { Call } from '../types'
-import { AnyCall, CallDispatcher, DispatchedCallData } from './types'
+import { Call, Extrinsic } from '../types'
+import { AnyCall, DispatchedCallData } from './types'
 
 import { SubstrateExtrinsic } from "@subql/types";
-import { checkIfExtrinsicExecuteSuccess, Dispatcher, getBatchInterruptedIndex, getKVData } from './utils';
+import { Dispatcher, getBatchInterruptedIndex, getKVData } from './utils';
 import { createTranserInBalances, createTransferInCurrencies } from './transfer';
 
 const dispatcher = new Dispatcher<DispatchedCallData>()
@@ -13,12 +13,9 @@ dispatcher.batchRegist([
   { key: 'balances-transferKeepAlive', handler: createTranserInBalances },
 ])
 
-async function traverExtrinsic(extrinsic: SubstrateExtrinsic): Promise<Call[]> {
+async function traverExtrinsic(extrinsic: Extrinsic, raw: SubstrateExtrinsic): Promise<Call[]> {
   const list = []
-  const signer = extrinsic.extrinsic.signer.toString()
-  const timestamp = extrinsic.block.timestamp
-  const isSuccess = checkIfExtrinsicExecuteSuccess(extrinsic)
-  const batchInterruptedIndex = getBatchInterruptedIndex(extrinsic)
+  const batchInterruptedIndex = getBatchInterruptedIndex(raw)
 
   const inner = async (
     data: AnyCall,
@@ -33,12 +30,13 @@ async function traverExtrinsic(extrinsic: SubstrateExtrinsic): Promise<Call[]> {
     const args = data.args
 
     const call = new Call(id)
+
     call.method = method
     call.section = section
     call.args = getKVData(data.args, data.argsDef)
-    call.signerId = signer
-    call.isSuccess = depth === 0 ? isSuccess : batchInterruptedIndex > idx;
-    call.timestamp = timestamp
+    call.signerId = extrinsic.signerId
+    call.isSuccess = depth === 0 ? extrinsic.isSuccess : batchInterruptedIndex > idx;
+    call.timestamp = extrinsic.timestamp
 
     if (!isRoot) {
       call.parentCallId = isRoot ? '' : parentCallId
@@ -50,10 +48,10 @@ async function traverExtrinsic(extrinsic: SubstrateExtrinsic): Promise<Call[]> {
 
     list.push(call)
 
-    // await dispatcher.dispatch(
-    //   `${call.section}-${call.method}`,
-    //   { id: call.id, call: data, extrinsic: extrinsic, isSuccess: call.isSuccess }
-    // )
+    await dispatcher.dispatch(
+      `${call.section}-${call.method}`,
+      { call, extrinsic, rawCall: data, rawExtrinsic: raw }
+    )
 
     if (depth < 1 && section === 'utility' && (method === 'batch' || method === 'batchAll')) {
       const temp = args[0] as unknown as Vec<AnyCall>
@@ -62,14 +60,14 @@ async function traverExtrinsic(extrinsic: SubstrateExtrinsic): Promise<Call[]> {
     } 
   }
 
-  await inner(extrinsic.extrinsic.method, extrinsic.extrinsic.hash.toString(), 0, true, 0)
+  await inner(raw.extrinsic.method, extrinsic.id, 0, true, 0)
 
   return list
 }
 
-export async function createCalls (extrinsic: SubstrateExtrinsic) {
+export async function createCalls (extrinsic: Extrinsic, raw: SubstrateExtrinsic) {
 
-    const calls = await traverExtrinsic(extrinsic)
+    const calls = await traverExtrinsic(extrinsic, raw)
 
     await Promise.all(calls.map(async (item) => item.save()));
 }
