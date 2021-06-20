@@ -41,21 +41,8 @@ type Extrinsic @entity {
   isSuccess: Boolean
 
   block: Block
-
   events: [Event] @derivedFrom(field: "extrinsic")
   calls: [Call] @derivedFrom(field: "extrinsic")
-}
-
-type Event @entity {
-  id: ID!
-
-  index: Int
-  section: String
-  method: String
-  data: [KVData]
-
-  block: Block
-  extrinsic: Extrinsic
 }
 
 type Call @entity {
@@ -74,6 +61,18 @@ type Call @entity {
   calls: [Call] @derivedFrom(field: "parentCall")
 }
 
+type Event @entity {
+  id: ID!
+
+  index: Int
+  section: String
+  method: String
+  data: [KVData]
+
+  block: Block
+  extrinsic: Extrinsic
+}
+
 type Account @entity {
   id: ID!
 
@@ -87,42 +86,12 @@ type Account @entity {
   position: [LoanPosition] @derivedFrom(field: "account")
 }
 
-type Price @entity {
-  id: ID!
-
-  price: String
-  token: String
-
-  createAtBlockNumber: BigInt
-}
-
 type Token @entity {
   id: ID!
 
   symbol: String
   decimal: Int
-}
-
-type Asset @entity {
-  id: ID!
-
-  token: Token
-  account: Account
-
-  free: String
-  frozen: String
-  reserved: String
-
-  total: String
-  totalInUSD: String
-}
-
-type AccountAssetDayData @entity {
-  id: ID!
-
-  account: Account
-  totalInUSD: String
-  timestamp: Date
+  isDexShare: Boolean
 }
 
 type OracleFeedRecord @entity {
@@ -135,18 +104,6 @@ type OracleFeedRecord @entity {
   feedPrice: String
 
   updateAtBlock: Block
-}
-
-type OracleFeedHourData @entity {
-  id: ID!
-
-  token: Token
-  account: Account
-  provider: String
-
-  averagePrice: String
-
-  timestamp: Date
 }
 
 type Transfer @entity {
@@ -163,18 +120,6 @@ type Transfer @entity {
   timestamp: Date
   isSuccess: Boolean
 }
-
-#
-#type LoanDayData @entity {
-#  id: ID!
-#
-#  token: String!
-#  timestamp: Date!
-#
-#  collateral: BigInt!
-#  debit: BigInt!
-#}
-#
 
 type LoanPosition @entity {
   id: ID!
@@ -195,88 +140,21 @@ type LoanAction @entity {
   debit: BigInt
   exchangeRate: BigInt
 
-  extrinsic: Extrinsic #create relation to extrinsic
-  call: Call #create relation to call
+  extrinsic: Extrinsic
+  call: Call
   timestamp: Date
   isSuccess: Boolean
 }
 
-#type Pair @entity {
-#  id: ID!
-#
-#  token0: String!
-#  token1: String!
-#  totalSupply: BigInt!
-#
-#  token0Volume: BigInt!
-#  token1Volume: BigInt!
-#
-#  token0USD: BigInt!
-#  token1USD: BigInt!
-#
-#  token0Price: BigInt!
-#  token1Price: BigInt!
-#
-#  txCount: BigInt!
-#}
-#
-#type SwapAction @entity {
-#  id: ID!
-#  isBatch: Int!
-#  isSudo: Int!
-#  isSuccess: Int!
-#
-#  block: String!
-#  extrinsicHash: String!
-#  timestamp: Date!
-#
-#  account: String!
-#  type: String!
-#  path: String!
-#  token0: String!
-#  token1: String!
-#  token0Input: String!
-#  token1Input: String!
-#  result: String!
-#}
-#
-#type AddLiquidityHistory @entity {
-#  id: ID!
-#  isBatch: Int!
-#  isSudo: Int!
-#  isSuccess: Int!
-#
-#  block: String!
-#  extrinsicHash: String!
-#  timestamp: Date!
-#
-#  account: String!
-#  token0: String!
-#  token1: String!
-#
-#  token0Input: BigInt!
-#  token1Input: BigInt!
-#
-#  token0Amount: BigInt!
-#  token1Amount: BigInt!
-#  receivedShare: BigInt!
-#}
-#
-#type RemoveLiquidityHistoryEntity @entity {
-#  id: ID!
-#  isBatch: Int!
-#  isSudo: Int!
-#  isSuccess: Int!
-#
-#  block: String!
-#  timestamp: Date!
-#
-#  account: String!
-#  token0: String!
-#  token1: String!
-#  removedShare: BigInt!
-#
-#  token0Amount: BigInt!
-#  token1Amount: BigInt!
-#}
-#
+type DexAction @entity {
+  id: ID!
+
+  account: Account
+
+  type: String
+  subType: String
+  data: [KVData]
+
+  extrinsic: Extrinsic
+  timestamp: Date
+}

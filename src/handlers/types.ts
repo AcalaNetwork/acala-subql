@@ -24,4 +24,4 @@ export type DispatchedEventData = {
 
 export type EventDispatcher = Dispatcher<DispatchedEventData>
 
-export type EventHander = (data: DispatchedEventData) => Promise<any>
+export type EventHandler = (data: DispatchedEventData) => Promise<any>

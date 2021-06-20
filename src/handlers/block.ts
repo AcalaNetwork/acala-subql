@@ -1,7 +1,6 @@
 import { SubstrateBlock, SubstrateExtrinsic } from '@subql/types'
 import { getBlockTimestamp } from './utils/getBlockTimestamp'
 import { Block } from '../types'
-import { initPrices } from './price'
 import { initSystemConsts } from './system'
 import { initSystemTokens } from './tokens'
 
@@ -21,7 +20,8 @@ export async function ensureBlock (block: SubstrateBlock) {
   return data
 }
 
-export async function createBlock (block: SubstrateBlock) {
+export async function createBlock (origin: SubstrateBlock) {
+  // when the program start, initialize the tokens information and system consts
   if (isFirstSync) {
     await initSystemTokens()
     await initSystemConsts()
@@ -29,26 +29,23 @@ export async function createBlock (block: SubstrateBlock) {
     isFirstSync = false
   }
 
-  const data = await ensureBlock(block)
+  const block = await ensureBlock(origin)
 
-  const blockNumber = block.block.header.number.toBigInt() || BigInt(0)
-  const parentHash = block.block.header.parentHash.toString()
-  const stateRoot = block.block.header.stateRoot.toString()
-  const specVersion = block.specVersion.toString()
-  const extrinsicsRoot = block.block.header.extrinsicsRoot.toString()
-  const timestamp = getBlockTimestamp(block.block)
+  const blockNumber = origin.block.header.number.toBigInt() || BigInt(0)
+  const parentHash = origin.block.header.parentHash.toString()
+  const stateRoot = origin.block.header.stateRoot.toString()
+  const specVersion = origin.specVersion.toString()
+  const extrinsicsRoot = origin.block.header.extrinsicsRoot.toString()
+  const timestamp = getBlockTimestamp(origin.block)
 
-  data.number = blockNumber
-  data.parentHash = parentHash
-  data.stateRoot = stateRoot
-  data.extrinsicRoot = extrinsicsRoot
-  data.specVersion = specVersion
-  data.timestamp = timestamp
+  block.number = blockNumber
+  block.parentHash = parentHash
+  block.stateRoot = stateRoot
+  block.extrinsicRoot = extrinsicsRoot
+  block.specVersion = specVersion
+  block.timestamp = timestamp
 
-  // get prices data in every block
-  await initPrices()
+  await block.save()
 
-  await data.save()
-
-  return data
+  return block
 }

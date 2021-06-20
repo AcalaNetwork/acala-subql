@@ -1,19 +1,21 @@
-import { Call, Transfer } from "../types"
+import { forceToCurrencyIdName } from "@acala-network/sdk-core"
+import { CurrencyId } from "@acala-network/types/interfaces"
+import { Transfer } from "../types"
 import { ensureAccount } from "./account"
-import { updateAccountAsset } from "./asset"
 import { ensureCallExist } from "./call"
-import { ensuerExtrinsic } from "./extrinsic"
-import { getToken, getNativeToken } from "./tokens"
+import { getNativeToken, getToken } from "./tokens"
 import { DispatchedCallData } from "./types"
-import { getTokenName } from "./utils/token"
 
 export async function createTransferInCurrencies ({ call, extrinsic, rawCall }: DispatchedCallData) {
     const args = rawCall.args
 
     await ensureCallExist(call.id)
-    const token = await getToken(getTokenName(args[1]))
+
+    const currencyId = args[1] as CurrencyId;
+
     const to = await ensureAccount(args[0].toString())
     const from = await ensureAccount(extrinsic.signerId)
+    const token = await getToken(currencyId);
 
     const amount = (args[2] as any).toString()
     const extrinsicHash = extrinsic.id
@@ -28,8 +30,6 @@ export async function createTransferInCurrencies ({ call, extrinsic, rawCall }: 
     transfer.extrinsicId = extrinsicHash
     transfer.callId = call.id
 
-    await updateAccountAsset(from.id, token.symbol, transfer.timestamp.getTime());
-    await updateAccountAsset(to.id, token.symbol, transfer.timestamp.getTime());
     await transfer.save()
 }
 
@@ -37,6 +37,7 @@ export async function createTranserInBalances({ call, extrinsic, rawCall }: Disp
     const args = rawCall.args
 
     await ensureCallExist(call.id)
+
     const token = await getNativeToken()
     const to = await ensureAccount(args[0].toString())
     const from = await ensureAccount(extrinsic.signerId)
@@ -54,7 +55,5 @@ export async function createTranserInBalances({ call, extrinsic, rawCall }: Disp
     transfer.extrinsicId = extrinsicHash
     transfer.callId = call.id
 
-    await updateAccountAsset(from.id, token.symbol, transfer.timestamp.getTime());
-    await updateAccountAsset(to.id, token.symbol, transfer.timestamp.getTime());
     await transfer.save()
 }

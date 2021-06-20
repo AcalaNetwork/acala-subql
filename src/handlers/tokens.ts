@@ -1,4 +1,4 @@
-import { Token as SDKToken, TokenPair } from "@acala-network/sdk-core"
+import { Token as SDKToken, getLPCurrenciesFormName, isDexShare, forceToCurrencyIdName, MaybeCurrency, TokenPair } from "@acala-network/sdk-core"
 import { SystemConsts } from "../types"
 import { Token } from "../types"
 import { getChainName } from "./system"
@@ -23,32 +23,52 @@ import { getTokenName } from "./utils/token"
 		// Reserve for RENBTC = 132
 	}
  */
+let tokenDecimalMap: Map<string, number>;
+let systemTokens: Map<string, string>;
 
-export async function getToken(symbol: string) {
-    const token = await Token.get(symbol)
+function getDecimal (token: string) {
+    return tokenDecimalMap.get(token) || 10;
+}
+
+// get token info include 
+export async function getToken(currency: MaybeCurrency) {
+    const tokenName = forceToCurrencyIdName(currency);
+
+    const token = await Token.get(tokenName)
 
     if (token) return token
 
-    const temp = new Token(symbol)
+    // create token if the token doesn't exits
+    const temp = new Token(tokenName)
 
-    const tokens = api.registry.chainTokens
-    const decimals = api.registry.chainDecimals
-    const isDexShare = symbol.includes('-')
+    // build the token decimal map
+    if (!tokenDecimalMap) {
+        const tokens = api.registry.chainTokens
+        const decimals = api.registry.chainDecimals
+
+        tokenDecimalMap = new Map<string, number>(
+            tokens.map((item, index) => [item, decimals[index]])
+        )
+    }
 
     let decimal = 10
 
-    if (isDexShare) {
-        const [token0, token1] = symbol.split('-')
-        const decimal0 = decimals[tokens.findIndex(item => item === token0)]
-        const decimal1 = decimals[tokens.findIndex(item => item === token1)]
+    // TODO: handle erc20
+    const isDexShareToken = isDexShare(tokenName);
+
+    if (isDexShareToken) {
+        const [token0, token1] = getLPCurrenciesFormName(tokenName);
+        const decimal0 = getDecimal(token0)
+        const decimal1 = getDecimal(token1)
 
         decimal = decimal0 > decimal1 ? decimal0 : decimal1
     } {
-        decimal = decimals[tokens.findIndex((item) => item === symbol)]
+        decimal = getDecimal(tokenName)
     }
 
     temp.decimal = decimal
-    temp.symbol = symbol
+    temp.symbol = tokenName
+    temp.isDexShare = isDexShareToken
 
     await temp.save()
 
@@ -58,6 +78,7 @@ export async function getToken(symbol: string) {
 export async function initSystemTokens () {
     const tokens = api.registry.chainTokens
 
+    // ensure that all basic tokens are created
     await Promise.all(tokens.map((symbol) => getToken(symbol)))
 }
 
@@ -106,7 +127,6 @@ export async function createLiquidPoolTokenPair (token: string) {
     const currentToken = await Token.get(token)
 
     if (!currentToken) return
-
 
     return new TokenPair(
         new SDKToken(stableToken.symbol, { decimal: stableToken.decimal}),

@@ -4,7 +4,7 @@ import { AnyCall, DispatchedCallData } from './types'
 
 import { SubstrateExtrinsic } from "@subql/types";
 import { Dispatcher, getBatchInterruptedIndex, getKVData } from './utils';
-import { createTranserInBalances, createTransferInCurrencies } from './transfer';
+import { createTranserInBalances, createTransferInCurrencies } from './transferHistory';
 
 const dispatcher = new Dispatcher<DispatchedCallData>()
 

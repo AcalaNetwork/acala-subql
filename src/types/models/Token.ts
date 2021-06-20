@@ -16,6 +16,8 @@ export class Token implements Entity {
 
     public decimal?: number;
 
+    public isDexShare?: boolean;
+
 
     async save(): Promise<void>{
         let id = this.id;

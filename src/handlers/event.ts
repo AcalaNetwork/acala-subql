@@ -4,14 +4,18 @@ import { ensureBlock } from './block'
 import { Event } from '../types'
 import { getKVData } from './utils'
 import { ensuerExtrinsic } from './extrinsic'
-import { handleBalanceUpdateEvent } from './asset'
 import { DispatchedEventData } from './types'
+import { createAddLiquidityHistory, createAddProvisionHistory, createRemoveLiquidityHistory, createSwapHistory } from './dexHistory'
 
 
 const dispatch = new Dispatcher<DispatchedEventData>()
 
 dispatch.batchRegist([
-  { key: 'currencies-BalanceUpdated', handler: handleBalanceUpdateEvent }
+  // handle dex event
+  { key: 'dex-Swap', handler: createSwapHistory },
+  { key: 'dex-AddProvision', handler: createAddProvisionHistory },
+  { key: 'dex-AddLiquidity', handler: createAddLiquidityHistory },
+  { key: 'dex-RemoveLiquidity', handler: createRemoveLiquidityHistory }
 ])
 
 export async function ensureEvnet (event: SubstrateEvent) {
