@@ -28,6 +28,7 @@
     "yaml": "^1.10.0"
   },
   "dependencies": {
-    "@acala-network/sdk-core": "^0.7.4-14"
+    "@acala-network/sdk-core": "^0.7.4-14",
+    "@open-web3/orml-types": "^0.9.3"
   }
 }

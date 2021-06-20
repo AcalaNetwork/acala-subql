@@ -6,16 +6,35 @@ import { getKVData } from './utils'
 import { ensuerExtrinsic } from './extrinsic'
 import { DispatchedEventData } from './types'
 import { createAddLiquidityHistory, createAddProvisionHistory, createRemoveLiquidityHistory, createSwapHistory } from './dexHistory'
+import { createConfiscateCollateralAndDebitHistory, createPositionUpdatedHistory, createTransferLoanHistory } from './loanHistory';
+import { createClaimRewards, createDepositDexShareHistory, createWithdrawDexShareHistory } from './incentiveHistory'
+import { createMintLiquidHistory, createRedeemByClaimUnbonding, createRedeemByFreeUnbonded, createRedeemByUnbondHistory } from './homaHistory'
 
 
 const dispatch = new Dispatcher<DispatchedEventData>()
 
 dispatch.batchRegist([
-  // handle dex event
+  // loan
+  { key: 'loans-PositionUpdated', handler: createPositionUpdatedHistory },
+  { key: 'loans-ConfiscateCollateralAndDebit', handler: createConfiscateCollateralAndDebitHistory },
+  { key: 'loans-transferLoan', handler: createTransferLoanHistory },
+
+  // dex
   { key: 'dex-Swap', handler: createSwapHistory },
   { key: 'dex-AddProvision', handler: createAddProvisionHistory },
   { key: 'dex-AddLiquidity', handler: createAddLiquidityHistory },
-  { key: 'dex-RemoveLiquidity', handler: createRemoveLiquidityHistory }
+  { key: 'dex-RemoveLiquidity', handler: createRemoveLiquidityHistory },
+
+  // incentive
+  { key: 'incentives-DepositDexShare', handler: createDepositDexShareHistory },
+  { key: 'incentives-WithdrawDexShare', handler: createWithdrawDexShareHistory },
+  { key: 'incentives-ClaimRewards', handler: createClaimRewards },
+
+  // homa
+  { key: 'stakingPool-MintLiquid', handler: createMintLiquidHistory },
+  { key: 'stakingPool-RedeemByUnbond', handler: createRedeemByUnbondHistory },
+  { key: 'stakingPool-RedeemByFreeUnbonded', handler: createRedeemByFreeUnbonded },
+  { key: 'stakingPool-RedeemByClaimUnbonding', handler: createRedeemByClaimUnbonding },
 ])
 
 export async function ensureEvnet (event: SubstrateEvent) {

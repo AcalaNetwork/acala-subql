@@ -26,3 +26,7 @@ export {LoanAction} from "./LoanAction"
 
 export {DexAction} from "./DexAction"
 
+export {IncentiveAction} from "./IncentiveAction"
+
+export {HomaAction} from "./HomaAction"
+

@@ -1202,10 +1202,22 @@
     memoizee "^0.4.15"
     rxjs "^6.6.6"
 
+"@open-web3/orml-type-definitions@0.9.3":
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-type-definitions/-/orml-type-definitions-0.9.3.tgz#6bf2ff02c108fa0b4416798f27449f14b16f420f"
+  integrity sha512-Sq88InH7Ca5XbPP2xIzXaZukw0lHG9prpK/y/UA51owscJYQr1y3f6+x8qSUVXMQwowajtODKVVZr4a9wBWi/w==
+
 "@open-web3/orml-type-definitions@0.9.4-9", "@open-web3/orml-type-definitions@^0.9.4-7":
   version "0.9.4-9"
   resolved "https://registry.yarnpkg.com/@open-web3/orml-type-definitions/-/orml-type-definitions-0.9.4-9.tgz#5c743de2626d393075b00d468ead0cbb3aff0d2f"
   integrity sha512-f0bxXnwjJFD6ldcZfiMjSOaHFRDy0ldG1KAwoa8w9WOcSlJD54oDA8rTlLaMsDRZr9N0gSR4Uf9fIdptWvqu4w==
+
+"@open-web3/orml-types@^0.9.3":
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.9.3.tgz#6da0e20cb44e86d7a51202aa8ab82d1742a86a44"
+  integrity sha512-nkIOEL0DfMBsFE5G72cScZnhCf9GsTeGpybPZUmy8rxIjHo1zQNbAD/iLh3V+2qwkR3PJYmxun+Q1GnCIEfF9w==
+  dependencies:
+    "@open-web3/orml-type-definitions" "0.9.3"
 
 "@open-web3/orml-types@^0.9.4-7":
   version "0.9.4-9"

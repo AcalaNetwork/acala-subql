@@ -135,18 +135,42 @@ type LoanAction @entity {
   id: ID!
 
   account: Account
-  token: Token
-  collateral: BigInt
-  debit: BigInt
-  exchangeRate: BigInt
+
+  type: String
+  subType: String
+  data: [KVData]
 
   extrinsic: Extrinsic
-  call: Call
   timestamp: Date
-  isSuccess: Boolean
 }
 
 type DexAction @entity {
+  id: ID!
+
+  account: Account
+
+  type: String
+  subType: String
+  data: [KVData]
+
+  extrinsic: Extrinsic
+  timestamp: Date
+}
+
+type IncentiveAction @entity {
+  id: ID!
+
+  account: Account
+
+  type: String
+  subType: String
+  data: [KVData]
+
+  extrinsic: Extrinsic
+  timestamp: Date
+}
+
+type HomaAction @entity {
   id: ID!
 
   account: Account
