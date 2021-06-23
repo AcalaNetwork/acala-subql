@@ -21,15 +21,18 @@ export async function initSystemConsts () {
     const nativeToken = getConsts<CurrencyId>('transactionPayment.nativeCurrencyId');
     const stableToken =  getConsts<CurrencyId>('transactionPayment.stableCurrencyId');
 
-    const liquidTokenId = liquidToken.asToken.toString()
-    const stakingTokenId = stakingToken.asToken.toString()
-    const nativeTokenId = nativeToken.asToken.toString()
-    const stableTokenId = stableToken.asToken.toString()
+    const liquidTokenId = liquidToken?.asToken.toString()
+    const stakingTokenId = stakingToken?.asToken.toString()
+    const nativeTokenId = nativeToken?.asToken.toString()
+    const stableTokenId = stableToken?.asToken.toString()
 
-    await getToken(liquidTokenId)
-    await getToken(stakingTokenId)
     await getToken(stableTokenId)
     await getToken(nativeTokenId)
+
+    if (stakingToken && liquidToken) {
+        await getToken(liquidTokenId)
+        await getToken(stakingTokenId)
+    }
 
     const temp = new SystemConsts(chainName)
 
