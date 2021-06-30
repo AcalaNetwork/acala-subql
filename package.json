@@ -19,7 +19,7 @@
   "author": "qwer951123",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@acala-network/types": "^0.7.4-14",
+    "@acala-network/types": "^1.0.2-0",
     "@polkadot/api": "^4.11.2",
     "@subql/cli": "^0.9.3",
     "@subql/node": "^0.15.1",
@@ -28,7 +28,7 @@
     "yaml": "^1.10.0"
   },
   "dependencies": {
-    "@acala-network/sdk-core": "^0.7.4-14",
+    "@acala-network/sdk-core": "^1.0.2-0",
     "@open-web3/orml-types": "^0.9.3"
   }
 }
