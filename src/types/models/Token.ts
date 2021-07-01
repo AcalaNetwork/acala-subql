@@ -1,9 +1,7 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 // Auto-generated , DO NOT EDIT
 import {Entity} from "@subql/types";
 import assert from 'assert';
+
 
 export class Token implements Entity {
 
@@ -14,9 +12,11 @@ export class Token implements Entity {
 
     public id: string;
 
+    public symbol?: string;
+
     public decimal?: number;
 
-    public name?: string;
+    public isDexShare?: boolean;
 
 
     async save(): Promise<void>{
@@ -29,8 +29,8 @@ export class Token implements Entity {
         await store.remove('Token', id.toString());
     }
 
-    static async get(id:string): Promise<Token>{
-        assert(id !== null, "Cannot get Token entity without an ID");
+    static async get(id:string): Promise<Token | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get Token entity without an ID");
         const record = await store.get('Token', id.toString());
         if (record){
             return Token.create(record);
@@ -38,6 +38,8 @@ export class Token implements Entity {
             return;
         }
     }
+
+
 
     static create(record){
         let entity = new Token(record.id);

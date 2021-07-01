@@ -1,4 +1,3 @@
-import { ApiPromise } from '@polkadot/api';
 import { Block } from '@polkadot/types/interfaces/runtime';
 
 export const getBlockTimestamp = (block: Block): Date => {
@@ -8,9 +7,7 @@ export const getBlockTimestamp = (block: Block): Date => {
     })
 
     if (extrinsicForSetTimestamp) {
-        return new Date(
-            Number(extrinsicForSetTimestamp?.args?.[0].toString())
-        )
+        return new Date(Number(extrinsicForSetTimestamp?.args?.[0].toString()))
     }
 
     return new Date()

@@ -1,100 +1,49 @@
+import { checkIfExtrinsicExecuteSuccess, getKVData } from './utils'
 import { SubstrateExtrinsic } from '@subql/types'
-import { checkIfExtrinsicExecuteSuccess, getBatchInterruptedIndex } from '../helpers'
-import { Extrinsic } from '../types/models/Extrinsic'
-import { BlockHandler } from './block'
-import { CallHandler } from './call'
-import { AccountHandler } from './sub-handlers/account'
+import { Extrinsic } from '../types'
+import { ensureAccount } from './account'
+import { ensureBlock } from './block'
+import { createCalls } from './call'
 
-export class ExtrinsicHandler {
-  private extrinsic: SubstrateExtrinsic
+export async function ensuerExtrinsic (extrinsic: SubstrateExtrinsic) {
+  const recordId = extrinsic.extrinsic.hash.toString()
 
-  static async ensureExtrinsic(id: string): Promise<void> {
-    const extrinsic = await Extrinsic.get(id)
-  
-    if (!extrinsic) {
-      await new Extrinsic(id).save()
-    }
+  let data = await Extrinsic.get(recordId)
+
+  if (!data) {
+    data = new Extrinsic(recordId)
+
+    await data.save()
   }
 
-  constructor(extrinsic: SubstrateExtrinsic) {
-    this.extrinsic = extrinsic
-  }
+  return data
+}
 
-  get id(): string {
-    return this.extrinsic?.extrinsic?.hash?.toString()
-  }
+export async function createExtrinsic (extrinsic: SubstrateExtrinsic) {
+  const signerAccount = extrinsic.extrinsic.signer.toString()
 
-  get method(): string {
-    return this.extrinsic.extrinsic.method.method
-  }
+  const data = await ensuerExtrinsic(extrinsic)
+  const block = await ensureBlock(extrinsic.block)
+  const signer = await ensureAccount(signerAccount)
 
-  get section(): string {
-    return this.extrinsic.extrinsic.method.section
-  }
+  data.method = extrinsic.extrinsic.method.method 
+  data.section = extrinsic.extrinsic.method.section
 
-  get args(): string {
-    return this.extrinsic?.extrinsic?.args?.toString()
-  }
+  data.args = getKVData(extrinsic.extrinsic.args, extrinsic.extrinsic.argsDef)
+  data.signerId = signer.id
+  data.nonce = extrinsic.extrinsic.nonce.toBigInt() || BigInt(0)
+  data.isSigned = extrinsic.extrinsic.isSigned
+  data.timestamp = extrinsic.block.timestamp
+  data.signature = extrinsic.extrinsic.signature?.toString()
+  data.tip = extrinsic.extrinsic.tip?.toString()
+  data.isSuccess = checkIfExtrinsicExecuteSuccess(extrinsic)
 
-  get signer(): string {
-    return this.extrinsic?.extrinsic?.signer?.toString()
-  }
+  data.blockId = block.id
 
-  get nonce(): bigint {
-    return this.extrinsic?.extrinsic?.nonce?.toBigInt() || BigInt(0)
-  }
+  await data.save()
 
-  get timestamp(): Date {
-    return this.extrinsic.block.timestamp
-  }
+  // divide the extrinsic into subcalls
+  await createCalls(data, extrinsic)
 
-  get blockHash(): string {
-    return this.extrinsic?.block?.block?.hash?.toString()
-  }
-
-  get isSigned(): boolean {
-    return this.extrinsic.extrinsic.isSigned
-  }
-
-  get signature(): string {
-    return this.extrinsic.extrinsic.signature.toString()
-  }
-
-  get tip(): bigint {
-    return this.extrinsic.extrinsic.tip.toBigInt() || BigInt(0)
-  }
-
-  get isSuccess(): boolean {
-    return checkIfExtrinsicExecuteSuccess(this.extrinsic)
-  }
-
-  get batchInterruptedIndex(): number {
-    return getBatchInterruptedIndex(this.extrinsic)
-  }
-
-  public async save () {
-    const record = new Extrinsic(this.id)
-
-    await BlockHandler.ensureBlock(this.blockHash)
-    await AccountHandler.ensureAccount(this.signer)
-
-    record.method = this.method
-    record.section = this.section
-    record.args = this.args
-    record.signerId = this.signer
-    record.nonce = this.nonce
-    record.isSigned = this.isSigned
-    record.timestamp = this.timestamp
-    record.signature = this.signature
-    record.tip = this.tip
-    record.isSuccess = this.isSuccess
-    record.blockId = this.blockHash
-
-    await record.save()
-
-    // handle calls
-    const calls = new CallHandler(this.extrinsic)
-
-    await calls.save()
-  }
+  return data
 }

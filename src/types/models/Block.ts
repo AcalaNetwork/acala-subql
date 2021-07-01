@@ -1,9 +1,7 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 // Auto-generated , DO NOT EDIT
 import {Entity} from "@subql/types";
 import assert from 'assert';
+
 
 export class Block implements Entity {
 
@@ -20,7 +18,11 @@ export class Block implements Entity {
 
     public parentHash?: string;
 
-    public specVersion?: number;
+    public specVersion?: string;
+
+    public stateRoot?: string;
+
+    public extrinsicRoot?: string;
 
 
     async save(): Promise<void>{
@@ -33,8 +35,8 @@ export class Block implements Entity {
         await store.remove('Block', id.toString());
     }
 
-    static async get(id:string): Promise<Block>{
-        assert(id !== null, "Cannot get Block entity without an ID");
+    static async get(id:string): Promise<Block | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get Block entity without an ID");
         const record = await store.get('Block', id.toString());
         if (record){
             return Block.create(record);
@@ -42,6 +44,8 @@ export class Block implements Entity {
             return;
         }
     }
+
+
 
     static create(record){
         let entity = new Block(record.id);
