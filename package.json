@@ -20,10 +20,10 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@acala-network/types": "^2.0.2",
-    "@polkadot/api": "^4.11.2",
+    "@polkadot/api": "^5.2.1",
     "@subql/cli": "^0.9.3",
-    "@subql/node": "^0.15.1",
-    "@subql/types": "^0.7.1",
+    "@subql/node": "^0.19.1",
+    "@subql/types": "^0.8.0",
     "typescript": "^4.1.3",
     "yaml": "^1.10.0"
   },

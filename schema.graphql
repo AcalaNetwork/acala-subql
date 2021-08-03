@@ -100,9 +100,7 @@ type Balance @entity {
   account: Account
   token: Token
 
-  freeBalance: String
-  tranfserable: String
-  locked: String
+  balance: String
 }
 
 type TotalBalance @entity {
@@ -110,9 +108,7 @@ type TotalBalance @entity {
 
   token: Token
 
-  freeBalance: String
-  transferable: String
-  locked: String
+  balance: String
 }
 
 type BalanceChangedRecord @entity {

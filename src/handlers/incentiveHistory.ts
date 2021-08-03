@@ -2,8 +2,6 @@ import {  EventHandler } from "./types";
 import { IncentiveAction } from "../types/models";
 import { ensureAccount } from "./account";
 import { mapUpdateKVData } from "./utils/updateKVData";
-import { Balance, Share } from "@acala-network/types/interfaces";
-import { PoolInfo } from "@open-web3/orml-types/interfaces";
 
 export const createDepositDexShareHistory: EventHandler =  async ({ event, rawEvent }) => {
   const record = new IncentiveAction(event.id);

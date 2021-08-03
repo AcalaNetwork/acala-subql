@@ -1,8 +1,6 @@
 import {  EventHandler } from "./types";
 import { ensureAccount } from "./account";
 import { mapUpdateKVData } from "./utils/updateKVData";
-import { Balance, Share } from "@acala-network/types/interfaces";
-import { PoolInfo } from "@open-web3/orml-types/interfaces";
 import { HomaAction } from "../types/models";
 
 export const createMintLiquidHistory: EventHandler =  async ({ event, rawEvent }) => {
