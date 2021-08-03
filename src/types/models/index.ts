@@ -16,9 +16,19 @@ export {Account} from "./Account"
 
 export {Token} from "./Token"
 
+export {Balance} from "./Balance"
+
+export {TotalBalance} from "./TotalBalance"
+
+export {BalanceChangedRecord} from "./BalanceChangedRecord"
+
+export {TotalBalanceChangedRecord} from "./TotalBalanceChangedRecord"
+
 export {OracleFeedRecord} from "./OracleFeedRecord"
 
 export {Transfer} from "./Transfer"
+
+export {LoanParams} from "./LoanParams"
 
 export {LoanPosition} from "./LoanPosition"
 

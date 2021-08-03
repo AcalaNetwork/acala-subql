@@ -3,7 +3,7 @@ description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: wss://acala-testnet-1.polkawallet.io:9904
+  endpoint: wss://kusama-1.polkawallet.io:9944
   types:
     CallOf: Call
     DispatchTime:
@@ -23,11 +23,7 @@ network:
     StorageKeyBytes: Vec<u8>
     StorageValueBytes: Vec<u8>
     RpcDataProviderId: Text
-    DataProviderId:
-      _enum:
-        - Aggregated
-        - Acala
-        - Band
+    DataProviderId: u8
     TimestampedValue:
       value: OracleValue
       timestamp: Moment
@@ -129,7 +125,6 @@ network:
     EvmAccountInfo:
       nonce: Index
       contractInfo: Option<EvmContractInfo>
-      developerDeposit: Option<Balance>
     CodeInfo:
       codeSize: u32
       refCount: u32
@@ -172,29 +167,36 @@ network:
       collateral: Balance
       debit: Balance
     CID: Vec<u8>
-    ClassId: u32
-    ClassIdOf: ClassId
-    TokenId: u64
-    TokenIdOf: TokenId
-    ClassInfoOf:
-      metadata: CID
-      totalIssuance: TokenId
-      owner: AccountId
-      data: ClassData
+    Attributes: BTreeMap<Vec<u8>, Vec<u8>>
     TokenInfoOf:
       metadata: CID
       owner: AccountId
       data: TokenData
-    ClassData:
-      deposit: Balance
-      properties: Properties
-    TokenData:
-      deposit: Balance
     Properties:
       _set:
         _bitLength: 8
         Transferable: 1
         Burnable: 2
+        Mintable: 4
+        ClassPropertiesMutable: 8
+    ClassData:
+      deposit: Balance
+      properties: Properties
+      attributes: Attributes
+    TokenData:
+      deposit: Balance
+      attributes: Attributes
+    TokenId: u64
+    TokenIdOf: TokenId
+    NFTClassId: u32
+    ClassIdOf: ClassId
+    NFTBalance: u128
+    NFTBalanceOf: NFTBalance
+    ClassInfoOf:
+      metadata: CID
+      totalIssuance: TokenId
+      owner: AccountId
+      data: ClassData
     NomineeId: AccountId
     HomaUnlockChunk:
       value: Balance
@@ -218,6 +220,7 @@ network:
         KUSD: 129
         KSM: 130
         LKSM: 131
+        CASH: 140
     DexShare:
       _enum:
         Token: TokenSymbol
@@ -236,12 +239,16 @@ network:
     AuthoritysOriginId:
       _enum:
         - Root
-        - AcalaTreasury
+        - Treasury
         - HonzonTreasury
         - HomaTreasury
-        - DSWF
+        - TreasuryReserve
+    AcalaDataProviderId:
+      _enum:
+        - Aggregated
+        - Acala
+        - Band
     TradingPair: (CurrencyId,  CurrencyId)
-    NFTBalance: u128
     OracleKey: CurrencyId
     AsOriginId: AuthoritysOriginId
     SubAccountStatus:
@@ -287,70 +294,11 @@ network:
     ResourceId: "[u8; 32]"
     ChainId: u8
     Keys: SessionKeys1
-    PalletsOrigin:
-      _enum:
-        System: SystemOrigin
-        Timestamp: "Null"
-        RandomnessCollectiveFlip: "Null"
-        Balances: "Null"
-        Accounts: "Null"
-        Currencies: "Null"
-        Tokens: "Null"
-        Vesting: "Null"
-        AcalaTreasury: "Null"
-        Utility: "Null"
-        Multisig: "Null"
-        Recovery: "Null"
-        Proxy: "Null"
-        Scheduler: "Null"
-        Indices: "Null"
-        GraduallyUpdate: "Null"
-        Authorship: "Null"
-        Babe: "Null"
-        Grandpa: "Null"
-        Staking: "Null"
-        Session: "Null"
-        Historical: "Null"
-        GeneralCouncil: CollectiveOrigin
-        GeneralCouncilMembership: "Null"
-        HonzonCouncil: CollectiveOrigin
-        HonzonCouncilMembership: "Null"
-        HomaCouncil: CollectiveOrigin
-        HomaCouncilMembership: "Null"
-        TechnicalCommittee: CollectiveOrigin
-        TechnicalCommitteeMembership: "Null"
-        Authority: DelayedOrigin
-        ElectionsPhragmen: "Null"
-        AcalaOracle: "Null"
-        BandOracle: "Null"
-        OperatorMembershipAcala: "Null"
-        OperatorMembershipBand: "Null"
-        Auction: "Null"
-        Rewards: "Null"
-        OrmlNFT: "Null"
-        Prices: "Null"
-        Dex: "Null"
-        AuctionManager: "Null"
-        Loans: "Null"
-        Honzon: "Null"
-        CdpTreasury: "Null"
-        CdpEngine: "Null"
-        EmergencyShutdown: "Null"
-        Homa: "Null"
-        NomineesElection: "Null"
-        StakingPool: "Null"
-        PolkadotBridge: "Null"
-        Incentives: "Null"
-        AirDrop: "Null"
-        NFT: "Null"
-        RenVmBridge: "Null"
-        Contracts: "Null"
-        EVM: "Null"
-        Sudo: "Null"
-        TransactionPayment: "Null"
   typesAlias:
     stakingPool:
       Phase: StakingPoolPhase
+    oracle:
+      DataProviderId: AcalaDataProviderId
     nomineesElection:
       UnlockChunk: HomaUnlockChunk
     evm:

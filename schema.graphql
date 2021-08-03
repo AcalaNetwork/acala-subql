@@ -94,6 +94,55 @@ type Token @entity {
   isDexShare: Boolean
 }
 
+type Balance @entity {
+  id: ID!
+
+  account: Account
+  token: Token
+
+  freeBalance: String
+  tranfserable: String
+  locked: String
+}
+
+type TotalBalance @entity {
+  id: ID!
+
+  token: Token
+
+  freeBalance: String
+  transferable: String
+  locked: String
+}
+
+type BalanceChangedRecord @entity {
+  id: ID!
+
+  account: Account
+  token: Token
+
+  changed: String
+  total: String
+
+  timestamp: Date
+  blockNumber: BigInt
+  block: Block
+}
+
+type TotalBalanceChangedRecord @entity {
+  id: ID!
+
+  token: Token
+
+  changed: String
+  total: String
+
+  timestamp: Date
+  blockNumber: BigInt
+  block: Block
+}
+
+
 type OracleFeedRecord @entity {
   id: ID!
 
@@ -121,14 +170,19 @@ type Transfer @entity {
   isSuccess: Boolean
 }
 
+type LoanParams @entity {
+  id: ID!
+  debitExchangeRate: String
+}
+
 type LoanPosition @entity {
   id: ID!
 
   account: Account
   token: Token
 
-  debit: BigInt
-  collateral: BigInt
+  debit:String 
+  collateral: String 
 }
 
 type LoanAction @entity {

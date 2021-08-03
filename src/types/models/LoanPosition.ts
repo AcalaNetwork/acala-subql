@@ -16,9 +16,9 @@ export class LoanPosition implements Entity {
 
     public tokenId?: string;
 
-    public debit?: bigint;
+    public debit?: string;
 
-    public collateral?: bigint;
+    public collateral?: string;
 
 
     async save(): Promise<void>{
