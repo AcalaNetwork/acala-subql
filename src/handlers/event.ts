@@ -1,7 +1,7 @@
 import { SubstrateEvent } from '@subql/types'
 import { Dispatcher } from './utils/dispatcher'
 import { ensureBlock } from './block'
-import { Event } from '../types'
+import { Event } from '../types/models/Event'
 import { getKVData } from './utils'
 import { ensuerExtrinsic } from './extrinsic'
 import { DispatchedEventData } from './types'
@@ -9,6 +9,7 @@ import { createAddLiquidityHistory, createAddProvisionHistory, createRemoveLiqui
 import { createConfiscateCollateralAndDebitHistory, createPositionUpdatedHistory, createTransferLoanHistory } from './loanHistory';
 import { createClaimRewards, createDepositDexShareHistory, createWithdrawDexShareHistory } from './incentiveHistory'
 import { createMintLiquidHistory, createRedeemByClaimUnbonding, createRedeemByFreeUnbonded, createRedeemByUnbondHistory } from './homaHistory'
+import { updateLoanPosition, updateTotalLoanPosition } from './loanPosition'
 
 
 const dispatch = new Dispatcher<DispatchedEventData>()
@@ -16,6 +17,8 @@ const dispatch = new Dispatcher<DispatchedEventData>()
 dispatch.batchRegist([
   // loan
   { key: 'loans-PositionUpdated', handler: createPositionUpdatedHistory },
+  { key: 'loans-PositionUpdated', handler: updateLoanPosition },
+  { key: 'loans-PositionUpdated', handler: updateTotalLoanPosition },
   { key: 'loans-ConfiscateCollateralAndDebit', handler: createConfiscateCollateralAndDebitHistory },
   { key: 'loans-transferLoan', handler: createTransferLoanHistory },
 

@@ -1,6 +1,6 @@
-import { SubstrateBlock, SubstrateExtrinsic } from '@subql/types'
+import { SubstrateBlock } from '@subql/types'
 import { getBlockTimestamp } from './utils/getBlockTimestamp'
-import { Block } from '../types'
+import { Block } from '../types/models/Block'
 import { initSystemConsts } from './system'
 import { initSystemTokens } from './tokens'
 

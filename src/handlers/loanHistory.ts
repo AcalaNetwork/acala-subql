@@ -1,7 +1,9 @@
 import {  EventHandler } from "./types";
-import { LoanAction, Account } from "../types/models";
+import { LoanAction } from "../types/models/LoanAction";
+import { Account } from "../types/models/Account";
 import { ensureAccount } from "./account";
 import { mapUpdateKVData } from "./utils/updateKVData";
+import { OptionRate } from "@acala-network/types/interfaces";
 
 export const createPositionUpdatedHistory: EventHandler =  async ({ event, rawEvent }) => {
   const record = new LoanAction(event.id);
@@ -33,12 +35,12 @@ export const createPositionUpdatedHistory: EventHandler =  async ({ event, rawEv
 
     // save the debit exchange rate
     if (collateral) {
-      const dexbitExchangeRate = await (api.query.cdpEngine.debitExchangeRate as any)(collateral)
+      const dexbitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as OptionRate 
 
       record.data.push({
         key: 'debitExchangeRate',
         type: 'Option<ExchangeRate>',
-        value: dexbitExchangeRate
+        value: dexbitExchangeRate.toString()
       });
     }
   }

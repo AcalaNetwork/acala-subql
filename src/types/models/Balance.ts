@@ -16,11 +16,7 @@ export class Balance implements Entity {
 
     public tokenId?: string;
 
-    public freeBalance?: string;
-
-    public tranfserable?: string;
-
-    public locked?: string;
+    public balance?: string;
 
 
     async save(): Promise<void>{

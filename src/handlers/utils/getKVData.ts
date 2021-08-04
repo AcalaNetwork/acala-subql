@@ -13,8 +13,8 @@ export const getKVData = (data: AnyTuple, keys?: ArgsDef) => {
         return data.map((item, index) => {
             return {
                 key: '' + index,
-                type: (data as any).typeDef[index].type.toString(),
-                value: item.toString()
+                type: (data as any).typeDef?.[index]?.type?.toString(),
+                value: item?.toString()
             }
         })
     }
@@ -23,7 +23,7 @@ export const getKVData = (data: AnyTuple, keys?: ArgsDef) => {
         return {
             key: _key,
             type: (data[index] as any).type,
-            value: data[index].toString()
+            value: data[index]?.toString()
         }
     })
 }

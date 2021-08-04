@@ -166,19 +166,23 @@ type Transfer @entity {
   isSuccess: Boolean
 }
 
-type LoanParams @entity {
-  id: ID!
-  debitExchangeRate: String
-}
-
 type LoanPosition @entity {
   id: ID!
 
   account: Account
   token: Token
 
-  debit:String 
+  debit: String 
   collateral: String 
+}
+
+type TotalLoanPosition @entity {
+  id: ID!
+
+  token: Token
+
+  debit: String
+  collateral: String
 }
 
 type LoanAction @entity {

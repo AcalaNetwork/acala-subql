@@ -1,5 +1,5 @@
 import {  EventHandler } from "./types";
-import { IncentiveAction } from "../types/models";
+import { IncentiveAction } from "../types/models/IncentiveAction";
 import { ensureAccount } from "./account";
 import { mapUpdateKVData } from "./utils/updateKVData";
 
@@ -75,7 +75,8 @@ export const createClaimRewards: EventHandler = async ({ event, rawEvent }) => {
   if (event.data) {
     const keyArray = [
       { key: 'account' },
-      { key: 'PoolId' }
+      { key: 'PoolId' },
+      { key: 'amount' }
     ];
     record.data = mapUpdateKVData(event.data, keyArray);
   }

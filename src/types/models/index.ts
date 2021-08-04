@@ -28,9 +28,9 @@ export {OracleFeedRecord} from "./OracleFeedRecord"
 
 export {Transfer} from "./Transfer"
 
-export {LoanParams} from "./LoanParams"
-
 export {LoanPosition} from "./LoanPosition"
+
+export {TotalLoanPosition} from "./TotalLoanPosition"
 
 export {LoanAction} from "./LoanAction"
 
