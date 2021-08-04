@@ -14,11 +14,7 @@ export class TotalBalanceChangedRecord implements Entity {
 
     public tokenId?: string;
 
-    public changed?: string;
-
-    public total?: string;
-
-    public timestamp?: Date;
+    public balance?: string;
 
     public blockNumber?: bigint;
 

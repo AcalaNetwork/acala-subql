@@ -10,11 +10,18 @@ import { createConfiscateCollateralAndDebitHistory, createPositionUpdatedHistory
 import { createClaimRewards, createDepositDexShareHistory, createWithdrawDexShareHistory } from './incentiveHistory'
 import { createMintLiquidHistory, createRedeemByClaimUnbonding, createRedeemByFreeUnbonded, createRedeemByUnbondHistory } from './homaHistory'
 import { updateLoanPosition, updateTotalLoanPosition } from './loanPosition'
+import { updateBalanceByDeposit, updateBalanceByTransferred, updateBalanceByUpdate, updateBalanceByWithdrawn } from './balance'
 
 
 const dispatch = new Dispatcher<DispatchedEventData>()
 
 dispatch.batchRegist([
+  // currencies
+  { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
+  { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
+  { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
+  { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
+
   // loan
   { key: 'loans-PositionUpdated', handler: createPositionUpdatedHistory },
   { key: 'loans-PositionUpdated', handler: updateLoanPosition },
@@ -52,6 +59,7 @@ export async function ensureEvnet (event: SubstrateEvent) {
     data = new Event(recordId)
     data.index = idx
     data.blockId = block.id
+    data.blockNumber = block.number
 
     await data.save()
   }

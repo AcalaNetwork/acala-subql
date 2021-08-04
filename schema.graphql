@@ -69,6 +69,7 @@ type Event @entity {
   method: String
   data: [KVData]
 
+  blockNumber: BigInt
   block: Block
   extrinsic: Extrinsic
 }
@@ -117,10 +118,8 @@ type BalanceChangedRecord @entity {
   account: Account
   token: Token
 
-  changed: String
-  total: String
+  balance: String
 
-  timestamp: Date
   blockNumber: BigInt
   block: Block
 }
@@ -130,10 +129,8 @@ type TotalBalanceChangedRecord @entity {
 
   token: Token
 
-  changed: String
-  total: String
+  balance: String
 
-  timestamp: Date
   blockNumber: BigInt
   block: Block
 }
