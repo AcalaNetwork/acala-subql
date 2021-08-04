@@ -18,7 +18,7 @@ dispatch.batchRegist([
   // loan
   { key: 'loans-PositionUpdated', handler: createPositionUpdatedHistory },
   { key: 'loans-PositionUpdated', handler: updateLoanPosition },
-  { key: 'loans-PositionUpdated', handler: updateTotalLoanPosition },
+  // { key: 'loans-PositionUpdated', handler: updateTotalLoanPosition },
   { key: 'loans-ConfiscateCollateralAndDebit', handler: createConfiscateCollateralAndDebitHistory },
   { key: 'loans-transferLoan', handler: createTransferLoanHistory },
 

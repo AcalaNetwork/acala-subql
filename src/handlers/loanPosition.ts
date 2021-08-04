@@ -10,7 +10,7 @@ async function getLoanPositionRecord (account: string, token: string) {
 	const record = await LoanPosition.get(key)
 
 	if (!record) {
-		const record = LoanPosition.create(key)
+		const record = new LoanPosition(key)
 
 		record.accountId = account
 		record.tokenId = token
@@ -25,7 +25,6 @@ async function getLoanPositionRecord (account: string, token: string) {
 
 export const updateLoanPosition: EventHandler = async ({ rawEvent}) => {
 	const [account, collateral] = rawEvent.event.data
-
 	const record = await getLoanPositionRecord(account.toString(), forceToCurrencyIdName(collateral as CurrencyId))
 	const currentPosition: Position = await api.query.loans.positions(collateral, account) as Position
 
@@ -39,7 +38,7 @@ async function getTotalLoanPositionRecord (token: string) {
 	const record = await TotalLoanPosition.get(token)
 
 	if (!record) {
-		const record = TotalLoanPosition.create(token)
+		const record = new TotalLoanPosition(token)
 
 		record.tokenId = token
 
