@@ -35,13 +35,13 @@ export const createPositionUpdatedHistory: EventHandler =  async ({ event, rawEv
 
     // save the debit exchange rate
     if (collateral) {
-      const dexbitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as OptionRate 
+      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as OptionRate 
       const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as Rate
 
       record.data.push({
         key: 'debitExchangeRate',
         type: 'Option<ExchangeRate>',
-        value: (dexbitExchangeRate || globalExchangeRate).toString()
+        value: debitExchangeRate.isNone ? globalExchangeRate.toString() : debitExchangeRate.unwrapOrDefault().toString()
       });
     }
   }
