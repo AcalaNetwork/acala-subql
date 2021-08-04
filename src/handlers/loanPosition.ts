@@ -34,6 +34,17 @@ export const updateLoanPosition: EventHandler = async ({ rawEvent}) => {
 	await record.save()
 }
 
+export const updateLoanPositionByLiquidate: EventHandler = async ({ rawEvent}) => {
+	const [collateral, account] = rawEvent.event.data
+	const record = await getLoanPositionRecord(account.toString(), forceToCurrencyIdName(collateral as CurrencyId))
+	const currentPosition: Position = await api.query.loans.positions(collateral, account) as Position
+
+	record.collateral = currentPosition.collateral.toString()
+	record.debit = currentPosition.debit.toString()
+
+	await record.save()
+}
+
 async function getTotalLoanPositionRecord (token: string) {
 	const record = await TotalLoanPosition.get(token)
 
@@ -52,6 +63,19 @@ async function getTotalLoanPositionRecord (token: string) {
 
 export const updateTotalLoanPosition: EventHandler = async ({ rawEvent }) => {
 	const [_, collateral] = rawEvent.event.data
+
+	const record = await getTotalLoanPositionRecord(forceToCurrencyIdName(collateral as CurrencyId))
+
+	const currentPosition: Position = await api.query.loans.totalPositions(collateral ) as Position
+
+	record.collateral = currentPosition.collateral.toString()
+	record.debit = currentPosition.debit.toString()
+
+	await record.save()
+}
+
+export const updateTotalLoanPositionByLiquidate: EventHandler = async ({ rawEvent }) => {
+	const [collateral] = rawEvent.event.data
 
 	const record = await getTotalLoanPositionRecord(forceToCurrencyIdName(collateral as CurrencyId))
 

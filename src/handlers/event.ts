@@ -6,10 +6,10 @@ import { getKVData } from './utils'
 import { ensuerExtrinsic } from './extrinsic'
 import { DispatchedEventData } from './types'
 import { createAddLiquidityHistory, createAddProvisionHistory, createRemoveLiquidityHistory, createSwapHistory } from './dexHistory'
-import { createConfiscateCollateralAndDebitHistory, createPositionUpdatedHistory, createTransferLoanHistory } from './loanHistory';
+import { createConfiscateCollateralAndDebitHistory, createLiquidateUnsafeCDPHistory, createPositionUpdatedHistory, createTransferLoanHistory } from './loanHistory';
 import { createClaimRewards, createDepositDexShareHistory, createWithdrawDexShareHistory } from './incentiveHistory'
 import { createMintLiquidHistory, createRedeemByClaimUnbonding, createRedeemByFreeUnbonded, createRedeemByUnbondHistory } from './homaHistory'
-import { updateLoanPosition, updateTotalLoanPosition } from './loanPosition'
+import { updateLoanPosition, updateTotalLoanPosition, updateLoanPositionByLiquidate, updateTotalLoanPositionByLiquidate } from './loanPosition'
 import { updateBalanceByDeposit, updateBalanceByTransferred, updateBalanceByUpdate, updateBalanceByWithdrawn } from './balance'
 
 
@@ -28,6 +28,9 @@ dispatch.batchRegist([
   { key: 'loans-PositionUpdated', handler: updateTotalLoanPosition },
   { key: 'loans-ConfiscateCollateralAndDebit', handler: createConfiscateCollateralAndDebitHistory },
   { key: 'loans-transferLoan', handler: createTransferLoanHistory },
+  { key: 'cdpEngine-LiquidateUnsafeCDP', handler: createLiquidateUnsafeCDPHistory },
+  { key: 'cdpEngine-LiquidateUnsafeCDP', handler: updateLoanPositionByLiquidate },
+  { key: 'cdpEngine-LiquidateUnsafeCDP', handler: updateTotalLoanPositionByLiquidate },
 
   // dex
   { key: 'dex-Swap', handler: createSwapHistory },

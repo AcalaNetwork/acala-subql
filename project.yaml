@@ -3,7 +3,7 @@ description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: wss://kusama-1.polkawallet.io:9944
+  endpoint: wss://karura.polkawallet.io
   types:
     CallOf: Call
     DispatchTime:

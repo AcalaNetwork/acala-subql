@@ -72,6 +72,20 @@ export const createConfiscateCollateralAndDebitHistory: EventHandler = async ({ 
       { key: 'debitValueAdjustment' },
     ];
     record.data = mapUpdateKVData(event.data, keyArray);
+
+    const [_, collateral] = rawEvent.event.data;
+
+    // save the debit exchange rate
+    if (collateral) {
+      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as OptionRate 
+      const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as Rate
+
+      record.data.push({
+        key: 'debitExchangeRate',
+        type: 'Option<ExchangeRate>',
+        value: debitExchangeRate.isNone ? globalExchangeRate.toString() : debitExchangeRate.unwrapOrDefault().toString()
+      });
+    }
   }
 
   await record.save();
@@ -115,4 +129,49 @@ export const createTransferLoanHistory: EventHandler = async ({ event, rawEvent 
 
   await fromRecord.save();
   await toRecord.save();
+}
+
+export const createLiquidateUnsafeCDPHistory: EventHandler =  async ({ event, rawEvent }) => {
+  const record = new LoanAction(event.id);
+
+  record.type = 'LiquidateUnsafeCDP';
+  record.extrinsicId = event.extrinsicId;
+  record.timestamp = rawEvent.block.timestamp;
+
+  if (rawEvent.values) {
+    const [, account] = rawEvent.event.data;
+
+    const accountRecord = await ensureAccount(account.toString());
+
+    record.accountId = accountRecord.id;
+  }
+
+  if (event.data) {
+    const keyArray = [
+      { key: 'collateral' },
+      { key: 'owner' },
+      { key: 'collateralAdjustment'},
+      { key: 'debitAdjustment' },
+      { key: 'liquidationStrategy' }
+    ];
+    record.data = mapUpdateKVData(event.data, keyArray);
+  }
+
+  if (rawEvent.event.data) {
+    const [collateral] = rawEvent.event.data;
+
+    // save the debit exchange rate
+    if (collateral) {
+      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as OptionRate 
+      const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as Rate
+
+      record.data.push({
+        key: 'debitExchangeRate',
+        type: 'Option<ExchangeRate>',
+        value: debitExchangeRate.isNone ? globalExchangeRate.toString() : debitExchangeRate.unwrapOrDefault().toString()
+      });
+    }
+  }
+
+  await record.save();
 }
