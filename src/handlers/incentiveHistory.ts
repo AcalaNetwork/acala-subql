@@ -60,7 +60,7 @@ export const createWithdrawDexShareHistory: EventHandler = async ({ event, rawEv
 export const createClaimRewards: EventHandler = async ({ event, rawEvent }) => {
   const record = new IncentiveAction(event.id);
 
-  record.type = 'claimRewards';
+  record.type = 'PayoutRewards';
   record.extrinsicId = event.extrinsicId;
   record.timestamp = rawEvent.block.timestamp;
 
@@ -76,7 +76,9 @@ export const createClaimRewards: EventHandler = async ({ event, rawEvent }) => {
     const keyArray = [
       { key: 'account' },
       { key: 'PoolId' },
-      { key: 'amount' }
+      { key: 'rewardCurrency' },
+      { key: 'acturalPayout' },
+      { key: 'deductionAmount' },
     ];
     record.data = mapUpdateKVData(event.data, keyArray);
   }
