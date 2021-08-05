@@ -3,7 +3,7 @@ import { get } from 'lodash'
 
 import { CurrencyId } from "@acala-network/types/interfaces"
 import{ getToken } from './tokens'
-import { SystemConsts } from '../types'
+import { SystemConsts } from '../types/models'
 
 function getConsts<T> (path: string) {
     return get(api.consts, path) as T

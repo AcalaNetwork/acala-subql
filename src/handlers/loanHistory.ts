@@ -69,7 +69,7 @@ export const createConfiscateCollateralAndDebitHistory: EventHandler = async ({ 
       { key: 'owner' },
       { key: 'collateral' },
       { key: 'collateralAdjustment'},
-      { key: 'debitValueAdjustment' },
+      { key: 'debitAdjustment' },
     ];
     record.data = mapUpdateKVData(event.data, keyArray);
 

@@ -1,5 +1,5 @@
 import {  EventHandler } from "./types";
-import { DexAction } from "../types/models";
+import { DexAction } from "../types/models/DexAction";
 import { ensureAccount } from "./account";
 import { mapUpdateKVData } from "./utils/updateKVData";
 

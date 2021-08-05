@@ -1,5 +1,6 @@
-import { forceToCurrencyId, forceToCurrencyIdName } from '@acala-network/sdk-core';
-import { CurrencyId } from '@acala-network/types/interfaces';
+import { forceToCurrencyId, forceToCurrencyIdName, isDexShare, mockEventRecord } from '@acala-network/sdk-core';
+import { CurrencyId, Position } from '@acala-network/types/interfaces';
+import { Share } from '@open-web3/orml-types/interfaces/rewards';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces/tokens';
 import { Balance, BalanceChangedRecord, TotalBalanceChangedRecord } from "../types/models";
 import { ensureAccount } from './account';
@@ -36,6 +37,18 @@ async function getBalance (account: string, token: string) {
 	const data = await api.query.tokens.accounts(account, forceToCurrencyId(api, token)) as OrmlAccountData
 
 	return data.free.toString()
+}
+
+async function getDexIncentiveShare (account: string, token: string) {
+	const data = await api.query.rewards.shareAndWithdrawnReward(account, { DexIncentive: forceToCurrencyId(api, token) }) as unknown as [Share, Balance];
+
+	return data[0].toString()
+}
+
+async function getLaonDeposit(account: string, token: string) {
+	const position: Position = await api.query.loans.positions(forceToCurrencyId(api, token), account) as Position
+
+	return position.collateral.toString()
 }
 
 async function getBalanceChangedRecord (account: string, token: string, blockNumber: BigInt) {
@@ -83,6 +96,18 @@ async function createBalanceChangedRcord (account: string, token: string, blockN
 	record.blockId = block
 	record.balance = balance
 
+	if (isDexShare(token)) {
+		const incentive = await getDexIncentiveShare(account, token)
+
+		record.incentive = incentive
+	}
+
+	const collateral = await getLaonDeposit(account, token)
+
+	record.collateral = collateral
+
+	record.total = Number(record.balance || 0) + Number(record.incentive || 0) + Number(record.collateral || 0) + ''
+
 	await record.save()
 }
 
@@ -101,6 +126,18 @@ async function updateBalanceRecord (account: string, token: string) {
 	const balance = await getBalance(account, token)
 
 	record.balance = balance
+
+	if (isDexShare(token)) {
+		const incentive = await getDexIncentiveShare(account, token);
+
+		record.incentive = incentive;
+	}
+
+	const collateral = await getLaonDeposit(account, token)
+
+	record.collateral = collateral
+
+	record.total = Number(record.balance || 0) + Number(record.incentive || 0) + Number(record.collateral || 0) + ''
 
 	await record.save()
 }

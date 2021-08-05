@@ -101,7 +101,10 @@ type Balance @entity {
   account: Account
   token: Token
 
-  balance: String
+  total: String
+  balance: String # the account free balance
+  incentive: String # the balance in the incentive pool
+  collateral: String # the balance in the loan
 }
 
 type TotalBalance @entity {
@@ -118,7 +121,10 @@ type BalanceChangedRecord @entity {
   account: Account
   token: Token
 
-  balance: String
+  total: String
+  balance: String # the account free balance
+  incentive: String # the balance in the incentive pool
+  collateral: String # the balance in the loan
 
   blockNumber: BigInt
   block: Block

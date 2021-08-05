@@ -16,7 +16,13 @@ export class Balance implements Entity {
 
     public tokenId?: string;
 
+    public total?: string;
+
     public balance?: string;
+
+    public incentive?: string;
+
+    public collateral?: string;
 
 
     async save(): Promise<void>{
