@@ -40,7 +40,7 @@ async function getBalance (account: string, token: string) {
 }
 
 async function getDexIncentiveShare (account: string, token: string) {
-	const data = await api.query.rewards.shareAndWithdrawnReward(account, { DexIncentive: forceToCurrencyId(api, token) }) as unknown as [Share, Balance];
+	const data = await api.query.rewards.shareAndWithdrawnReward({ DexIncentive: forceToCurrencyId(api, token) }, account) as unknown as [Share, Balance];
 
 	return data[0].toString()
 }
