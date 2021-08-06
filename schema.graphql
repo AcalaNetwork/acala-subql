@@ -239,3 +239,74 @@ type HomaAction @entity {
   extrinsic: Extrinsic
   timestamp: Date
 }
+
+type Provision @entity {
+  id: ID!
+
+  account: Account
+
+  token0: Token
+  token1: Token
+  lpToken: Token
+
+  token0Amount: String
+  token1Amount: String 
+}
+
+type ProvisionRecord @entity {
+  id: ID!
+
+  account: Account
+
+  token0: Token
+  token1: Token
+  lpToken: Token
+
+  token0Amount: String
+  token1Amount: String 
+
+  blockNumber: BigInt
+  block: Block
+}
+
+type ProvisionOpenState @entity {
+  id: ID!
+
+  token: Token
+
+  token0: String
+  token1: String
+  initIssuance: String
+
+  blockNumber: BigInt
+}
+
+type Share @entity {
+  id: ID!
+
+  token: Token
+  account: Account
+
+  amount: String
+}
+
+type ShareRecord @entity {
+  id: ID!
+
+  token: Token
+  account: Account
+
+  amount: String
+  blockNumber: BigInt
+  block: Block
+}
+
+type TotalShareRecord @entity {
+  id: ID!
+
+  token: Token
+
+  amount: String
+  blockNumber: BigInt
+  block: Block
+}

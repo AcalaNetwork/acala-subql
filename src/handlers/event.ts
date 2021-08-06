@@ -11,43 +11,50 @@ import { createClaimRewards, createDepositDexShareHistory, createWithdrawDexShar
 import { createMintLiquidHistory, createRedeemByClaimUnbonding, createRedeemByFreeUnbonded, createRedeemByUnbondHistory } from './homaHistory'
 import { updateLoanPosition, updateTotalLoanPosition, updateLoanPositionByLiquidate, updateTotalLoanPositionByLiquidate } from './loanPosition'
 import { updateBalanceByDeposit, updateBalanceByTransferred, updateBalanceByUpdate, updateBalanceByWithdrawn } from './balance'
+import { udpateShareByAdd, udpateShareByRemove, updateProvision, updateProvisionOpenState } from './share'
 
 
 const dispatch = new Dispatcher<DispatchedEventData>()
 
 dispatch.batchRegist([
   // currencies
-  { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
-  { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
-  { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
-  { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
+  // { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
+  // { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
+  // { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
+  // { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
 
   // loan
-  { key: 'loans-PositionUpdated', handler: createPositionUpdatedHistory },
-  { key: 'loans-PositionUpdated', handler: updateLoanPosition },
-  { key: 'loans-PositionUpdated', handler: updateTotalLoanPosition },
-  { key: 'loans-ConfiscateCollateralAndDebit', handler: createConfiscateCollateralAndDebitHistory },
-  { key: 'loans-transferLoan', handler: createTransferLoanHistory },
-  { key: 'cdpEngine-LiquidateUnsafeCDP', handler: createLiquidateUnsafeCDPHistory },
-  { key: 'cdpEngine-LiquidateUnsafeCDP', handler: updateLoanPositionByLiquidate },
-  { key: 'cdpEngine-LiquidateUnsafeCDP', handler: updateTotalLoanPositionByLiquidate },
+  // { key: 'loans-PositionUpdated', handler: createPositionUpdatedHistory },
+  // { key: 'loans-PositionUpdated', handler: updateLoanPosition },
+  // { key: 'loans-PositionUpdated', handler: updateTotalLoanPosition },
+  // { key: 'loans-ConfiscateCollateralAndDebit', handler: createConfiscateCollateralAndDebitHistory },
+  // { key: 'loans-transferLoan', handler: createTransferLoanHistory },
+  // { key: 'cdpEngine-LiquidateUnsafeCDP', handler: createLiquidateUnsafeCDPHistory },
+  // { key: 'cdpEngine-LiquidateUnsafeCDP', handler: updateLoanPositionByLiquidate },
+  // { key: 'cdpEngine-LiquidateUnsafeCDP', handler: updateTotalLoanPositionByLiquidate },
 
   // dex
-  { key: 'dex-Swap', handler: createSwapHistory },
-  { key: 'dex-AddProvision', handler: createAddProvisionHistory },
-  { key: 'dex-AddLiquidity', handler: createAddLiquidityHistory },
-  { key: 'dex-RemoveLiquidity', handler: createRemoveLiquidityHistory },
+  // { key: 'dex-Swap', handler: createSwapHistory },
+  // { key: 'dex-AddProvision', handler: createAddProvisionHistory },
+  // { key: 'dex-AddLiquidity', handler: createAddLiquidityHistory },
+  // { key: 'dex-RemoveLiquidity', handler: createRemoveLiquidityHistory },
 
   // incentive
-  { key: 'incentives-DepositDexShare', handler: createDepositDexShareHistory },
-  { key: 'incentives-WithdrawDexShare', handler: createWithdrawDexShareHistory },
-  { key: 'incentives-PayoutRewards', handler: createClaimRewards },
+  // { key: 'incentives-DepositDexShare', handler: createDepositDexShareHistory },
+  // { key: 'incentives-WithdrawDexShare', handler: createWithdrawDexShareHistory },
+  // { key: 'incentives-PayoutRewards', handler: createClaimRewards },
 
   // homa
-  { key: 'stakingPool-MintLiquid', handler: createMintLiquidHistory },
-  { key: 'stakingPool-RedeemByUnbond', handler: createRedeemByUnbondHistory },
-  { key: 'stakingPool-RedeemByFreeUnbonded', handler: createRedeemByFreeUnbonded },
-  { key: 'stakingPool-RedeemByClaimUnbonding', handler: createRedeemByClaimUnbonding },
+  // { key: 'stakingPool-MintLiquid', handler: createMintLiquidHistory },
+  // { key: 'stakingPool-RedeemByUnbond', handler: createRedeemByUnbondHistory },
+  // { key: 'stakingPool-RedeemByFreeUnbonded', handler: createRedeemByFreeUnbonded },
+  // { key: 'stakingPool-RedeemByClaimUnbonding', handler: createRedeemByClaimUnbonding },
+
+  // share record
+  { key: 'dex-AddProvision', handler: updateProvision },
+  { key: 'dex-AddLiquidity', handler: udpateShareByAdd },
+  { key: 'dex-removeLiquidity', handler: udpateShareByRemove },
+  { key: 'dex-ProvisioningToEnabled', handler: updateProvisionOpenState }
 ])
 
 export async function ensureEvnet (event: SubstrateEvent) {
