@@ -53,7 +53,7 @@ dispatch.batchRegist([
   // share record
   { key: 'dex-AddProvision', handler: updateProvision },
   { key: 'dex-AddLiquidity', handler: udpateShareByAdd },
-  { key: 'dex-removeLiquidity', handler: udpateShareByRemove },
+  { key: 'dex-RemoveLiquidity', handler: udpateShareByRemove },
   { key: 'dex-ProvisioningToEnabled', handler: updateProvisionOpenState }
 ])
 
