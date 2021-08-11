@@ -1,9 +1,11 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 // Auto-generated , DO NOT EDIT
 import {Entity} from "@subql/types";
 import assert from 'assert';
+
+import {
+    KVData,
+} from '../interfaces'
+
 
 export class Event implements Entity {
 
@@ -14,13 +16,15 @@ export class Event implements Entity {
 
     public id: string;
 
-    public index: number;
+    public index?: number;
 
-    public section: string;
+    public section?: string;
 
-    public method: string;
+    public method?: string;
 
-    public data: string;
+    public data?: KVData[];
+
+    public blockNumber?: bigint;
 
     public blockId?: string;
 
@@ -37,8 +41,8 @@ export class Event implements Entity {
         await store.remove('Event', id.toString());
     }
 
-    static async get(id:string): Promise<Event>{
-        assert(id !== null, "Cannot get Event entity without an ID");
+    static async get(id:string): Promise<Event | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get Event entity without an ID");
         const record = await store.get('Event', id.toString());
         if (record){
             return Event.create(record);
@@ -46,6 +50,8 @@ export class Event implements Entity {
             return;
         }
     }
+
+
 
     static create(record){
         let entity = new Event(record.id);

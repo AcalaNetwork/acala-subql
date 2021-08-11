@@ -3,7 +3,7 @@ description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: wss://mandala6.laminar.codes
+  endpoint: wss://karura.polkawallet.io
   types:
     CallOf: Call
     DispatchTime:
@@ -14,6 +14,7 @@ network:
     DelayedOrigin:
       delay: BlockNumber
       origin: PalletsOrigin
+    AuthorityOrigin: DelayedOrigin
     StorageValue: Vec<u8>
     GraduallyUpdate:
       key: StorageKey
@@ -22,11 +23,7 @@ network:
     StorageKeyBytes: Vec<u8>
     StorageValueBytes: Vec<u8>
     RpcDataProviderId: Text
-    DataProviderId:
-      _enum:
-        - Aggregated
-        - Acala
-        - Band
+    DataProviderId: u8
     TimestampedValue:
       value: OracleValue
       timestamp: Moment
@@ -60,13 +57,6 @@ network:
       totalRewards: Compact<Balance>
       totalWithdrawnRewards: Compact<Balance>
     Share: u128
-    ChainId:
-      _enum:
-        RelayChain: "Null"
-        ParaChain: ParaId
-    XCurrencyId:
-      chainId: ChainId
-      currencyId: Vec<u8>
     OracleValue: Price
     PalletBalanceOf: Balance
     CollateralAuctionItem:
@@ -104,10 +94,11 @@ network:
         NewValue: Balance
     RiskManagementParams:
       maximumTotalDebitValue: Balance
-      stabilityFee: Option<Rate>
+      interestRatePerSec: Option<Rate>
       liquidationRatio: Option<Rate>
       liquidationPenalty: Option<Rate>
       requiredCollateralRatio: Option<Rate>
+    CandidateInfoOf: CandidateInfo
     TradingPairProvisionParameters:
       minContribution: (Balance, Balance)
       targetProvision: (Balance, Balance)
@@ -122,10 +113,18 @@ network:
         NotEnabled: "Null"
         Provisioning: TradingPairProvisionParameters
         Enabled: "Null"
+    Erc20Info:
+      address: EvmAddress
+      name: Vec<u8>
+      symbol: Vec<u8>
+      decimals: u8
+    EstimateResourcesResponse:
+      gas: u256
+      storage: i32
+      weightFee: u256
     EvmAccountInfo:
       nonce: Index
       contractInfo: Option<EvmContractInfo>
-      developerDeposit: Option<Balance>
     CodeInfo:
       codeSize: u32
       refCount: u32
@@ -146,46 +145,66 @@ network:
         Immediately: "Null"
         Target: EraIndex
         WaitForUnbonding: "Null"
+    RelaychainAccountId: AccountId
+    SlashInfo:
+      validator: RelaychainAccountId
+      relaychainTokenAmount: Balance
+    ValidatorBacking:
+      totalInsurance: Balance
+      isFrozen: bool
+    Guarantee:
+      total: Balance
+      bonded: Balance
+      unbonding: Option<(Balance, BlockNumber)>
     PoolId:
       _enum:
-        Loans: CurrencyId
+        LoansIncentive: CurrencyId
         DexIncentive: CurrencyId
+        HomaIncentive: "Null"
         DexSaving: CurrencyId
-        Homa: "Null"
+        HomaValidatorAllowance: AccountId
     Position:
       collateral: Balance
       debit: Balance
     CID: Vec<u8>
-    ClassId: u32
-    ClassIdOf: ClassId
-    TokenId: u64
-    TokenIdOf: TokenId
-    ClassInfoOf:
-      metadata: CID
-      totalIssuance: TokenId
-      owner: AccountId
-      data: ClassData
+    Attributes: BTreeMap<Vec<u8>, Vec<u8>>
     TokenInfoOf:
       metadata: CID
       owner: AccountId
       data: TokenData
-    ClassData:
-      deposit: Balance
-      properties: Properties
-    TokenData:
-      deposit: Balance
     Properties:
       _set:
         _bitLength: 8
         Transferable: 1
         Burnable: 2
+        Mintable: 4
+        ClassPropertiesMutable: 8
+    ClassData:
+      deposit: Balance
+      properties: Properties
+      attributes: Attributes
+    TokenData:
+      deposit: Balance
+      attributes: Attributes
+    TokenId: u64
+    TokenIdOf: TokenId
+    NFTClassId: u32
+    ClassIdOf: ClassId
+    NFTBalance: u128
+    NFTBalanceOf: NFTBalance
+    ClassInfoOf:
+      metadata: CID
+      totalIssuance: TokenId
+      owner: AccountId
+      data: ClassData
+    NomineeId: AccountId
     HomaUnlockChunk:
-      value: Compact<Balance>
-      era: Compact<EraIndex>
+      value: Balance
+      era: EraIndex
     BondingLedger:
-      total: Compact<Balance>
-      active: Compact<Balance>
-      unlocking: Vec<UnlockChunk>
+      total: Balance
+      active: Balance
+      unlocking: Vec<HomaUnlockChunk>
     Amount: i128
     AmountOf: Amount
     AuctionId: u32
@@ -196,22 +215,22 @@ network:
         AUSD: 1
         DOT: 2
         LDOT: 3
-        XBTC: 4
-        RENBTC: 5
-        POLKABTC: 6
-        PLM: 7
-        PHA: 8
-        HDT: 9
+        RENBTC: 4
         KAR: 128
         KUSD: 129
         KSM: 130
         LKSM: 131
-        SDN: 135
+        CASH: 140
+    DexShare:
+      _enum:
+        Token: TokenSymbol
+        Erc20: EvmAddress
     CurrencyId:
       _enum:
         Token: TokenSymbol
-        DEXShare: (TokenSymbol, TokenSymbol)
+        DEXShare: (DexShare, DexShare)
         ERC20: EvmAddress
+        ChainSafe: "[u8; 32]"
     CurrencyIdOf: CurrencyId
     AirDropCurrencyId:
       _enum:
@@ -220,12 +239,16 @@ network:
     AuthoritysOriginId:
       _enum:
         - Root
-        - AcalaTreasury
+        - Treasury
         - HonzonTreasury
         - HomaTreasury
-        - DSWF
+        - TreasuryReserve
+    AcalaDataProviderId:
+      _enum:
+        - Aggregated
+        - Acala
+        - Band
     TradingPair: (CurrencyId,  CurrencyId)
-    NFTBalance: u128
     OracleKey: CurrencyId
     AsOriginId: AuthoritysOriginId
     SubAccountStatus:
@@ -239,6 +262,12 @@ network:
       targetUnbondingToFreeRatio: Ratio
       unbondingToFreeAdjustment: Ratio
       baseFeeRate: Rate
+    StakingPoolPhase:
+      _enum:
+        - Started
+        - RelaychainUpdated
+        - LedgerUpdated
+        - Finished
     Ledger:
       bonded: Balance
       unbondingToFree: Balance
@@ -261,81 +290,27 @@ network:
     Ratio: FixedU128
     PublicKey: "[u8; 20]"
     DestAddress: Vec<u8>
-    Keys: SessionKeys2
-    PalletsOrigin:
-      _enum:
-        System: SystemOrigin
-        Timestamp: "Null"
-        RandomnessCollectiveFlip: "Null"
-        Balances: "Null"
-        Accounts: "Null"
-        Currencies: "Null"
-        Tokens: "Null"
-        Vesting: "Null"
-        AcalaTreasury: "Null"
-        Utility: "Null"
-        Multisig: "Null"
-        Recovery: "Null"
-        Proxy: "Null"
-        Scheduler: "Null"
-        Indices: "Null"
-        GraduallyUpdate: "Null"
-        Authorship: "Null"
-        Babe: "Null"
-        Grandpa: "Null"
-        Staking: "Null"
-        Session: "Null"
-        Historical: "Null"
-        GeneralCouncil: CollectiveOrigin
-        GeneralCouncilMembership: "Null"
-        HonzonCouncil: CollectiveOrigin
-        HonzonCouncilMembership: "Null"
-        HomaCouncil: CollectiveOrigin
-        HomaCouncilMembership: "Null"
-        TechnicalCommittee: CollectiveOrigin
-        TechnicalCommitteeMembership: "Null"
-        Authority: DelayedOrigin
-        ElectionsPhragmen: "Null"
-        AcalaOracle: "Null"
-        BandOracle: "Null"
-        OperatorMembershipAcala: "Null"
-        OperatorMembershipBand: "Null"
-        Auction: "Null"
-        Rewards: "Null"
-        OrmlNFT: "Null"
-        Prices: "Null"
-        Dex: "Null"
-        AuctionManager: "Null"
-        Loans: "Null"
-        Honzon: "Null"
-        CdpTreasury: "Null"
-        CdpEngine: "Null"
-        EmergencyShutdown: "Null"
-        Homa: "Null"
-        NomineesElection: "Null"
-        StakingPool: "Null"
-        PolkadotBridge: "Null"
-        Incentives: "Null"
-        AirDrop: "Null"
-        NFT: "Null"
-        RenVmBridge: "Null"
-        Contracts: "Null"
-        EVM: "Null"
-        Sudo: "Null"
-        TransactionPayment: "Null"
+    DepositNonce: u64
+    ResourceId: "[u8; 32]"
+    ChainId: u8
+    Keys: SessionKeys1
   typesAlias:
-    tokens:
-      AccountData: OrmlAccountData
-      BalanceLock: OrmlBalanceLock
+    stakingPool:
+      Phase: StakingPoolPhase
+    oracle:
+      DataProviderId: AcalaDataProviderId
+    nomineesElection:
+      UnlockChunk: HomaUnlockChunk
     evm:
       AccountInfo: EvmAccountInfo
       ContractInfo: EvmContractInfo
-    nomineesElection:
-      UnlockChunk: HomaUnlockChunk
+    tokens:
+      AccountData: OrmlAccountData
+      BalanceLock: OrmlBalanceLock
 dataSources:
   - name: main
     kind: substrate/Runtime
-    startBlock: 261173
+    startBlock: 200000
     mapping:
       handlers:
         - handler: handleBlock

@@ -7,7 +7,7 @@ import {
 } from '../interfaces'
 
 
-export class LoanAction implements Entity {
+export class HomaAction implements Entity {
 
     constructor(id: string) {
         this.id = id;
@@ -31,19 +31,19 @@ export class LoanAction implements Entity {
 
     async save(): Promise<void>{
         let id = this.id;
-        assert(id !== null, "Cannot save LoanAction entity without an ID");
-        await store.set('LoanAction', id.toString(), this);
+        assert(id !== null, "Cannot save HomaAction entity without an ID");
+        await store.set('HomaAction', id.toString(), this);
     }
     static async remove(id:string): Promise<void>{
-        assert(id !== null, "Cannot remove LoanAction entity without an ID");
-        await store.remove('LoanAction', id.toString());
+        assert(id !== null, "Cannot remove HomaAction entity without an ID");
+        await store.remove('HomaAction', id.toString());
     }
 
-    static async get(id:string): Promise<LoanAction | undefined>{
-        assert((id !== null && id !== undefined), "Cannot get LoanAction entity without an ID");
-        const record = await store.get('LoanAction', id.toString());
+    static async get(id:string): Promise<HomaAction | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get HomaAction entity without an ID");
+        const record = await store.get('HomaAction', id.toString());
         if (record){
-            return LoanAction.create(record);
+            return HomaAction.create(record);
         }else{
             return;
         }
@@ -52,7 +52,7 @@ export class LoanAction implements Entity {
 
 
     static create(record){
-        let entity = new LoanAction(record.id);
+        let entity = new HomaAction(record.id);
         Object.assign(entity,record);
         return entity;
     }

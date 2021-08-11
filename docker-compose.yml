@@ -13,7 +13,7 @@ services:
   graphql-engine:
     image: onfinality/subql-query:latest
     ports:
-      - 3000:3000
+      - 3001:3000
     depends_on:
       - "postgres"
     restart: always

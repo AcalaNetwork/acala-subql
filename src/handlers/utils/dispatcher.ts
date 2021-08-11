@@ -18,8 +18,7 @@ export class Dispatcher<DispatchData> {
   public async dispatch (key: string, data: DispatchData) {
     const handlers = this.subHandlers[key]
 
-    // check handlers is exists or is an array
-    if (!handlers || !Array.isArray(handlers)) return
+    if (!handlers) return
 
     return Promise.all(handlers.map((handler) => handler(data)))
   }

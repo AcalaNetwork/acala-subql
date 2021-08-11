@@ -1,51 +1,51 @@
 import { SubstrateBlock } from '@subql/types'
-import { getBlockTimestamp } from '../helpers'
+import { getBlockTimestamp } from './utils/getBlockTimestamp'
 import { Block } from '../types/models/Block'
-import { TokenHandler } from './sub-handlers/token'
+import { initSystemConsts } from './system'
+import { initSystemTokens } from './tokens'
 
-export class BlockHandler {
-  private block: SubstrateBlock
+let isFirstSync = true
 
-  static async ensureBlock (id: string): Promise<void> {
-    const block = await Block.get(id)
+export async function ensureBlock (block: SubstrateBlock) {
+  const recordId = block.block.hash.toString()
 
-    if (!block) {
-      await new Block(id).save()
-    }
+  let data = await Block.get(recordId)
+
+  if (!data) {
+    data = new Block(recordId)
+
+    await data.save()
   }
 
-  constructor(block: SubstrateBlock) {
-    this.block = block
+  return data
+}
+
+export async function createBlock (origin: SubstrateBlock) {
+  // when the program start, initialize the tokens information and system consts
+  if (isFirstSync) {
+    await initSystemTokens()
+    await initSystemConsts()
+
+    isFirstSync = false
   }
 
-  get blockTimestamp () {
-    return getBlockTimestamp(this.block.block)
-  }
+  const block = await ensureBlock(origin)
 
-  get number () {
-    return this.block.block.header.number.toBigInt() || BigInt(0)
-  }
+  const blockNumber = origin.block.header.number.toBigInt() || BigInt(0)
+  const parentHash = origin.block.header.parentHash.toString()
+  const stateRoot = origin.block.header.stateRoot.toString()
+  const specVersion = origin.specVersion.toString()
+  const extrinsicsRoot = origin.block.header.extrinsicsRoot.toString()
+  const timestamp = getBlockTimestamp(origin.block)
 
-  get hash () {
-    return this.block.block.hash.toString()
-  }
+  block.number = blockNumber
+  block.parentHash = parentHash
+  block.stateRoot = stateRoot
+  block.extrinsicRoot = extrinsicsRoot
+  block.specVersion = specVersion
+  block.timestamp = timestamp
 
-  get specVersion () {
-    return this.block.specVersion
-  }
+  await block.save()
 
-  get parentHash () {
-    return this.block.block.header.parentHash.toString()
-  }
-
-  public async save () {
-    const block = new Block(this.hash)
-
-    block.number = this.number
-    block.timestamp = this.blockTimestamp
-    block.specVersion = this.specVersion
-    block.parentHash = this.parentHash
-
-    await block.save()
-  }
+  return block
 }

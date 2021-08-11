@@ -1,10 +1,26 @@
+type KVData @jsonField {
+  key: String
+  value: String
+  type: String
+}
+
+type SystemConsts @entity {
+  id: ID!
+  liquidToken: Token
+  stakignToken: Token
+  nativeToken: Token
+  stableToken: Token
+}
+
 type Block @entity {
   id: ID!
 
   number: BigInt
   timestamp: Date
   parentHash: String
-  specVersion: Int
+  specVersion: String
+  stateRoot: String
+  extrinsicRoot: String
 
   extrinsics: [Extrinsic] @derivedFrom(field: "block")
   events: [Event] @derivedFrom(field: "block")
@@ -15,31 +31,18 @@ type Extrinsic @entity {
 
   method: String
   section: String
-  args: String
-  signer: Account #create relation to account
+  args: [KVData]
+  signer: Account
   nonce: BigInt
   timestamp: Date
   signature: String
-  tip: BigInt
+  tip: String
   isSigned: Boolean
   isSuccess: Boolean
 
-  block: Block #create relation to block
-
+  block: Block
   events: [Event] @derivedFrom(field: "extrinsic")
   calls: [Call] @derivedFrom(field: "extrinsic")
-}
-
-type Event @entity {
-  id: ID!
-
-  index: Int!
-  section: String!
-  method: String!
-  data: String!
-
-  block: Block #create relation to block
-  extrinsic: Extrinsic #create relation to extrins
 }
 
 type Call @entity {
@@ -47,23 +50,38 @@ type Call @entity {
 
   section: String
   method: String
-  args: String
+  args:[KVData] 
   timestamp: Date
   isSuccess: Boolean
 
-  signer: Account #create ration to account
-  extrinsic: Extrinsic #create relation to extrinsic
-  parentCall: Call #create relation to call
+  signer: Account
+  extrinsic: Extrinsic
+  parentCall: Call
 
   calls: [Call] @derivedFrom(field: "parentCall")
+}
+
+type Event @entity {
+  id: ID!
+
+  index: Int
+  section: String
+  method: String
+  data: [KVData]
+
+  blockNumber: BigInt
+  block: Block
+  extrinsic: Extrinsic
 }
 
 type Account @entity {
   id: ID!
 
+  txCount: Int
+  createAtBlock: Block
+
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   calls: [Call] @derivedFrom(field: "signer")
-
   transferIn: [Transfer] @derivedFrom(field: "to")
   transferOut: [Transfer] @derivedFrom(field: "from")
   position: [LoanPosition] @derivedFrom(field: "account")
@@ -72,8 +90,68 @@ type Account @entity {
 type Token @entity {
   id: ID!
 
+  symbol: String
   decimal: Int
-  name: String
+  isDexShare: Boolean
+}
+
+type Balance @entity {
+  id: ID!
+
+  account: Account
+  token: Token
+
+  total: String
+  balance: String # the account free balance
+  incentive: String # the balance in the incentive pool
+  collateral: String # the balance in the loan
+}
+
+type TotalBalance @entity {
+  id: ID!
+
+  token: Token
+
+  balance: String
+}
+
+type BalanceChangedRecord @entity {
+  id: ID!
+
+  account: Account
+  token: Token
+
+  total: String
+  balance: String # the account free balance
+  incentive: String # the balance in the incentive pool
+  collateral: String # the balance in the loan
+
+  blockNumber: BigInt
+  block: Block
+}
+
+type TotalBalanceChangedRecord @entity {
+  id: ID!
+
+  token: Token
+
+  balance: String
+
+  blockNumber: BigInt
+  block: Block
+}
+
+
+type OracleFeedRecord @entity {
+  id: ID!
+
+  token: Token
+  account: Account
+  provider: String
+
+  feedPrice: String
+
+  updateAtBlock: Block
 }
 
 type Transfer @entity {
@@ -82,25 +160,14 @@ type Transfer @entity {
   from: Account
   to: Account
   token: Token
-  amount: BigInt
+  amount: String
+  amountInUSD: String
 
-  extrinsic: Extrinsic #create relation to extrinsic
-  call: Call #create relation to call
+  extrinsic: Extrinsic
+  call: Call
   timestamp: Date
   isSuccess: Boolean
 }
-
-#
-#type LoanDayData @entity {
-#  id: ID!
-#
-#  token: String!
-#  timestamp: Date!
-#
-#  collateral: BigInt!
-#  debit: BigInt!
-#}
-#
 
 type LoanPosition @entity {
   id: ID!
@@ -108,101 +175,67 @@ type LoanPosition @entity {
   account: Account
   token: Token
 
-  debit: BigInt
-  collateral: BigInt
+  debit: String 
+  collateral: String 
+}
+
+type TotalLoanPosition @entity {
+  id: ID!
+
+  token: Token
+
+  debit: String
+  collateral: String
 }
 
 type LoanAction @entity {
   id: ID!
 
   account: Account
-  token: Token
-  collateral: BigInt
-  debit: BigInt
-  exchangeRate: BigInt
 
-  extrinsic: Extrinsic #create relation to extrinsic
-  call: Call #create relation to call
+  type: String
+  subType: String
+  data: [KVData]
+
+  extrinsic: Extrinsic
   timestamp: Date
-  isSuccess: Boolean
 }
 
-#type Pair @entity {
-#  id: ID!
-#
-#  token0: String!
-#  token1: String!
-#  totalSupply: BigInt!
-#
-#  token0Volume: BigInt!
-#  token1Volume: BigInt!
-#
-#  token0USD: BigInt!
-#  token1USD: BigInt!
-#
-#  token0Price: BigInt!
-#  token1Price: BigInt!
-#
-#  txCount: BigInt!
-#}
-#
-#type SwapAction @entity {
-#  id: ID!
-#  isBatch: Int!
-#  isSudo: Int!
-#  isSuccess: Int!
-#
-#  block: String!
-#  extrinsicHash: String!
-#  timestamp: Date!
-#
-#  account: String!
-#  type: String!
-#  path: String!
-#  token0: String!
-#  token1: String!
-#  token0Input: String!
-#  token1Input: String!
-#  result: String!
-#}
-#
-#type AddLiquidityHistory @entity {
-#  id: ID!
-#  isBatch: Int!
-#  isSudo: Int!
-#  isSuccess: Int!
-#
-#  block: String!
-#  extrinsicHash: String!
-#  timestamp: Date!
-#
-#  account: String!
-#  token0: String!
-#  token1: String!
-#
-#  token0Input: BigInt!
-#  token1Input: BigInt!
-#
-#  token0Amount: BigInt!
-#  token1Amount: BigInt!
-#  receivedShare: BigInt!
-#}
-#
-#type RemoveLiquidityHistoryEntity @entity {
-#  id: ID!
-#  isBatch: Int!
-#  isSudo: Int!
-#  isSuccess: Int!
-#
-#  block: String!
-#  timestamp: Date!
-#
-#  account: String!
-#  token0: String!
-#  token1: String!
-#  removedShare: BigInt!
-#
-#  token0Amount: BigInt!
-#  token1Amount: BigInt!
-#}
-#
+type DexAction @entity {
+  id: ID!
+
+  account: Account
+
+  type: String
+  subType: String
+  data: [KVData]
+
+  extrinsic: Extrinsic
+  timestamp: Date
+}
+
+type IncentiveAction @entity {
+  id: ID!
+
+  account: Account
+
+  type: String
+  subType: String
+  data: [KVData]
+
+  extrinsic: Extrinsic
+  timestamp: Date
+}
+
+type HomaAction @entity {
+  id: ID!
+
+  account: Account
+
+  type: String
+  subType: String
+  data: [KVData]
+
+  extrinsic: Extrinsic
+  timestamp: Date
+}

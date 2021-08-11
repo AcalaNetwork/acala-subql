@@ -1,9 +1,7 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 // Auto-generated , DO NOT EDIT
 import {Entity} from "@subql/types";
 import assert from 'assert';
+
 
 export class LoanPosition implements Entity {
 
@@ -18,9 +16,9 @@ export class LoanPosition implements Entity {
 
     public tokenId?: string;
 
-    public debit?: bigint;
+    public debit?: string;
 
-    public collateral?: bigint;
+    public collateral?: string;
 
 
     async save(): Promise<void>{
@@ -33,8 +31,8 @@ export class LoanPosition implements Entity {
         await store.remove('LoanPosition', id.toString());
     }
 
-    static async get(id:string): Promise<LoanPosition>{
-        assert(id !== null, "Cannot get LoanPosition entity without an ID");
+    static async get(id:string): Promise<LoanPosition | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get LoanPosition entity without an ID");
         const record = await store.get('LoanPosition', id.toString());
         if (record){
             return LoanPosition.create(record);
@@ -42,6 +40,8 @@ export class LoanPosition implements Entity {
             return;
         }
     }
+
+
 
     static create(record){
         let entity = new LoanPosition(record.id);
