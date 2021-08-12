@@ -10,17 +10,21 @@ import { createConfiscateCollateralAndDebitHistory, createLiquidateUnsafeCDPHist
 import { createClaimRewards, createDepositDexShareHistory, createWithdrawDexShareHistory } from './incentiveHistory'
 import { createMintLiquidHistory, createRedeemByClaimUnbonding, createRedeemByFreeUnbonded, createRedeemByUnbondHistory } from './homaHistory'
 import { updateLoanPosition, updateTotalLoanPosition, updateLoanPositionByLiquidate, updateTotalLoanPositionByLiquidate } from './loanPosition'
-import { updateBalanceByDeposit, updateBalanceByTransferred, updateBalanceByUpdate, updateBalanceByWithdrawn } from './balance'
+import { handleProvisioningToEnabled } from './dex/pool'
+// import { updateBalanceByDeposit, updateBalanceByTransferred, updateBalanceByUpdate, updateBalanceByWithdrawn } from './balance'
+// import { updateCrossedKSM } from './summary'
 
 
 const dispatch = new Dispatcher<DispatchedEventData>()
 
 dispatch.batchRegist([
   // currencies
-  { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
-  { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
-  { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
-  { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
+  // { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
+  // { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
+  // { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
+  // { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
+  // { key: 'currencies-Withdrawn', handler: updateCrossedKSM },
+  // { key: 'currencies-Transferred', handler: updateCrossedKSM },
 
   // loan
   { key: 'loans-PositionUpdated', handler: createPositionUpdatedHistory },
@@ -37,6 +41,7 @@ dispatch.batchRegist([
   { key: 'dex-AddProvision', handler: createAddProvisionHistory },
   { key: 'dex-AddLiquidity', handler: createAddLiquidityHistory },
   { key: 'dex-RemoveLiquidity', handler: createRemoveLiquidityHistory },
+  { key: 'dex-ProvisioningToEnable', handler: handleProvisioningToEnabled },
 
   // incentive
   { key: 'incentives-DepositDexShare', handler: createDepositDexShareHistory },
@@ -63,6 +68,7 @@ export async function ensureEvnet (event: SubstrateEvent) {
     data.index = idx
     data.blockId = block.id
     data.blockNumber = block.number
+    data.timestamp = block.timestamp
 
     await data.save()
   }

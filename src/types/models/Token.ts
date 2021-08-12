@@ -12,11 +12,15 @@ export class Token implements Entity {
 
     public id: string;
 
-    public symbol?: string;
+    public name: string;
 
     public decimal?: number;
 
     public isDexShare?: boolean;
+
+    public issuance?: string;
+
+    public price?: string;
 
 
     async save(): Promise<void>{

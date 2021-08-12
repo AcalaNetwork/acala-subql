@@ -2,29 +2,8 @@ import { Token as SDKToken, getLPCurrenciesFormName, isDexShare, forceToCurrency
 import { SystemConsts } from "../types"
 import { Token } from "../types"
 import { getChainName } from "./system"
-import { getTokenName } from "./utils/token"
 
-/**
- * token config from the chain config
- * 
- * pub enum TokenSymbol {
-		// Polkadot Ecosystem
-		ACA("Acala", 12) = 0,
-		AUSD("Acala Dollar", 12) = 1,
-		DOT("Polkadot", 10) = 2,
-		LDOT("Liquid DOT", 10) = 3,
-		RENBTC("Ren Protocol BTC", 8) = 4,
-
-		// Kusama Ecosystem
-		KAR("Karura", 12) = 128,
-		KUSD("Karura Dollar", 12) = 129,
-		KSM("Kusama", 12) = 130,
-		LKSM("Liquid KSM", 12) = 131,
-		// Reserve for RENBTC = 132
-	}
- */
 let tokenDecimalMap: Map<string, number>;
-let systemTokens: Map<string, string>;
 
 function getDecimal (token: string) {
     return tokenDecimalMap.get(token) || 10;
@@ -56,18 +35,18 @@ export async function getToken(currency: MaybeCurrency) {
     // TODO: handle erc20
     const isDexShareToken = isDexShare(tokenName);
 
+    // trade dex share decimal as token0 decimal
     if (isDexShareToken) {
-        const [token0, token1] = getLPCurrenciesFormName(tokenName);
+        const [token0] = getLPCurrenciesFormName(tokenName);
         const decimal0 = getDecimal(token0)
-        const decimal1 = getDecimal(token1)
 
-        decimal = decimal0 > decimal1 ? decimal0 : decimal1
+        decimal = decimal0
     } {
         decimal = getDecimal(tokenName)
     }
 
     temp.decimal = decimal
-    temp.symbol = tokenName
+    temp.name = tokenName
     temp.isDexShare = isDexShareToken
 
     await temp.save()

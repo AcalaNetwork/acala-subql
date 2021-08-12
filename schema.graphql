@@ -69,6 +69,7 @@ type Event @entity {
   method: String
   data: [KVData]
 
+  timestamp: Date
   blockNumber: BigInt
   block: Block
   extrinsic: Extrinsic
@@ -90,9 +91,13 @@ type Account @entity {
 type Token @entity {
   id: ID!
 
-  symbol: String
+  name: String!
   decimal: Int
+
   isDexShare: Boolean
+
+  issuance: String
+  price: String
 }
 
 type Balance @entity {
@@ -102,18 +107,11 @@ type Balance @entity {
   token: Token
 
   total: String
-  balance: String # the account free balance
-  incentive: String # the balance in the incentive pool
-  collateral: String # the balance in the loan
-}
-
-type TotalBalance @entity {
-  id: ID!
-
-  token: Token
-
   balance: String
+  incentive: String
+  collateral: String
 }
+
 
 type BalanceChangedRecord @entity {
   id: ID!
@@ -122,9 +120,9 @@ type BalanceChangedRecord @entity {
   token: Token
 
   total: String
-  balance: String # the account free balance
-  incentive: String # the balance in the incentive pool
-  collateral: String # the balance in the loan
+  balance: String
+  incentive: String
+  collateral: String
 
   blockNumber: BigInt
   block: Block
@@ -141,18 +139,6 @@ type TotalBalanceChangedRecord @entity {
   block: Block
 }
 
-
-type OracleFeedRecord @entity {
-  id: ID!
-
-  token: Token
-  account: Account
-  provider: String
-
-  feedPrice: String
-
-  updateAtBlock: Block
-}
 
 type Transfer @entity {
   id: ID!
@@ -238,4 +224,142 @@ type HomaAction @entity {
 
   extrinsic: Extrinsic
   timestamp: Date
+}
+
+type OracleFeedRecord @entity {
+  id: ID!
+
+  token: Token
+  price: String
+  provider: String
+  account: Account
+
+  blockNumber: BigInt
+  block: Block
+}
+
+type PriceBundle @entity {
+  id: ID!
+
+  ksm: String!
+}
+
+type PriceRecord @entity {
+  id: ID!
+
+  prices: [KVData]
+}
+
+
+# dex
+type Pool @entity {
+  id: ID!
+
+  token0: Token!
+  token1: Token!
+
+  token0Amount: String!
+  token1Amount: String!
+  token0Price: String!
+  token1Price: String!
+
+  token0Volumn: String!
+  token1Volumn: String!
+  volumnUSD: String!
+
+  token0TVL: String!
+  token1TVL: String!
+  tvlUSD: String!
+
+  txCount: Int!
+  userCount: Int!
+
+  hourData: [PoolHourData] @derivedFrom(field: "pool")
+  dayData: [PoolDayData] @derivedFrom(field: "pool")
+}
+
+type PoolHourData @entity {
+  id: ID!
+
+  pool: Pool!
+
+  token0: Token!
+  token1: Token!
+
+  token0Amount: String!
+  token1Amount: String!
+  token0Price: String!
+  token1Price: String!
+
+  volumnToken0: String!
+  volumnToken1: String!
+  volumnUSD: String!
+
+  txCount: Int!
+
+  tvlUSD: String!
+
+  token0Open: String! 
+  token0High: String!
+  token0Low: String!
+  token0Close: String!
+}
+
+type PoolDayData @entity {
+  id: ID!
+
+  pool: Pool!
+
+  token0: Token!
+  token1: Token!
+
+  token0Amount: String!
+  token1Amount: String!
+  token0Price: String!
+  token1Price: String!
+
+  volumnToken0: String!
+  volumnToken1: String!
+  volumnUSD: String!
+
+  txCount: Int!
+
+  tvlUSD: String!
+
+  token0Open: String! 
+  token0High: String!
+  token0Low: String!
+  token0Close: String!
+}
+
+type DexDayData @entity {
+  id: ID!
+
+  date: Date!
+  tvlUSD: String!
+  volumnUSD: String!
+  txCount: Int!
+}
+
+type Summary @entity {
+  id: ID!
+
+  crossedKSMAmount: String
+  treasury: String
+  accounts: Int
+  transitions: Int
+  transfers: Int
+  crossChainMessage: Int
+}
+
+type SummaryDayData @entity {
+  id: ID!
+
+  date: Date
+  crossedKSMAmount: String
+  treasury: String
+  accounts: Int
+  transitions: Int
+  transfers: Int
+  crossChainMessage: Int
 }

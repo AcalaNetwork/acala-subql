@@ -24,6 +24,8 @@ export class Event implements Entity {
 
     public data?: KVData[];
 
+    public timestamp?: Date;
+
     public blockNumber?: bigint;
 
     public blockId?: string;

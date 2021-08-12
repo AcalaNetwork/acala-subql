@@ -14,13 +14,15 @@ export class OracleFeedRecord implements Entity {
 
     public tokenId?: string;
 
-    public accountId?: string;
+    public price?: string;
 
     public provider?: string;
 
-    public feedPrice?: string;
+    public accountId?: string;
 
-    public updateAtBlockId?: string;
+    public blockNumber?: bigint;
+
+    public blockId?: string;
 
 
     async save(): Promise<void>{
