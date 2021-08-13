@@ -1,6 +1,5 @@
 import { Token as SDKToken, getLPCurrenciesFormName, isDexShare, forceToCurrencyIdName, MaybeCurrency, TokenPair } from "@acala-network/sdk-core"
-import { SystemConsts } from "../types"
-import { Token } from "../types"
+import { SystemConsts, Token } from "../types/models"
 import { getChainName } from "./system"
 
 let tokenDecimalMap: Map<string, number>;

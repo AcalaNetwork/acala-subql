@@ -16,11 +16,17 @@ export class Token implements Entity {
 
     public decimal?: number;
 
-    public isDexShare?: boolean;
+    public price?: string;
+
+    public oraclePrice?: string;
 
     public issuance?: string;
 
-    public price?: string;
+    public lockedInLoan?: string;
+
+    public lockedInDex?: string;
+
+    public lockedInIncentive?: string;
 
 
     async save(): Promise<void>{

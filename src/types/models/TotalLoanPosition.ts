@@ -12,11 +12,11 @@ export class TotalLoanPosition implements Entity {
 
     public id: string;
 
-    public tokenId?: string;
+    public collateralId?: string;
 
-    public debit?: string;
+    public debitAmount?: string;
 
-    public collateral?: string;
+    public collateralAmount?: string;
 
 
     async save(): Promise<void>{

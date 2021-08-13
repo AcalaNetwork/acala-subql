@@ -12,13 +12,13 @@ export class LoanPosition implements Entity {
 
     public id: string;
 
-    public accountId?: string;
+    public ownerId?: string;
 
-    public tokenId?: string;
+    public collateralId?: string;
 
-    public debit?: string;
+    public debitAmount?: string;
 
-    public collateral?: string;
+    public collateralAmount?: string;
 
 
     async save(): Promise<void>{

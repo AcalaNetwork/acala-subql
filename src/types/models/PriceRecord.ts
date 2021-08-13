@@ -2,10 +2,6 @@
 import {Entity} from "@subql/types";
 import assert from 'assert';
 
-import {
-    KVData,
-} from '../interfaces'
-
 
 export class PriceRecord implements Entity {
 
@@ -16,7 +12,7 @@ export class PriceRecord implements Entity {
 
     public id: string;
 
-    public prices?: KVData[];
+    public ksm: string;
 
 
     async save(): Promise<void>{

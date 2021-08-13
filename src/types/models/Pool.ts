@@ -20,9 +20,9 @@ export class Pool implements Entity {
 
     public token1Amount: string;
 
-    public token0Price: string;
+    public exchange0: string;
 
-    public token1Price: string;
+    public exchange1: string;
 
     public token0Volumn: string;
 

@@ -85,60 +85,8 @@ type Account @entity {
   calls: [Call] @derivedFrom(field: "signer")
   transferIn: [Transfer] @derivedFrom(field: "to")
   transferOut: [Transfer] @derivedFrom(field: "from")
-  position: [LoanPosition] @derivedFrom(field: "account")
+  position: [LoanPosition] @derivedFrom(field: "owner")
 }
-
-type Token @entity {
-  id: ID!
-
-  name: String!
-  decimal: Int
-
-  isDexShare: Boolean
-
-  issuance: String
-  price: String
-}
-
-type Balance @entity {
-  id: ID!
-
-  account: Account
-  token: Token
-
-  total: String
-  balance: String
-  incentive: String
-  collateral: String
-}
-
-
-type BalanceChangedRecord @entity {
-  id: ID!
-
-  account: Account
-  token: Token
-
-  total: String
-  balance: String
-  incentive: String
-  collateral: String
-
-  blockNumber: BigInt
-  block: Block
-}
-
-type TotalBalanceChangedRecord @entity {
-  id: ID!
-
-  token: Token
-
-  balance: String
-
-  blockNumber: BigInt
-  block: Block
-}
-
 
 type Transfer @entity {
   id: ID!
@@ -153,25 +101,6 @@ type Transfer @entity {
   call: Call
   timestamp: Date
   isSuccess: Boolean
-}
-
-type LoanPosition @entity {
-  id: ID!
-
-  account: Account
-  token: Token
-
-  debit: String 
-  collateral: String 
-}
-
-type TotalLoanPosition @entity {
-  id: ID!
-
-  token: Token
-
-  debit: String
-  collateral: String
 }
 
 type LoanAction @entity {
@@ -238,6 +167,7 @@ type OracleFeedRecord @entity {
   block: Block
 }
 
+# price
 type PriceBundle @entity {
   id: ID!
 
@@ -247,31 +177,190 @@ type PriceBundle @entity {
 type PriceRecord @entity {
   id: ID!
 
-  prices: [KVData]
+  ksm: String!
+}
+
+# token
+type Token @entity {
+  id: ID!
+
+  # the token name
+  name: String!
+  # the token decimal
+  decimal: Int
+
+  # the price form dex
+  price: String
+  # the price from oracle
+  oraclePrice: String
+
+  # total issuance
+  issuance: String
+
+  # locked amount in loan
+  lockedInLoan: String
+  # locked amount in dex
+  lockedInDex: String
+  # locked amount in incentive
+  lockedInIncentive: String
+}
+
+
+# loan
+type LoanPosition @entity {
+  id: ID!
+
+  # the owner of loan
+  owner: Account
+  # the collateral token
+  collateral: Token
+
+  # the debit amount
+  debitAmount: String 
+  # the collateral amount
+  collateralAmount: String
+
+  # the loan params
+  params: LoanParams @derivedFrom(field: "collateral")
+}
+
+type TotalLoanPosition @entity {
+  id: ID!
+
+  # the collateral token
+  collateral: Token
+
+  # the total debit amount
+  debitAmount: String
+  # the total collateral amount
+  collateralAmount: String
+
+  # the loan params
+  params: LoanParams @derivedFrom(field: "collateral")
+}
+
+type LoanParams @entity {
+  id: ID!
+
+  # the collateral token
+  collateral: Token!
+
+  debitExchangeRate: String!
+
+  # the config start at
+  startAtBlockNumber: BigInt!
+  startAtBlock: Block!
+
+  maximumTotalDebitValue: String!
+  interestRatePerSec: String!
+  liquidationRatio: String!
+  liquidationPenalty: String!
+  requiredCollateralRatio: String!
+  globalInterestRatePerSec: String!
+}
+
+type LoanParamsHistory @entity {
+  id: ID!
+
+  # the collateral token
+  collateral: Token!
+  # the config start at
+  startAtBlockNumber: BigInt!
+  startAtBlock: Block
+
+  # the config end at
+  endAtBlockNumber: BigInt
+  endAtBlock: Block
+
+  maximumTotalDebitValue: String!
+  interestRatePerSec: String!
+  liquidationRatio: String!
+  liquidationPenalty: String!
+  requiredCollateralRatio: String!
+  globalInterestRatePerSec: String!
 }
 
 
 # dex
+type ProvisionPool @entity {
+  id: ID!
+
+  # the pool token
+  pool: Token!
+  # the pool token0
+  token0: Token!
+  # the pool token1
+  token1: Token!
+
+  # token0 amount
+  token0Amount: String!
+  # token1 amount
+  token1Amount: String!
+
+  # initialize share amount when begin
+  initializeShare: String!
+
+  # which block started
+  startAtBlockNumber: BigInt!
+  startAtBlock: Block!
+
+  # which block ended
+  endAtBlockNumber: BigInt
+  endAtBlock: Block!
+
+  # total transition count
+  txCount: Int!
+  # total user count
+  userCount: Int!
+
+  # user records
+  records: UserProvision @derivedFrom(field: "pool")
+}
+
+type UserProvision @entity {
+  id: ID!
+
+  pool: Token!
+  token0: Token!
+  token1: Token!
+
+  token0Amount: String!
+  token1Amount: String!
+}
+
 type Pool @entity {
   id: ID!
 
   token0: Token!
   token1: Token!
 
+  # avaiable token0 amount
   token0Amount: String!
+  # avaiable token1 amount
   token1Amount: String!
-  token0Price: String!
-  token1Price: String!
 
+  # the exchagne ratio token0:token1
+  exchange0: String!
+  # the exchagne ratio token1:token0
+  exchange1: String!
+
+  # token0 swap volumn
   token0Volumn: String!
+  # token1 swap volumn
   token1Volumn: String!
+  # total swap volumn in usd
   volumnUSD: String!
 
+  # token0 total value of locked
   token0TVL: String!
+  # token1 total value of locked
   token1TVL: String!
+  # total value of locked
   tvlUSD: String!
 
+  # tx count
   txCount: Int!
+  # user count
   userCount: Int!
 
   hourData: [PoolHourData] @derivedFrom(field: "pool")
@@ -330,36 +419,4 @@ type PoolDayData @entity {
   token0High: String!
   token0Low: String!
   token0Close: String!
-}
-
-type DexDayData @entity {
-  id: ID!
-
-  date: Date!
-  tvlUSD: String!
-  volumnUSD: String!
-  txCount: Int!
-}
-
-type Summary @entity {
-  id: ID!
-
-  crossedKSMAmount: String
-  treasury: String
-  accounts: Int
-  transitions: Int
-  transfers: Int
-  crossChainMessage: Int
-}
-
-type SummaryDayData @entity {
-  id: ID!
-
-  date: Date
-  crossedKSMAmount: String
-  treasury: String
-  accounts: Int
-  transitions: Int
-  transfers: Int
-  crossChainMessage: Int
 }

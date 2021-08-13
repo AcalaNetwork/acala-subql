@@ -45,7 +45,7 @@ export const handleProvisioningToEnabled: EventHandler = async ({ rawEvent }) =>
 	lpTokenRecord.issuance = FixedPointNumber.fromInner(lpTokenRecord.issuance || 0)
 		.add(FixedPointNumber.fromInner(lpShare.toString())).toChainData()
 
-	// reflash all tokens price
+	// reflash all related tokens price
 	const token0Price = await getPrice(token0Record.name)
 	const token1Price = await getPrice(token1Record.name)
 	
@@ -53,14 +53,15 @@ export const handleProvisioningToEnabled: EventHandler = async ({ rawEvent }) =>
 	const _token0Amount = FixedPointNumber.fromInner(token0Amount.toString(), token0Record.decimal)
 	const _token1Amount = FixedPointNumber.fromInner(token1Amount.toString(), token1Record.decimal)
 
-	const token0Volumn = _token0Amount.times(token0Price)
-	const token1Volumn = _token1Amount.times(token1Price)
-	const token0TVL = token0Volumn
-	const token1TVL = token1Volumn
+	const token0TVL = _token0Amount.times(token0Price)
+	const token1TVL = _token1Amount.times(token1Price)
+	const totalTVL = token0TVL.add(token1TVL)
 
 
 	token0Record.price = token0Price.toChainData()
 	token1Record.price = token1Price.toChainData()
+
+	pool.
 
 	await pool.save()
 }
