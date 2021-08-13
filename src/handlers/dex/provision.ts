@@ -4,6 +4,7 @@ import { add, getPoolId } from '../utils'
 import { Balance, CurrencyId, TradingPair } from '@acala-network/types/interfaces'
 import { MaybeCurrency } from '@acala-network/sdk-core'
 import { UserProvision } from '../../types/models'
+import { getToken } from '../tokens'
 
 async function getProvisionRecord (token0: MaybeCurrency, token1: MaybeCurrency) {
 	const [id, token0Id, token1Id] = getPoolId(token0, token1)
@@ -51,7 +52,14 @@ export const createProvision: EventHandler  = async ({ rawEvent, event }) => {
 	// [trading_pair, pool_0_amount, pool_1_amount, total_share_amount]
 	const [tradingPair] = rawEvent.event.data as unknown as [TradingPair]
 
-	const record = await getProvisionRecord(tradingPair[0], tradingPair[1])
+	const [id, token0Id, token1Id] = getPoolId(tradingPair[0], tradingPair[1])
+
+	// ensure token record is exists
+	await getToken(token0Id)
+	await getToken(token1Id)
+	await getToken(id)
+
+	const record = await getProvisionRecord(token0Id, token1Id)
 
 	record.startAtBlockId = event.blockId
 	record.startAtBlockNumber= event.blockNumber
@@ -63,7 +71,14 @@ export const updateProvisionByEnable: EventHandler = async ({ rawEvent, event })
 	// [trading_pair, pool_0_amount, pool_1_amount, total_share_amount]
 	const [tradingPair, pool0Amount, pool1Amount, totalShareAmount] = rawEvent.event.data as unknown as [TradingPair, Balance, Balance, Balance]
 
-	const record = await getProvisionRecord(tradingPair[0], tradingPair[1])
+	const [id, token0Id, token1Id] = getPoolId(tradingPair[0], tradingPair[1])
+
+	// ensure token record is exists
+	await getToken(token0Id)
+	await getToken(token1Id)
+	await getToken(id)
+
+	const record = await getProvisionRecord(token0Id, token1Id)
 
 	// reflash token0/token1/initializeShare amount
 	record.token0Amount = pool0Amount.toString()
@@ -80,8 +95,20 @@ export const updateUserProvision: EventHandler = async ({ rawEvent }) => {
 	// [who, currency_id_0, contribution_0, currency_id_1, contribution_1]
 	const [account, token0, token0Amount, token1, token1Amount] = rawEvent.event.data as unknown as [Account, CurrencyId, Balance, CurrencyId, Balance]
 
+	// the pool id also is the lp token name
+	const [id, token0Name, token1Name] = getPoolId(token0, token1)
+
+	const token0Record = await getToken(token0Name)
+	const token1Record = await getToken(token1Name)
+
+	await getToken(id)
+
 	const record = await getUserProvisionRecord(account.toString(), token0, token1)
 	const pool = await getProvisionRecord(token0, token1)
+
+	// update locked in dex token amount
+	token0Record.lockedInDex = add(token0Record.lockedInDex, token0Amount.toString()).toChainData()
+	token1Record.lockedInDex = add(token1Record.lockedInDex, token1Amount.toString()).toChainData()
 
 	record.token0Amount = add(record.token0Amount, token0Amount.toString()).toChainData()
 	record.token1Amount = add(record.token1Amount, token1Amount.toString()).toChainData()
@@ -89,6 +116,8 @@ export const updateUserProvision: EventHandler = async ({ rawEvent }) => {
 	pool.token0Amount = add(pool.token0Amount, token0Amount.toString()).toChainData()
 	pool.token1Amount = add(pool.token0Amount, token0Amount.toString()).toChainData()
 
+	await token0Record.save()
+	await token1Record.save()
 	await pool.save()
 	await record.save()
 }

@@ -22,7 +22,7 @@ import {
   createRemoveLiquidityHistory,
   createSwapHistory,
 } from "./history";
-import { handleProvisioningToEnabled } from "./dex/pool";
+import { createDexPool, handleProvisioningToEnabled } from "./dex/pool";
 import {
   createProvision,
   updateProvisionByEnable,
@@ -72,7 +72,7 @@ dispatch.batchRegist([
   { key: "dex-Swap", handler: createSwapHistory },
   { key: "dex-AddLiquidity", handler: createAddLiquidityHistory },
   { key: "dex-RemoveLiquidity", handler: createRemoveLiquidityHistory },
-  { key: "dex-ProvisioningToEnable", handler: handleProvisioningToEnabled },
+  { key: "dex-ProvisioningToEnable", handler: createDexPool },
 
   // provision
   { key: "dex-ListProvision", handler: createProvision },

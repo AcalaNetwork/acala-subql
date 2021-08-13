@@ -1,6 +1,6 @@
 import { Token as TokenSDK, createLPCurrencyName, forceToCurrencyIdName, FixedPointNumber } from "@acala-network/sdk-core"
 import { TradingPair } from "@acala-network/types/interfaces"
-import { Pool, Token } from "../../types"
+import { Pool, Token } from "../../types/models"
 import { getPrice } from "../prices"
 import { getToken } from "../tokens"
 import { EventHandler } from "../types"
@@ -26,7 +26,7 @@ export async function getPool (a: string, b: string) {
 	return record
 }
 
-export const handleProvisioningToEnabled: EventHandler = async ({ rawEvent }) => {
+export const createDexPool: EventHandler = async ({ rawEvent }) => {
 	// [trading_pair, pool_0_amount, pool_1_amount, total_share_amount\]
 	const [tradingPair, token0Amount, token1Amount, lpShare] = rawEvent.event.data
 
@@ -61,7 +61,7 @@ export const handleProvisioningToEnabled: EventHandler = async ({ rawEvent }) =>
 	token0Record.price = token0Price.toChainData()
 	token1Record.price = token1Price.toChainData()
 
-	pool.
+	pool.token0Amount
 
 	await pool.save()
 }

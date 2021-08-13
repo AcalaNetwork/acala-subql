@@ -6,6 +6,7 @@ import { Amount, CurrencyId, AccountId, OptionRate } from "@acala-network/types/
 import { add } from "../utils"
 import { LoanParams } from "../../types/models"
 import { LoanParamsHistory } from "../../types/models/LoanParamsHistory"
+import { getToken } from "../tokens"
 
 async function getLoanPositionRecord (owner: MaybeAccount, token: MaybeCurrency ) {
 	const collateralName = forceToCurrencyIdName(token)
@@ -100,7 +101,8 @@ export const updateLoanPosition: EventHandler = async ({ rawEvent}) => {
 	// [owner, collateral_type, collateral_adjustment, debit_adjustment\]
 	const [owner, collateral, collateralAdjustment, debitAdjustment] = rawEvent.event.data as unknown as [AccountId, CurrencyId, Amount, Amount];
 
-	const record = await getLoanPositionRecord(owner, collateral);
+	const collateralToken = await getToken(collateral)
+	const record = await getLoanPositionRecord(owner, collateral)
 	const totalRecord = await getTotalLoanPositionRecord(collateral)
 
 	record.collateralAmount = add(record.collateralAmount, collateralAdjustment.toString()).toChainData()
@@ -109,6 +111,9 @@ export const updateLoanPosition: EventHandler = async ({ rawEvent}) => {
 	totalRecord.collateralAmount = add(record.collateralAmount, collateralAdjustment.toString()).toChainData()
 	totalRecord.debitAmount = add(record.debitAmount, debitAdjustment.toString()).toChainData()
 
+	collateralToken.lockedInLoan = add(collateralToken.lockedInLoan, collateralAdjustment.toString()).toChainData()
+
+	await collateralToken.save()
 	await totalRecord.save()
 	await record.save()
 }
@@ -118,18 +123,24 @@ export const updateLoanPositionByLiquidate: EventHandler = async ({ rawEvent}) =
 	// [collateral_type, owner, collateral_amount, bad_debt_value, liquidation_strategy\]
 	const [collateral, owner, collateralAmount, badDebtValue] = rawEvent.event.data as unknown as [CurrencyId, AccountId, Amount, Amount];
 
+	const collateralToken = await getToken(collateral)
 	const record = await getLoanPositionRecord(owner, collateral);
 	const totalRecord = await getTotalLoanPositionRecord(collateral)
 
 	const positionCollateralAmount = record.collateralAmount
 	const positionDebitAmount = record.debitAmount
 
+	// force set position to zero
 	record.collateralAmount = '0'
 	record.debitAmount = '0'
 
 	totalRecord.collateralAmount = add(record.collateralAmount, positionCollateralAmount).toChainData()
 	totalRecord.debitAmount = add(record.debitAmount, positionDebitAmount).toChainData()
 
+	collateralToken.lockedInLoan = '0'
+	// TODO: should handle liquidate information
+
+	await collateralToken.save()
 	await totalRecord.save()
 	await record.save()
 }
