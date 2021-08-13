@@ -17,10 +17,10 @@ const dispatch = new Dispatcher<DispatchedEventData>()
 
 dispatch.batchRegist([
   // currencies
-  { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
-  { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
-  { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
-  { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
+  // { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
+  // { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
+  // { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
+  // { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
 
   // loan
   { key: 'loans-PositionUpdated', handler: createPositionUpdatedHistory },
