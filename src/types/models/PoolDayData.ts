@@ -14,6 +14,8 @@ export class PoolDayData implements Entity {
 
     public poolId: string;
 
+    public startAt: number;
+
     public token0Id: string;
 
     public token1Id: string;
@@ -22,9 +24,9 @@ export class PoolDayData implements Entity {
 
     public token1Amount: string;
 
-    public token0Price: string;
+    public exchange0: string;
 
-    public token1Price: string;
+    public exchange1: string;
 
     public volumnToken0: string;
 

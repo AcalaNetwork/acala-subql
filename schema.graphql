@@ -339,10 +339,13 @@ type Pool @entity {
   # avaiable token1 amount
   token1Amount: String!
 
-  # the exchagne ratio token0:token1
+  # the exchange ratio token0:token1
   exchange0: String!
-  # the exchagne ratio token1:token0
+  # the exchange ratio token1:token0
   exchange1: String!
+
+  # the fee rate of pool
+  fee: String!
 
   # token0 swap volumn
   token0Volumn: String!
@@ -360,8 +363,6 @@ type Pool @entity {
 
   # tx count
   txCount: Int!
-  # user count
-  userCount: Int!
 
   hourData: [PoolHourData] @derivedFrom(field: "pool")
   dayData: [PoolDayData] @derivedFrom(field: "pool")
@@ -371,14 +372,15 @@ type PoolHourData @entity {
   id: ID!
 
   pool: Pool!
+  startAt: Int!
 
   token0: Token!
   token1: Token!
 
   token0Amount: String!
   token1Amount: String!
-  token0Price: String!
-  token1Price: String!
+  exchange0: String!
+  exchange1: String!
 
   volumnToken0: String!
   volumnToken1: String!
@@ -398,14 +400,15 @@ type PoolDayData @entity {
   id: ID!
 
   pool: Pool!
+  startAt: Int!
 
   token0: Token!
   token1: Token!
 
   token0Amount: String!
   token1Amount: String!
-  token0Price: String!
-  token1Price: String!
+  exchange0: String!
+  exchange1: String!
 
   volumnToken0: String!
   volumnToken1: String!

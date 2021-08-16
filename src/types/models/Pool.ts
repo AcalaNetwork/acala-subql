@@ -24,6 +24,8 @@ export class Pool implements Entity {
 
     public exchange1: string;
 
+    public fee: string;
+
     public token0Volumn: string;
 
     public token1Volumn: string;
@@ -37,8 +39,6 @@ export class Pool implements Entity {
     public tvlUSD: string;
 
     public txCount: number;
-
-    public userCount: number;
 
 
     async save(): Promise<void>{
