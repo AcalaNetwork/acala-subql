@@ -12,15 +12,15 @@ export class UserProvision implements Entity {
 
     public id: string;
 
-    public poolId: string;
+    public poolId?: string;
 
-    public token0Id: string;
+    public token0Id?: string;
 
-    public token1Id: string;
+    public token1Id?: string;
 
-    public token0Amount: string;
+    public token0Amount?: string;
 
-    public token1Amount: string;
+    public token1Amount?: string;
 
 
     async save(): Promise<void>{

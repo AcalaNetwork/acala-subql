@@ -12,7 +12,7 @@ export class PriceRecord implements Entity {
 
     public id: string;
 
-    public ksm: string;
+    public ksm?: string;
 
 
     async save(): Promise<void>{

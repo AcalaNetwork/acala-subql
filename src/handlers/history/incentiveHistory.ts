@@ -1,7 +1,7 @@
-import {  EventHandler } from "./types";
-import { IncentiveAction } from "../types/models/IncentiveAction";
-import { ensureAccount } from "./account";
-import { mapUpdateKVData } from "./utils/updateKVData";
+import {  EventHandler } from "../types";
+import { IncentiveAction } from "../../types/models/IncentiveAction";
+import { ensureAccount } from "../account";
+import { mapUpdateKVData } from "../utils/updateKVData";
 
 export const createDepositDexShareHistory: EventHandler =  async ({ event, rawEvent }) => {
   const record = new IncentiveAction(event.id);

@@ -12,33 +12,33 @@ export class Pool implements Entity {
 
     public id: string;
 
-    public token0Id: string;
+    public token0Id?: string;
 
-    public token1Id: string;
+    public token1Id?: string;
 
-    public token0Amount: string;
+    public token0Amount?: string;
 
-    public token1Amount: string;
+    public token1Amount?: string;
 
-    public exchange0: string;
+    public exchange0?: string;
 
-    public exchange1: string;
+    public exchange1?: string;
 
-    public fee: string;
+    public fee?: string;
 
-    public token0Volumn: string;
+    public token0Volume?: string;
 
-    public token1Volumn: string;
+    public token1Volume?: string;
 
-    public volumnUSD: string;
+    public volumeUSD?: string;
 
-    public token0TVL: string;
+    public token0TVL?: string;
 
-    public token1TVL: string;
+    public token1TVL?: string;
 
-    public tvlUSD: string;
+    public tvlUSD?: string;
 
-    public txCount: number;
+    public txCount?: number;
 
 
     async save(): Promise<void>{

@@ -1,10 +1,9 @@
-import { forceToCurrencyIdName } from "@acala-network/sdk-core"
 import { CurrencyId } from "@acala-network/types/interfaces"
-import { Transfer } from "../types"
-import { ensureAccount } from "./account"
-import { ensureCallExist } from "./call"
-import { getNativeToken, getToken } from "./tokens"
-import { DispatchedCallData } from "./types"
+import { Transfer } from "../../types"
+import { ensureAccount } from "../account"
+import { ensureCallExist } from "../call"
+import { getNativeToken, getToken } from "../tokens"
+import { DispatchedCallData } from "../types"
 
 export async function createTransferInCurrencies ({ call, extrinsic, rawCall }: DispatchedCallData) {
     const args = rawCall.args

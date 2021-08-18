@@ -1,7 +1,6 @@
-import { forceToCurrencyId } from "@acala-network/sdk-core"
-import { Option } from "@polkadot/types"
-import { TimestampedValueOf } from "@open-web3/orml-types/interfaces"
+import { FixedPointNumber, forceToCurrencyId, forceToCurrencyIdName, MaybeCurrency } from "@acala-network/sdk-core"
 import { PriceBundle } from "../../types/models"
+import { getPool } from "../dex/pool"
 
 export async function getPricesBundle () {
 	const record = await PriceBundle.get('1')
@@ -19,12 +18,38 @@ export async function getPricesBundle () {
 	return record
 }
 
-export async function updatePricesBundle () {
-	const record = await getPricesBundle()
+export async function getKSMPrice () {
+	const pool = await getPool('KUSD', 'KSM')
 
-	const rawKSMPrice = await api.query.acalaOracle.values(forceToCurrencyId(api, 'KSM')) as  Option<TimestampedValueOf>
+	if (!pool) return FixedPointNumber.ZERO
 
-	record.ksm = rawKSMPrice.unwrapOrDefault().value.toString() || '0'
+	return FixedPointNumber.fromInner(pool.exchange0)
+}
 
-	record.save()
+export async function getKARPrice () {
+	const pool = await getPool('KAR', 'KSM')
+	const ksmPrice = await getKSMPrice()
+
+	if (!pool) return FixedPointNumber.ZERO
+
+	return FixedPointNumber.fromInner(pool.exchange1).mul(ksmPrice)
+}
+
+export async function getTokenPrice (token: string) {
+	const pool = await getPool('KUSD', token)
+
+	if (!pool) return FixedPointNumber.ZERO
+
+	return FixedPointNumber.fromInner(pool.exchange1);
+}
+
+
+export async function getPrice (token: MaybeCurrency) {
+	const name = forceToCurrencyIdName(token)
+
+	switch (name) {
+		case 'KSM': return getKSMPrice()
+		case 'KAR': return getKARPrice()
+		default: return getTokenPrice(name)
+	}
 }

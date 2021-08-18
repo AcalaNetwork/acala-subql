@@ -17,12 +17,8 @@ import {
   createClaimRewards,
   createDepositDexShareHistory,
   createWithdrawDexShareHistory,
-  createAddLiquidityHistory,
-  createAddProvisionHistory,
-  createRemoveLiquidityHistory,
-  createSwapHistory,
 } from "./history";
-import { createDexPool, handleProvisioningToEnabled } from "./dex/pool";
+import { createDexPool, updatePoolByAddLiquidity, updatePoolByRemoveLiquidity, updatePoolBySwap } from "./dex/pool";
 import {
   createProvision,
   updateProvisionByEnable,
@@ -57,7 +53,7 @@ dispatch.batchRegist([
   { key: "loans-ConfiscateCollateralAndDebit", handler: createConfiscateCollateralAndDebitHistory },
   { key: "loans-transferLoan", handler: createTransferLoanHistory },
 
-  // all cdp params config update
+  // // all cdp params config update
   { key: "cdpEngine-InterestRatePerSecUpdated", handler: handleInterestRatePerSecUpdated, },
   { key: "cdpEngine-LiquidationRatioUpdated", handler: handleLiquidationRatioUpdated, },
   { key: "cdpEngine-LiquidationPenaltyUpdated", handler: handleLiquidationPenaltyUpdated, },
@@ -68,22 +64,21 @@ dispatch.batchRegist([
   { key: "cdpEngine-LiquidateUnsafeCDP", handler: createLiquidateUnsafeCDPHistory },
   { key: "cdpEngine-LiquidateUnsafeCDP", handler: updateLoanPositionByLiquidate },
 
-  // dex
-  { key: "dex-Swap", handler: createSwapHistory },
-  { key: "dex-AddLiquidity", handler: createAddLiquidityHistory },
-  { key: "dex-RemoveLiquidity", handler: createRemoveLiquidityHistory },
-  { key: "dex-ProvisioningToEnable", handler: createDexPool },
+  // // dex
+  { key: "dex-ProvisioningToEnabled", handler: createDexPool },
+  { key: "dex-AddLiquidity", handler: updatePoolByAddLiquidity },
+  { key: "dex-RemoveLiquidity", handler: updatePoolByRemoveLiquidity },
+  { key: "dex-Swap", handler: updatePoolBySwap },
 
-  // provision
+  // // provision
   { key: "dex-ListProvision", handler: createProvision },
-  { key: "dex-ProvisionToEnable", handler: updateProvisionByEnable },
+  { key: "dex-ProvisioningToEnabled", handler: updateProvisionByEnable },
   { key: "dex-AddProvision", handler: updateUserProvision },
-  { key: "dex-AddProvision", handler: createAddProvisionHistory },
 
-  // incentive
-  { key: "incentives-DepositDexShare", handler: createDepositDexShareHistory },
-  { key: "incentives-WithdrawDexShare", handler: createWithdrawDexShareHistory },
-  { key: "incentives-PayoutRewards", handler: createClaimRewards },
+  // // incentive
+  // { key: "incentives-DepositDexShare", handler: createDepositDexShareHistory },
+  // { key: "incentives-WithdrawDexShare", handler: createWithdrawDexShareHistory },
+  // { key: "incentives-PayoutRewards", handler: createClaimRewards },
 
   // homa
   // { key: "stakingPool-MintLiquid", handler: createMintLiquidHistory },

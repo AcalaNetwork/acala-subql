@@ -1,8 +1,8 @@
-import {  EventHandler } from "./types";
-import { LoanAction } from "../types/models/LoanAction";
-import { Account } from "../types/models/Account";
-import { ensureAccount } from "./account";
-import { mapUpdateKVData } from "./utils/updateKVData";
+import {  EventHandler } from "../types";
+import { LoanAction } from "../../types/models/LoanAction";
+import { Account } from "../../types/models/Account";
+import { ensureAccount } from "../account";
+import { mapUpdateKVData } from "../utils/updateKVData";
 import { OptionRate, Rate } from "@acala-network/types/interfaces";
 
 export const createPositionUpdatedHistory: EventHandler =  async ({ event, rawEvent }) => {

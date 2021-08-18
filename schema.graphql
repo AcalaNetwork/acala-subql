@@ -116,19 +116,6 @@ type LoanAction @entity {
   timestamp: Date
 }
 
-type DexAction @entity {
-  id: ID!
-
-  account: Account
-
-  type: String
-  subType: String
-  data: [KVData]
-
-  extrinsic: Extrinsic
-  timestamp: Date
-}
-
 type IncentiveAction @entity {
   id: ID!
 
@@ -171,13 +158,13 @@ type OracleFeedRecord @entity {
 type PriceBundle @entity {
   id: ID!
 
-  ksm: String!
+  ksm: String
 }
 
 type PriceRecord @entity {
   id: ID!
 
-  ksm: String!
+  ksm: String
 }
 
 # token
@@ -185,7 +172,7 @@ type Token @entity {
   id: ID!
 
   # the token name
-  name: String!
+  name: String
   # the token decimal
   decimal: Int
 
@@ -221,7 +208,7 @@ type LoanPosition @entity {
   collateralAmount: String
 
   # the loan params
-  params: LoanParams @derivedFrom(field: "collateral")
+  # params: LoanParams @derivedFrom(field: "collateral")
 }
 
 type TotalLoanPosition @entity {
@@ -236,48 +223,48 @@ type TotalLoanPosition @entity {
   collateralAmount: String
 
   # the loan params
-  params: LoanParams @derivedFrom(field: "collateral")
+  # params: LoanParams @derivedFrom(field: "collateral")
 }
 
 type LoanParams @entity {
   id: ID!
 
   # the collateral token
-  collateral: Token!
+  collateral: Token
 
-  debitExchangeRate: String!
+  debitExchangeRate: String
 
   # the config start at
-  startAtBlockNumber: BigInt!
-  startAtBlock: Block!
+  startAtBlockNumber: BigInt
+  startAtBlock: Block
 
-  maximumTotalDebitValue: String!
-  interestRatePerSec: String!
-  liquidationRatio: String!
-  liquidationPenalty: String!
-  requiredCollateralRatio: String!
-  globalInterestRatePerSec: String!
+  maximumTotalDebitValue: String
+  interestRatePerSec: String
+  liquidationRatio: String
+  liquidationPenalty: String
+  requiredCollateralRatio: String
+  globalInterestRatePerSec: String
 }
 
 type LoanParamsHistory @entity {
   id: ID!
 
   # the collateral token
-  collateral: Token!
+  collateral: Token
 
   # the config start at
-  startAtBlockNumber: BigInt!
+  startAtBlockNumber: BigInt
   startAtBlock: Block
   # the config end at
   endAtBlockNumber: BigInt
   endAtBlock: Block
 
-  maximumTotalDebitValue: String!
-  interestRatePerSec: String!
-  liquidationRatio: String!
-  liquidationPenalty: String!
-  requiredCollateralRatio: String!
-  globalInterestRatePerSec: String!
+  maximumTotalDebitValue: String
+  interestRatePerSec: String
+  liquidationRatio: String
+  liquidationPenalty: String
+  requiredCollateralRatio: String
+  globalInterestRatePerSec: String
 }
 
 
@@ -286,83 +273,83 @@ type ProvisionPool @entity {
   id: ID!
 
   # the pool token
-  pool: Token!
+  poolToken: Token
   # the pool token0
-  token0: Token!
+  token0: Token
   # the pool token1
-  token1: Token!
+  token1: Token
 
   # token0 amount
-  token0Amount: String!
+  token0Amount: String
   # token1 amount
-  token1Amount: String!
+  token1Amount: String
 
   # initialize share amount when begin
-  initializeShare: String!
+  initializeShare: String
 
   # which block started
-  startAtBlockNumber: BigInt!
-  startAtBlock: Block!
+  startAtBlockNumber: BigInt
+  startAtBlock: Block
 
   # which block ended
   endAtBlockNumber: BigInt
-  endAtBlock: Block!
+  endAtBlock: Block
 
   # total transition count
-  txCount: Int!
+  txCount: Int
   # total user count
-  userCount: Int!
+  userCount: Int
 
   # user records
-  records: UserProvision @derivedFrom(field: "pool")
+  records: [UserProvision] @derivedFrom(field: "pool")
 }
 
 type UserProvision @entity {
   id: ID!
 
-  pool: Token!
-  token0: Token!
-  token1: Token!
+  pool: ProvisionPool
+  token0: Token
+  token1: Token
 
-  token0Amount: String!
-  token1Amount: String!
+  token0Amount: String
+  token1Amount: String
 }
 
 type Pool @entity {
   id: ID!
 
-  token0: Token!
-  token1: Token!
+  token0: Token
+  token1: Token
 
   # avaiable token0 amount
-  token0Amount: String!
+  token0Amount: String
   # avaiable token1 amount
-  token1Amount: String!
+  token1Amount: String
 
   # the exchange ratio token0:token1
-  exchange0: String!
+  exchange0: String
   # the exchange ratio token1:token0
-  exchange1: String!
+  exchange1: String
 
   # the fee rate of pool
-  fee: String!
+  fee: String
 
-  # token0 swap volumn
-  token0Volumn: String!
-  # token1 swap volumn
-  token1Volumn: String!
-  # total swap volumn in usd
-  volumnUSD: String!
+  # token0 swap volume
+  token0Volume: String
+  # token1 swap volume
+  token1Volume: String
+  # total swap volume in usd
+  volumeUSD: String
 
   # token0 total value of locked
-  token0TVL: String!
+  token0TVL: String
   # token1 total value of locked
-  token1TVL: String!
+  token1TVL: String
   # total value of locked
-  tvlUSD: String!
+  tvlUSD: String
 
   # tx count
-  txCount: Int!
+  txCount: Int
 
   hourData: [PoolHourData] @derivedFrom(field: "pool")
   dayData: [PoolDayData] @derivedFrom(field: "pool")
@@ -371,55 +358,96 @@ type Pool @entity {
 type PoolHourData @entity {
   id: ID!
 
-  pool: Pool!
-  startAt: Int!
+  pool: Pool
+  date: Date
 
-  token0: Token!
-  token1: Token!
+  token0: Token
+  token1: Token
 
-  token0Amount: String!
-  token1Amount: String!
-  exchange0: String!
-  exchange1: String!
+  token0Amount: String
+  token1Amount: String
+  exchange0: String
+  exchange1: String
 
-  volumnToken0: String!
-  volumnToken1: String!
-  volumnUSD: String!
+  volumeToken0: String
+  volumeToken1: String
+  volumeUSD: String
 
-  txCount: Int!
+  txCount: Int
 
-  tvlUSD: String!
+  tvlUSD: String
 
-  token0Open: String! 
-  token0High: String!
-  token0Low: String!
-  token0Close: String!
+  token0Open: String
+  token0High: String
+  token0Low: String
+  token0Close: String
 }
 
 type PoolDayData @entity {
   id: ID!
 
-  pool: Pool!
-  startAt: Int!
+  pool: Pool
+  date: Date
 
-  token0: Token!
-  token1: Token!
+  token0: Token
+  token1: Token
 
-  token0Amount: String!
-  token1Amount: String!
-  exchange0: String!
-  exchange1: String!
+  token0Amount: String
+  token1Amount: String
+  exchange0: String
+  exchange1: String
 
-  volumnToken0: String!
-  volumnToken1: String!
-  volumnUSD: String!
+  volumeToken0: String
+  volumeToken1: String
+  volumeUSD: String
 
-  txCount: Int!
+  txCount: Int
 
-  tvlUSD: String!
+  tvlUSD: String
 
-  token0Open: String! 
-  token0High: String!
-  token0Low: String!
-  token0Close: String!
+  token0Open: String
+  token0High: String
+  token0Low: String
+  token0Close: String
+}
+
+type Dex @entity {
+  id: ID!
+
+  poolCount: Int
+
+  totalVolumeUSD: String
+  totalTVLUSD: String
+}
+
+type DexDayData @entity {
+  id: ID!
+
+  poolCount: Int
+  date: Date
+
+  dailyVolumeUSD: String
+
+  totalVolumeUSD: String
+  totalTVLUSD: String
+}
+
+type DexAction @entity {
+  id: ID!
+
+  account: Account
+
+  type: String
+  subType: String
+  data: [KVData]
+
+  pool: Pool
+  token0: Token
+  token1: Token
+  token0Amount: String
+  token1Amount: String
+  volumeUSD: String
+
+  extrinsic: Extrinsic
+  timestamp: Date
 }

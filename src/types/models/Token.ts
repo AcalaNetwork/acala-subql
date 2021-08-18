@@ -12,7 +12,7 @@ export class Token implements Entity {
 
     public id: string;
 
-    public name: string;
+    public name?: string;
 
     public decimal?: number;
 

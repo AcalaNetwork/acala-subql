@@ -1,7 +1,7 @@
-import {  EventHandler } from "./types";
-import { ensureAccount } from "./account";
-import { mapUpdateKVData } from "./utils/updateKVData";
-import { HomaAction } from "../types/models";
+import {  EventHandler } from "../types";
+import { ensureAccount } from "../account";
+import { mapUpdateKVData } from "../utils/updateKVData";
+import { HomaAction } from "../../types/models";
 
 export const createMintLiquidHistory: EventHandler =  async ({ event, rawEvent }) => {
   const record = new HomaAction(event.id);

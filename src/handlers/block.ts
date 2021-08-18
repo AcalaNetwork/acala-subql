@@ -1,7 +1,6 @@
 import { SubstrateBlock } from '@subql/types'
 import { getBlockTimestamp } from './utils/getBlockTimestamp'
 import { Block } from '../types/models'
-import { updatePricesBundle } from './prices/priceBundle'
 import { initSystemConsts } from './system'
 import { initSystemTokens } from './tokens'
 
@@ -29,8 +28,6 @@ export async function createBlock (origin: SubstrateBlock) {
 
     isFirstSync = false
   }
-
-  await updatePricesBundle();
 
   const block = await ensureBlock(origin)
 

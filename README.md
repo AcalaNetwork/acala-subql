@@ -24,21 +24,21 @@
   - [ ] LiquidityPoolDayData
     pool
 
-    token0TotalVolumn
-    token1TotalVolumn
+    token0TotalVolume
+    token1TotalVolume
 
     totalIssuance
-    totalVolumnInUSD
+    totalVolumeInUSD
 
     callCount
 
   - [ ] LiquidityPoolHourData
     pool
 
-    token0TotalVolumn
-    token1TotalVolumn
+    token0TotalVolume
+    token1TotalVolume
 
     totalIssuance
-    totalVolumnInUSD
+    totalVolumeInUSD
 
     callCount

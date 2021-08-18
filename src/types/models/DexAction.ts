@@ -24,6 +24,18 @@ export class DexAction implements Entity {
 
     public data?: KVData[];
 
+    public poolId?: string;
+
+    public token0Id?: string;
+
+    public token1Id?: string;
+
+    public token0Amount?: string;
+
+    public token1Amount?: string;
+
+    public volumeUSD?: string;
+
     public extrinsicId?: string;
 
     public timestamp?: Date;

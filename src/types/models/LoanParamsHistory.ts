@@ -12,9 +12,9 @@ export class LoanParamsHistory implements Entity {
 
     public id: string;
 
-    public collateralId: string;
+    public collateralId?: string;
 
-    public startAtBlockNumber: bigint;
+    public startAtBlockNumber?: bigint;
 
     public startAtBlockId?: string;
 
@@ -22,17 +22,17 @@ export class LoanParamsHistory implements Entity {
 
     public endAtBlockId?: string;
 
-    public maximumTotalDebitValue: string;
+    public maximumTotalDebitValue?: string;
 
-    public interestRatePerSec: string;
+    public interestRatePerSec?: string;
 
-    public liquidationRatio: string;
+    public liquidationRatio?: string;
 
-    public liquidationPenalty: string;
+    public liquidationPenalty?: string;
 
-    public requiredCollateralRatio: string;
+    public requiredCollateralRatio?: string;
 
-    public globalInterestRatePerSec: string;
+    public globalInterestRatePerSec?: string;
 
 
     async save(): Promise<void>{

@@ -12,39 +12,39 @@ export class PoolHourData implements Entity {
 
     public id: string;
 
-    public poolId: string;
+    public poolId?: string;
 
-    public startAt: number;
+    public date?: Date;
 
-    public token0Id: string;
+    public token0Id?: string;
 
-    public token1Id: string;
+    public token1Id?: string;
 
-    public token0Amount: string;
+    public token0Amount?: string;
 
-    public token1Amount: string;
+    public token1Amount?: string;
 
-    public exchange0: string;
+    public exchange0?: string;
 
-    public exchange1: string;
+    public exchange1?: string;
 
-    public volumnToken0: string;
+    public volumeToken0?: string;
 
-    public volumnToken1: string;
+    public volumeToken1?: string;
 
-    public volumnUSD: string;
+    public volumeUSD?: string;
 
-    public txCount: number;
+    public txCount?: number;
 
-    public tvlUSD: string;
+    public tvlUSD?: string;
 
-    public token0Open: string;
+    public token0Open?: string;
 
-    public token0High: string;
+    public token0High?: string;
 
-    public token0Low: string;
+    public token0Low?: string;
 
-    public token0Close: string;
+    public token0Close?: string;
 
 
     async save(): Promise<void>{

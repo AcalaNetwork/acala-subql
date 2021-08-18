@@ -12,25 +12,25 @@ export class LoanParams implements Entity {
 
     public id: string;
 
-    public collateralId: string;
+    public collateralId?: string;
 
-    public debitExchangeRate: string;
+    public debitExchangeRate?: string;
 
-    public startAtBlockNumber: bigint;
+    public startAtBlockNumber?: bigint;
 
-    public startAtBlockId: string;
+    public startAtBlockId?: string;
 
-    public maximumTotalDebitValue: string;
+    public maximumTotalDebitValue?: string;
 
-    public interestRatePerSec: string;
+    public interestRatePerSec?: string;
 
-    public liquidationRatio: string;
+    public liquidationRatio?: string;
 
-    public liquidationPenalty: string;
+    public liquidationPenalty?: string;
 
-    public requiredCollateralRatio: string;
+    public requiredCollateralRatio?: string;
 
-    public globalInterestRatePerSec: string;
+    public globalInterestRatePerSec?: string;
 
 
     async save(): Promise<void>{

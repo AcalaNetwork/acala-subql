@@ -19,7 +19,7 @@ export async function initSystemConsts () {
     const liquidToken = getConsts<CurrencyId>('stakingPool.liquidCurrencyId')
     const stakingToken = getConsts<CurrencyId>('stakingPool.stakingCurrencyId')
     const nativeToken = getConsts<CurrencyId>('transactionPayment.nativeCurrencyId');
-    const stableToken =  getConsts<CurrencyId>('transactionPayment.stableCurrencyId');
+    const stableToken =  getConsts<CurrencyId>('cdpEngine.getStableCurrencyId');
 
     const liquidTokenId = liquidToken?.asToken.toString()
     const stakingTokenId = stakingToken?.asToken.toString()

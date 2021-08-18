@@ -18,8 +18,6 @@ export {Transfer} from "./Transfer"
 
 export {LoanAction} from "./LoanAction"
 
-export {DexAction} from "./DexAction"
-
 export {IncentiveAction} from "./IncentiveAction"
 
 export {HomaAction} from "./HomaAction"
@@ -49,4 +47,10 @@ export {Pool} from "./Pool"
 export {PoolHourData} from "./PoolHourData"
 
 export {PoolDayData} from "./PoolDayData"
+
+export {Dex} from "./Dex"
+
+export {DexDayData} from "./DexDayData"
+
+export {DexAction} from "./DexAction"
 

@@ -152,7 +152,9 @@ const createParamsUpdateFN = (name: string): EventHandler => {
 	
 		const blockNumber = event.blockNumber
 		const blockId = event.blockId
-	
+
+		await getToken(collateral)
+
 		const record = await getLoanParamsRecord(collateral)
 		const historyRecord = await getLoanParamsHistoryRecord(collateral, blockNumber, blockId)
 	

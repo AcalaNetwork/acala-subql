@@ -12,29 +12,29 @@ export class ProvisionPool implements Entity {
 
     public id: string;
 
-    public poolId: string;
+    public poolTokenId?: string;
 
-    public token0Id: string;
+    public token0Id?: string;
 
-    public token1Id: string;
+    public token1Id?: string;
 
-    public token0Amount: string;
+    public token0Amount?: string;
 
-    public token1Amount: string;
+    public token1Amount?: string;
 
-    public initializeShare: string;
+    public initializeShare?: string;
 
-    public startAtBlockNumber: bigint;
+    public startAtBlockNumber?: bigint;
 
-    public startAtBlockId: string;
+    public startAtBlockId?: string;
 
     public endAtBlockNumber?: bigint;
 
-    public endAtBlockId: string;
+    public endAtBlockId?: string;
 
-    public txCount: number;
+    public txCount?: number;
 
-    public userCount: number;
+    public userCount?: number;
 
 
     async save(): Promise<void>{
