@@ -11,6 +11,7 @@ import { getToken } from "../tokens"
 import { createLPCurrencyName, FixedPointNumber } from "@acala-network/sdk-core"
 import { getPrice } from "../prices"
 import { getPoolId } from "../utils"
+import { getPool } from "./pool"
 
 export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
   const record = new DexAction(event.id)
@@ -31,6 +32,7 @@ export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
     const [poolId] = getPoolId(_supplyToken.name, _targetToken.name)
     const accountRecord = await ensureAccount(who.toString())
 
+    await getPool(_supplyToken.name, _targetToken.name)
     const supplyPrice = await getPrice(_supplyToken.name)
     const targetPrice = await getPrice(_targetToken.name)
 
@@ -95,6 +97,7 @@ export const createAddLiquidityHistory: EventHandler = async ({
     const token1Price = await getPrice(token1.name)
     const accountRecord = await ensureAccount(account.toString())
     const [poolId] = getPoolId(token0.name, token1.name)
+    await getPool(token0.name, token1.name)
 
     const amount0 = FixedPointNumber.fromInner(
       pool0Amount.toString(),
@@ -157,6 +160,7 @@ export const createRemoveLiquidityHistory: EventHandler = async ({
     const token0Price = await getPrice(token0.name)
     const token1Price = await getPrice(token1.name)
     const accountRecord = await ensureAccount(account.toString())
+    await getPool(token0.name, token1.name)
     const [poolId] = getPoolId(token0.name, token1.name)
 
     const amount0 = FixedPointNumber.fromInner(pool0Amount.toString(), token0.decimal)
