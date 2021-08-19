@@ -14,11 +14,11 @@ export class PoolDayData implements Entity {
 
     public poolId?: string;
 
+    public token0Id: string;
+
+    public token1Id: string;
+
     public date?: Date;
-
-    public token0Id?: string;
-
-    public token1Id?: string;
 
     public token0Amount?: string;
 

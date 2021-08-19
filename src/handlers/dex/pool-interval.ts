@@ -127,6 +127,7 @@ export const updateTokenDayData= async (tokenName: string, timestamp: number) =>
 	if (!record) {
 		record = new TokenDayData(recordId)
 
+		record.tokenId = tokenName
 		record.date = dayjs.unix(dayIndex * 3600 * 24).toDate()
 		record.dailyVolumeUSD = '0'
 		record.dailyVolumeToken = '0'
