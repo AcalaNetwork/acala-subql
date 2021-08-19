@@ -3,7 +3,7 @@ description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: wss://karura-rpc-0.aca-api.network
+  endpoint: wss://karura.polkawallet.io
   types:
     CallOf: Call
     DispatchTime:

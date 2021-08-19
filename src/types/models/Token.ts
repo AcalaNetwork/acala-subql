@@ -18,8 +18,6 @@ export class Token implements Entity {
 
     public price?: string;
 
-    public oraclePrice?: string;
-
     public issuance?: string;
 
     public lockedInLoan?: string;
@@ -27,6 +25,12 @@ export class Token implements Entity {
     public lockedInDex?: string;
 
     public lockedInIncentive?: string;
+
+    public volume?: string;
+
+    public volumeUSD?: string;
+
+    public txCount?: bigint;
 
 
     async save(): Promise<void>{

@@ -1,6 +1,7 @@
 import { MaybeCurrency } from "@acala-network/sdk-core"
 import dayjs from "dayjs"
 import { DexDayData, PoolDayData, PoolHourData } from "../../types/models"
+import { TokenDayData } from "../../types/models/TokenDayData"
 import { getToken } from "../tokens"
 import { getPoolId } from "../utils"
 import { getDex } from "./dex"
@@ -33,7 +34,7 @@ export const updatePoolHourData = async (tokenA: MaybeCurrency, tokenB: MaybeCur
 		record.token0Low = poolRecord.exchange0
 		record.token0High = poolRecord.exchange0
 		record.token0Close = poolRecord.exchange0
-		record.txCount = 0
+		record.txCount = BigInt(0)
 
 		await record.save()
 	}
@@ -45,7 +46,7 @@ export const updatePoolHourData = async (tokenA: MaybeCurrency, tokenB: MaybeCur
 	record.exchange1 = poolRecord.exchange1
 	record.tvlUSD = poolRecord.tvlUSD
 
-	record.txCount = record.txCount + 1
+	record.txCount = record.txCount + BigInt(1)
 
 	return record
 }
@@ -77,7 +78,7 @@ export const updatePoolDayData = async (tokenA: MaybeCurrency, tokenB: MaybeCurr
 		record.token0Low = poolRecord.exchange0
 		record.token0High = poolRecord.exchange0
 		record.token0Close = poolRecord.exchange0
-		record.txCount = 0
+		record.txCount = BigInt(0)
 
 		await record.save()
 	}
@@ -88,7 +89,7 @@ export const updatePoolDayData = async (tokenA: MaybeCurrency, tokenB: MaybeCurr
 	record.exchange0 = poolRecord.exchange0
 	record.exchange1 = poolRecord.exchange1
 	record.tvlUSD = poolRecord.tvlUSD
-	record.txCount = record.txCount + 1
+	record.txCount = record.txCount + BigInt(1)
 
 	return record
 }
@@ -112,6 +113,27 @@ export const updateDexDayData= async (timestamp: number) => {
 	record.poolCount = dex.poolCount
 	record.totalVolumeUSD = dex.totalVolumeUSD
 	record.totalTVLUSD = dex.totalTVLUSD
+
+	return record
+}
+
+export const updateTokenDayData= async (tokenName: string, timestamp: number) => {
+	const token = await getToken(tokenName)
+	const dayIndex = Math.ceil(timestamp / 3600 / 24)
+	const recordId = `${token.id}-${dayIndex}`
+
+	let record = await TokenDayData.get(recordId)
+
+	if (!record) {
+		record = new TokenDayData(recordId)
+
+		record.date = dayjs.unix(dayIndex * 3600 * 24).toDate()
+		record.dailyVolumeUSD = '0'
+		record.dailyVolumeToken = '0'
+		record.dailyTxCount = BigInt(0)
+
+		await record.save()
+	}
 
 	return record
 }

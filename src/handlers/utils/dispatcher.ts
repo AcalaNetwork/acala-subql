@@ -20,6 +20,10 @@ export class Dispatcher<DispatchData> {
 
     if (!handlers) return
 
-    return Promise.all(handlers.map((handler) => handler(data)))
+    return Promise.all(handlers.map((handler) => handler(data))).catch((e) => {
+      logger.info(e.stack.toString())
+
+      throw e
+    })
   }
 }

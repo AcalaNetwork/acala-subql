@@ -52,12 +52,14 @@ export async function getToken(currency: MaybeCurrency) {
     token.name = tokenName;
 
     token.price = '0'
-    token.oraclePrice = '0'
 
     token.issuance = '0'
     token.lockedInDex = '0'
     token.lockedInIncentive = '0'
     token.lockedInLoan = '0'
+    token.volume = '0'
+    token.volumeUSD = '0'
+    token.txCount = BigInt(0)
 
     await token.save();
   }

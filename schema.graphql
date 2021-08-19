@@ -78,7 +78,7 @@ type Event @entity {
 type Account @entity {
   id: ID!
 
-  txCount: Int
+  txCount: BigInt
   createAtBlock: Block
 
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
@@ -178,8 +178,6 @@ type Token @entity {
 
   # the price form dex
   price: String
-  # the price from oracle
-  oraclePrice: String
 
   # total issuance
   issuance: String
@@ -190,6 +188,29 @@ type Token @entity {
   lockedInDex: String
   # locked amount in incentive
   lockedInIncentive: String
+
+  volume: String
+  volumeUSD: String
+  txCount: BigInt
+
+  dayData: [TokenDayData] @derivedFrom(field: "token")
+  poolDayDataBase: [PoolDayData] @derivedFrom(field: "token0")
+  poolDayDataQuote: [PoolDayData] @derivedFrom(field: "token1")
+  poolBase: [Pool] @derivedFrom(field: "token0")
+  poolQuote: [Pool] @derivedFrom(field: "token1")
+}
+
+type TokenDayData @entity {
+  id: ID!
+
+  date: Date
+
+  token: Token
+
+  # dex tvl
+  dailyVolumeToken: String
+  dailyVolumeUSD: String
+  dailyTxCount: BigInt
 }
 
 
@@ -296,9 +317,7 @@ type ProvisionPool @entity {
   endAtBlock: Block
 
   # total transition count
-  txCount: Int
-  # total user count
-  userCount: Int
+  txCount: BigInt
 
   # user records
   records: [UserProvision] @derivedFrom(field: "pool")
@@ -349,10 +368,11 @@ type Pool @entity {
   tvlUSD: String
 
   # tx count
-  txCount: Int
+  txCount: BigInt
 
   hourData: [PoolHourData] @derivedFrom(field: "pool")
   dayData: [PoolDayData] @derivedFrom(field: "pool")
+  actions: [DexAction] @derivedFrom(field: "pool")
 }
 
 type PoolHourData @entity {
@@ -373,7 +393,7 @@ type PoolHourData @entity {
   volumeToken1: String
   volumeUSD: String
 
-  txCount: Int
+  txCount: BigInt
 
   tvlUSD: String
 
@@ -401,7 +421,7 @@ type PoolDayData @entity {
   volumeToken1: String
   volumeUSD: String
 
-  txCount: Int
+  txCount: BigInt
 
   tvlUSD: String
 

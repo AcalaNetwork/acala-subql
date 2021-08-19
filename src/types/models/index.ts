@@ -30,6 +30,8 @@ export {PriceRecord} from "./PriceRecord"
 
 export {Token} from "./Token"
 
+export {TokenDayData} from "./TokenDayData"
+
 export {LoanPosition} from "./LoanPosition"
 
 export {TotalLoanPosition} from "./TotalLoanPosition"

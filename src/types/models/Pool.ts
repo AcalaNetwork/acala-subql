@@ -38,7 +38,7 @@ export class Pool implements Entity {
 
     public tvlUSD?: string;
 
-    public txCount?: number;
+    public txCount?: bigint;
 
 
     async save(): Promise<void>{

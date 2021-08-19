@@ -34,7 +34,7 @@ export class PoolDayData implements Entity {
 
     public volumeUSD?: string;
 
-    public txCount?: number;
+    public txCount?: bigint;
 
     public tvlUSD?: string;
 

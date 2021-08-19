@@ -15,7 +15,7 @@ async function getPriceFromDexPool (tokenA: string, tokenB: string) {
 
 	if (amount0.isZero()) return FixedPointNumber.ZERO
 
-	return pool.token0Id === tokenA ? amount0.div(amount1) : amount1.div(amount0)
+	return pool.token0Id === tokenA ? amount1.div(amount0) : amount0.div(amount1)
 }
  // get KAR price from KSM-KAR pair
 export async function getKARPrice () {

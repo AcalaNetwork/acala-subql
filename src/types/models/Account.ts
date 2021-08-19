@@ -12,7 +12,7 @@ export class Account implements Entity {
 
     public id: string;
 
-    public txCount?: number;
+    public txCount?: bigint;
 
     public createAtBlockId?: string;
 

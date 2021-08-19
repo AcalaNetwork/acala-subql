@@ -35,8 +35,8 @@ export const createPositionUpdatedHistory: EventHandler =  async ({ event, rawEv
 
     // save the debit exchange rate
     if (collateral) {
-      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as OptionRate 
-      const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as Rate
+      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as unknown as OptionRate 
+      const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as unknown as Rate
 
       record.data.push({
         key: 'debitExchangeRate',
@@ -77,8 +77,8 @@ export const createConfiscateCollateralAndDebitHistory: EventHandler = async ({ 
 
     // save the debit exchange rate
     if (collateral) {
-      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as OptionRate 
-      const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as Rate
+      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as unknown as OptionRate 
+      const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as unknown as Rate
 
       record.data.push({
         key: 'debitExchangeRate',
@@ -162,8 +162,8 @@ export const createLiquidateUnsafeCDPHistory: EventHandler =  async ({ event, ra
 
     // save the debit exchange rate
     if (collateral) {
-      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as OptionRate 
-      const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as Rate
+      const debitExchangeRate = (await api.query.cdpEngine.debitExchangeRate(collateral)) as unknown as OptionRate 
+      const globalExchangeRate = api.consts.cdpEngine.defaultDebitExchangeRate as unknown as Rate
 
       record.data.push({
         key: 'debitExchangeRate',

@@ -32,9 +32,7 @@ export class ProvisionPool implements Entity {
 
     public endAtBlockId?: string;
 
-    public txCount?: number;
-
-    public userCount?: number;
+    public txCount?: bigint;
 
 
     async save(): Promise<void>{

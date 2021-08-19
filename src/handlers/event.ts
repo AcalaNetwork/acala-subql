@@ -60,7 +60,6 @@ dispatch.batchRegist([
   { key: "cdpEngine-RequiredCollateralRatioUpdated", handler: handleRequiredCollateralRatioUpdated, },
   { key: "cdpEngine-MaximumTotalDebitValueUpdated", handler: handleMaximumTotalDebitValueUpdated, },
   { key: "cdpEngine-GlobalInterestRatePerSecUpdated", handler: handleGlobalInterestRatePerSecUpdated, },
-
   { key: "cdpEngine-LiquidateUnsafeCDP", handler: createLiquidateUnsafeCDPHistory },
   { key: "cdpEngine-LiquidateUnsafeCDP", handler: updateLoanPositionByLiquidate },
 
@@ -76,9 +75,9 @@ dispatch.batchRegist([
   { key: "dex-AddProvision", handler: updateUserProvision },
 
   // // incentive
-  // { key: "incentives-DepositDexShare", handler: createDepositDexShareHistory },
-  // { key: "incentives-WithdrawDexShare", handler: createWithdrawDexShareHistory },
-  // { key: "incentives-PayoutRewards", handler: createClaimRewards },
+  { key: "incentives-DepositDexShare", handler: createDepositDexShareHistory },
+  { key: "incentives-WithdrawDexShare", handler: createWithdrawDexShareHistory },
+  { key: "incentives-PayoutRewards", handler: createClaimRewards },
 
   // homa
   // { key: "stakingPool-MintLiquid", handler: createMintLiquidHistory },
