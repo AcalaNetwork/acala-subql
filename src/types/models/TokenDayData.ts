@@ -16,6 +16,8 @@ export class TokenDayData implements Entity {
 
     public tokenId?: string;
 
+    public price?: string;
+
     public dailyVolumeToken?: string;
 
     public dailyVolumeUSD?: string;

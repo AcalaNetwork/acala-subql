@@ -206,6 +206,7 @@ type TokenDayData @entity {
   date: Date
 
   token: Token
+  price: String
 
   # dex tvl
   dailyVolumeToken: String

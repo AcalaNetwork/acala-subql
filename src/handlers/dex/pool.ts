@@ -334,7 +334,7 @@ export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
     token0Record.price = token0Price.toChainData()
     token1Record.price = token1Price.toChainData()
     token0Record.lockedInDex = add(token0Record.lockedInDex, token0Balance).toChainData()
-    token1Record.lockedInDex = add(token1Record.lockedInDex, token0Balance).toChainData()
+    token1Record.lockedInDex = add(token1Record.lockedInDex, token1Balance).toChainData()
     token0Record.volume = add(token0Record.volume, token0Changed).toChainData()
     token1Record.volume = add(token0Record.volume, token1Changed).toChainData()
     token0Record.volumeUSD = add(token0Record.volumeUSD, token0VolumeUSD).toChainData()

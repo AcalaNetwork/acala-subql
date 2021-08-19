@@ -136,5 +136,7 @@ export const updateTokenDayData= async (tokenName: string, timestamp: number) =>
 		await record.save()
 	}
 
+	record.price = token.price
+
 	return record
 }
