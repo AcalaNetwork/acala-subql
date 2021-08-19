@@ -5,7 +5,7 @@ import { Balance, CurrencyId, TradingPair } from '@acala-network/types/interface
 import { MaybeCurrency } from '@acala-network/sdk-core'
 import { UserProvision } from '../../types/models'
 import { getToken } from '../tokens'
-import { createAddLiquidityHistory } from './dexHistory'
+import { createAddLiquidityHistory } from './dex-history'
 
 async function getProvisionRecord (token0: MaybeCurrency, token1: MaybeCurrency) {
 	const [id, token0Id, token1Id] = getPoolId(token0, token1)
@@ -102,6 +102,8 @@ export const updateUserProvision: EventHandler = async ({ rawEvent, event }) => 
 
 	const token0Record = await getToken(token0Name)
 	const token1Record = await getToken(token1Name)
+	const token0Decimal = token0Record.decimal
+	const token1Decimal = token1Record.decimal
 
 	await getToken(id)
 
@@ -109,14 +111,14 @@ export const updateUserProvision: EventHandler = async ({ rawEvent, event }) => 
 	const record = await getUserProvisionRecord(account.toString(), token0, token1)
 
 	// update locked in dex token amount
-	token0Record.lockedInDex = add(token0Record.lockedInDex, token0Amount.toString()).toChainData()
-	token1Record.lockedInDex = add(token1Record.lockedInDex, token1Amount.toString()).toChainData()
+	token0Record.lockedInDex = add(token0Record.lockedInDex, token0Amount.toString(), token0Decimal, token0Decimal).toChainData()
+	token1Record.lockedInDex = add(token1Record.lockedInDex, token1Amount.toString(), token1Decimal, token1Decimal).toChainData()
 
-	record.token0Amount = add(record.token0Amount, token0Amount.toString()).toChainData()
-	record.token1Amount = add(record.token1Amount, token1Amount.toString()).toChainData()
+	record.token0Amount = add(record.token0Amount, token0Amount.toString(), token0Decimal, token0Decimal).toChainData()
+	record.token1Amount = add(record.token1Amount, token1Amount.toString(), token1Decimal, token1Decimal).toChainData()
 
-	pool.token0Amount = add(pool.token0Amount, token0Amount.toString()).toChainData()
-	pool.token1Amount = add(pool.token0Amount, token0Amount.toString()).toChainData()
+	pool.token0Amount = add(pool.token0Amount, token0Amount.toString(), token0Decimal, token0Decimal).toChainData()
+	pool.token1Amount = add(pool.token0Amount, token0Amount.toString(), token1Decimal, token1Decimal).toChainData()
 
 	await createAddLiquidityHistory({ rawEvent, event })
 	await token0Record.save()
