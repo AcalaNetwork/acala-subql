@@ -381,6 +381,7 @@ export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
     await token1DayRecord.save()
 		await hourRecord.save()
 		await dayRecord.save()
+    await dexDayRecord.save()
   }
 
   const history = await createSwapHistory({ event, rawEvent })
