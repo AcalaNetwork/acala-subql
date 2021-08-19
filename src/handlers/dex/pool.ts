@@ -88,7 +88,7 @@ export const createDexPool: EventHandler = async ({ rawEvent, event }) => {
   // modify pricision
   token0TVL.setPrecision(18)
   token1TVL.setPrecision(18)
-  token0TVL.setPrecision(18)
+  totalTVL.setPrecision(18)
 
   // the swap volume is 0 at the pool created
   pool.token0Volume = "0"
@@ -185,7 +185,7 @@ export const updatePoolByAddLiquidity: EventHandler = async ({
   pool.tvlUSD = totalTVL.toChainData()
   pool.txCount = pool.txCount + BigInt(1)
 
-  const tvlChanged = FixedPointNumber.fromInner(prevTVL).minus(totalTVL)
+  const tvlChanged = totalTVL.minus(FixedPointNumber.fromInner(prevTVL))
 
   dex.totalTVLUSD = add(dex.totalTVLUSD, tvlChanged).toChainData()
 
@@ -257,14 +257,14 @@ export const updatePoolByRemoveLiquidity: EventHandler = async ({
 
   token0TVL.setPrecision(18)
   token1TVL.setPrecision(18)
-  token0TVL.setPrecision(18)
+  totalTVL.setPrecision(18)
 
   pool.token0TVL = token0TVL.toChainData()
   pool.token1TVL = token1TVL.toChainData()
   pool.tvlUSD = totalTVL.toChainData()
   pool.txCount = pool.txCount + BigInt(1)
 
-  const tvlChanged = prevTVL.minus(totalTVL)
+  const tvlChanged = totalTVL.minus(prevTVL)
 
   dex.totalTVLUSD = add(dex.totalTVLUSD, tvlChanged).toChainData()
 
@@ -364,8 +364,8 @@ export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
     token1Record.price = token1Price.toChainData()
     token0Record.lockedInDex = add(token0Record.lockedInDex, token0Balance, token0Decimal, token0Decimal).toChainData()
     token1Record.lockedInDex = add(token1Record.lockedInDex, token1Balance, token1Decimal, token1Decimal).toChainData()
-    token0Record.volume = add(token0Record.volume, token0Changed).toChainData()
-    token1Record.volume = add(token1Record.volume, token1Changed).toChainData()
+    token0Record.volume = add(token0Record.volume, token0Changed, token0Decimal, token0Decimal).toChainData()
+    token1Record.volume = add(token1Record.volume, token1Changed, token1Decimal, token1Decimal).toChainData()
     token0Record.volumeUSD = add(token0Record.volumeUSD, token0VolumeUSD).toChainData()
     token1Record.volumeUSD = add(token1Record.volumeUSD, token1VolumeUSD).toChainData()
     token0Record.txCount = token0Record.txCount + BigInt(1)
@@ -385,7 +385,7 @@ export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
 		pool.token1Volume = add(pool.token1Volume, token1Changed).toChainData()
 		pool.volumeUSD = add(pool.volumeUSD, totalVolumeUSD).toChainData()
 
-    dex.totalTVLUSD = add(minus(prevTVL, pool.tvlUSD), dex.totalTVLUSD).toChainData()
+    dex.totalTVLUSD = add(minus(pool.tvlUSD, prevTVL), dex.totalTVLUSD).toChainData()
 
     await pool.save()
     await dex.save()
