@@ -8,7 +8,7 @@ import {
   CurrencyId,
 } from "@acala-network/types/interfaces"
 import { getToken } from "../tokens"
-import { createLPCurrencyName, FixedPointNumber } from "@acala-network/sdk-core"
+import { FixedPointNumber } from "@acala-network/sdk-core"
 import { getPrice } from "../prices"
 import { getPoolId } from "../utils"
 import { getPool } from "./pool"
@@ -29,10 +29,9 @@ export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
 
     const _supplyToken = await getToken(supplyToken)
     const _targetToken = await getToken(targetToken)
-    const [poolId] = getPoolId(_supplyToken.name, _targetToken.name)
+    const pool = await getPool(_supplyToken.name, _targetToken.name)
     const accountRecord = await ensureAccount(who.toString())
 
-    await getPool(_supplyToken.name, _targetToken.name)
     const supplyPrice = await getPrice(_supplyToken.name)
     const targetPrice = await getPrice(_targetToken.name)
 
@@ -46,16 +45,20 @@ export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
     ).times(targetPrice)
 
     record.accountId = accountRecord.id
-    record.poolId = poolId
+    record.poolId = pool.id
     record.token0Id = _supplyToken.id
     record.token1Id = _targetToken.id
     record.token0Amount = supplyAmount.toString()
     record.token1Amount = targetAmount.toString()
+
     // swap volume should divide 2
-    record.volumeUSD = supplyVolume
+    const volumeUSD = supplyVolume
       .add(targetVolume)
       .times(new FixedPointNumber(0.5))
-      .toChainData()
+    
+    volumeUSD.setPrecision(18)
+
+    record.volumeUSD = volumeUSD.toChainData()
   }
 
   if (event.data) {
@@ -96,8 +99,7 @@ export const createAddLiquidityHistory: EventHandler = async ({
     const token0Price = await getPrice(token0.name)
     const token1Price = await getPrice(token1.name)
     const accountRecord = await ensureAccount(account.toString())
-    const [poolId] = getPoolId(token0.name, token1.name)
-    await getPool(token0.name, token1.name)
+    const pool = await getPool(token0.name, token1.name)
 
     const amount0 = FixedPointNumber.fromInner(
       pool0Amount.toString(),
@@ -107,16 +109,18 @@ export const createAddLiquidityHistory: EventHandler = async ({
       pool1Amount.toString(),
       token0.decimal
     )
-    const volumnUSD = amount0
+    const volumeUSD = amount0
       .mul(token0Price)
       .add(amount1.times(token1Price))
 
-    record.poolId = poolId
+    volumeUSD.setPrecision(18)
+
+    record.poolId = pool.id
     record.token0Id = token0.id
     record.token1Id = token1.id
     record.token0Amount = amount0.toChainData()
     record.token1Amount = amount1.toChainData()
-    record.volumeUSD = volumnUSD.toChainData()
+    record.volumeUSD = volumeUSD.toChainData()
     record.accountId = accountRecord.id
   }
 
@@ -160,19 +164,21 @@ export const createRemoveLiquidityHistory: EventHandler = async ({
     const token0Price = await getPrice(token0.name)
     const token1Price = await getPrice(token1.name)
     const accountRecord = await ensureAccount(account.toString())
-    await getPool(token0.name, token1.name)
-    const [poolId] = getPoolId(token0.name, token1.name)
+
+    const pool = await getPool(token0.name, token1.name)
 
     const amount0 = FixedPointNumber.fromInner(pool0Amount.toString(), token0.decimal)
     const amount1 = FixedPointNumber.fromInner(pool1Amount.toString(), token0.decimal)
-    const volumnUSD = amount0.times(token0Price).add(amount1.times(token1Price))
+    const volumeUSD = amount0.times(token0Price).add(amount1.times(token1Price))
 
-    record.poolId = poolId
+    volumeUSD.setPrecision(18)
+
+    record.poolId = pool.id
     record.token0Id = token0.id
     record.token1Id = token1.id
     record.token0Amount = amount0.toChainData()
     record.token1Amount = amount1.toChainData()
-    record.volumeUSD = volumnUSD.toChainData()
+    record.volumeUSD = volumeUSD.toChainData()
     record.accountId = accountRecord.id
 
     if (event.data) {
