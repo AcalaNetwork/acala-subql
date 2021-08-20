@@ -10,7 +10,6 @@ import {
 import { getToken } from "../tokens"
 import { FixedPointNumber } from "@acala-network/sdk-core"
 import { getPrice } from "../prices"
-import { getPoolId } from "../utils"
 import { getPool } from "./pool"
 
 export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
@@ -145,7 +144,7 @@ export const createRemoveLiquidityHistory: EventHandler = async ({
 }) => {
   const record = new DexAction(event.id)
 
-  record.type = "addProvision"
+  record.type = "removeLiquidity"
   record.extrinsicId = event.extrinsicId
   record.timestamp = rawEvent.block.timestamp
 
