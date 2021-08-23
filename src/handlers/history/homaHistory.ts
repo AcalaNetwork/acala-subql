@@ -3,6 +3,33 @@ import { ensureAccount } from "../account";
 import { mapUpdateKVData } from "../utils/updateKVData";
 import { HomaAction } from "../../types/models";
 
+export const createHomaLiteMintHistory: EventHandler =  async ({ event, rawEvent }) => {
+  const record = new HomaAction(event.id);
+
+  record.type = 'Minted';
+  record.extrinsicId = event.extrinsicId;
+  record.timestamp = rawEvent.block.timestamp;
+
+  if (rawEvent.values) {
+    const [account] = rawEvent.event.data;
+
+    const accountRecord = await ensureAccount(account.toString());
+
+    record.accountId = accountRecord.id;
+  }
+
+  if (event.data) {
+    const keyArray = [
+      { key: 'account' },
+      { key: 'amountStaked' },
+      { key: 'amountMinted'}
+    ];
+    record.data = mapUpdateKVData(event.data, keyArray);
+  }
+
+  await record.save();
+}
+
 export const createMintLiquidHistory: EventHandler =  async ({ event, rawEvent }) => {
   const record = new HomaAction(event.id);
 

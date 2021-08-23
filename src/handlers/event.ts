@@ -17,6 +17,7 @@ import {
   createClaimRewards,
   createDepositDexShareHistory,
   createWithdrawDexShareHistory,
+  createHomaLiteMintHistory,
 } from "./history";
 import { createDexPool, updatePoolByAddLiquidity, updatePoolByRemoveLiquidity, updatePoolBySwap } from "./dex/pool";
 import {
@@ -80,6 +81,7 @@ dispatch.batchRegist([
   { key: "incentives-PayoutRewards", handler: createClaimRewards },
 
   // homa
+  { key: 'homaLite-Minted', handler: createHomaLiteMintHistory }
   // { key: "stakingPool-MintLiquid", handler: createMintLiquidHistory },
   // { key: "stakingPool-RedeemByUnbond", handler: createRedeemByUnbondHistory },
   // { key: "stakingPool-RedeemByFreeUnbonded", handler: createRedeemByFreeUnbonded },
