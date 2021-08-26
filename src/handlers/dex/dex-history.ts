@@ -14,14 +14,36 @@ import { getPool } from "./pool"
 
 export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
   const record = new DexAction(event.id)
+  const runtimeVersion = Number(api.runtimeVersion.specVersion.toString())
 
   record.type = "swap"
   record.extrinsicId = event.extrinsicId
   record.timestamp = rawEvent.block.timestamp
 
   if (rawEvent.values) {
-    const [who, tradingPath, supplyAmount, targetAmount] = rawEvent.event
-      .data as unknown as [AccountId, CurrencyId[], Balance, Balance]
+    let supplyAmount
+    let targetAmount
+    let tradingPath
+    let who
+
+
+    if (runtimeVersion >= 1008) {
+      const [_who, _tradingPath, resultPath] = rawEvent.event
+        .data as unknown as [AccountId, CurrencyId[], Balance[]]
+
+        who = _who
+        supplyAmount = resultPath[0]
+        targetAmount = resultPath[resultPath.length - 1]
+        tradingPath = _tradingPath
+    } else {
+      const [_who, _tradingPath, _supplyAmount, _targetAmount] = rawEvent.event
+        .data as unknown as [AccountId, CurrencyId[], Balance, Balance]
+
+        who = _who
+        supplyAmount = _supplyAmount
+        targetAmount = _targetAmount
+        tradingPath = _tradingPath
+    }
 
     const supplyToken = tradingPath[0]
     const targetToken = tradingPath[tradingPath.length - 1]

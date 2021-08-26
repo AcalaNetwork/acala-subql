@@ -283,19 +283,17 @@ export const updatePoolByRemoveLiquidity: EventHandler = async ({
 }
 
 export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
-  const runtime = Number(api.runtimeVersion.toString());
+  const runtime = Number(api.runtimeVersion.specVersion.toString());
 
-  if (runtime === 1008) {
-    updatePoolBySwapNew({ rawEvent, event });
+  if (runtime >= 1008) {
+    await updatePoolBySwapNew({ rawEvent, event });
 
     return;
   }
 
   // [trader, trading_path, supply_currency_amount, target_currency_amount\]
-  const [who, tradingPath, supplyAmount, targetAmount] = rawEvent.event
+  const [, tradingPath, supplyAmount, targetAmount] = rawEvent.event
     .data as unknown as [AccountId, CurrencyId[], Balance, Balance]
-  
-  
 
 	let nextSupplyAmount = FixedPointNumber.ZERO
 
@@ -457,7 +455,6 @@ export const updatePoolBySwapNew: EventHandler = async ({ rawEvent, event }) => 
 
     const token0Balance = token0Name === supplyTokenName ? result0.toString() : '-' + result1.toString()
     const token1Balance = token1Name === supplyTokenName ? result0.toString() : '-' + result1.toString()
-		
 
     const token0Price = await getPrice(token0Record.name)
     const token1Price = await getPrice(token1Record.name)
