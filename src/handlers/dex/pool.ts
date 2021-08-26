@@ -283,9 +283,19 @@ export const updatePoolByRemoveLiquidity: EventHandler = async ({
 }
 
 export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
+  const runtime = Number(api.runtimeVersion.toString());
+
+  if (runtime === 1008) {
+    updatePoolBySwapNew({ rawEvent, event });
+
+    return;
+  }
+
   // [trader, trading_path, supply_currency_amount, target_currency_amount\]
   const [who, tradingPath, supplyAmount, targetAmount] = rawEvent.event
     .data as unknown as [AccountId, CurrencyId[], Balance, Balance]
+  
+  
 
 	let nextSupplyAmount = FixedPointNumber.ZERO
 
@@ -327,6 +337,127 @@ export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
 			token0Balance = pool.token0Id === supplyTokenName ? _supplyAmount.toChainData() : '-' + targetAmount.toChainData()
 			token1Balance = pool.token1Id === supplyTokenName ? _supplyAmount.toChainData() : '-' + targetAmount.toChainData()
 		}
+
+    const token0Price = await getPrice(token0Record.name)
+    const token1Price = await getPrice(token1Record.name)
+    const token0Decimal = token0Record.decimal
+    const token1Decimal = token1Record.decimal
+
+    const token0Amount = add(pool.token0Amount, token0Balance, token0Decimal, token0Decimal)
+    const token1Amount = add(pool.token1Amount, token1Balance, token1Decimal, token1Decimal)
+
+		const token0Changed = FixedPointNumber.fromInner(token0Balance, token0Decimal).abs()
+		const token1Changed = FixedPointNumber.fromInner(token1Balance, token1Decimal).abs()
+
+    // set exchange first
+    pool.exchange0 = token1Amount.div(token0Amount).toChainData()
+    pool.exchange1 = token0Amount.div(token1Amount).toChainData()
+
+
+    const token0TVL = token0Amount.times(token0Price)
+    const token1TVL = token1Amount.times(token1Price)
+    const totalTVL = token0TVL.add(token1TVL)
+
+		const token0VolumeUSD = token0Changed.times(token0Price)
+		const token1VolumeUSD = token1Changed.times(token1Price)
+		const totalVolumeUSD = token0VolumeUSD.add(token1VolumeUSD).times(new FixedPointNumber(0.5))
+
+    token0TVL.setPrecision(18)
+    token1TVL.setPrecision(18)
+    totalTVL.setPrecision(18)
+    token0VolumeUSD.setPrecision(18)
+    token1VolumeUSD.setPrecision(18)
+    totalVolumeUSD.setPrecision(18)
+
+    // update token data
+    token0Record.price = token0Price.toChainData()
+    token1Record.price = token1Price.toChainData()
+    token0Record.lockedInDex = add(token0Record.lockedInDex, token0Balance, token0Decimal, token0Decimal).toChainData()
+    token1Record.lockedInDex = add(token1Record.lockedInDex, token1Balance, token1Decimal, token1Decimal).toChainData()
+    token0Record.volume = add(token0Record.volume, token0Changed, token0Decimal, token0Decimal).toChainData()
+    token1Record.volume = add(token1Record.volume, token1Changed, token1Decimal, token1Decimal).toChainData()
+    token0Record.volumeUSD = add(token0Record.volumeUSD, token0VolumeUSD).toChainData()
+    token1Record.volumeUSD = add(token1Record.volumeUSD, token1VolumeUSD).toChainData()
+    token0Record.txCount = token0Record.txCount + BigInt(1)
+    token1Record.txCount = token0Record.txCount + BigInt(1)
+
+    await token0Record.save()
+    await token1Record.save()
+
+    const prevTVL = pool.tvlUSD
+
+    pool.token0Amount = token0Amount.toChainData()
+    pool.token1Amount = token1Amount.toChainData()
+    pool.token0TVL = token0TVL.toChainData()
+    pool.token1TVL = token1TVL.toChainData()
+    pool.tvlUSD = totalTVL.toChainData()
+		pool.token0Volume = add(pool.token0Volume, token0Changed).toChainData()
+		pool.token1Volume = add(pool.token1Volume, token1Changed).toChainData()
+		pool.volumeUSD = add(pool.volumeUSD, totalVolumeUSD).toChainData()
+
+    dex.totalTVLUSD = add(minus(pool.tvlUSD, prevTVL), dex.totalTVLUSD).toChainData()
+
+    await pool.save()
+    await dex.save()
+
+    // update daily and hour data
+    const hourRecord = await updatePoolHourData(token0Name, token1Name, timestamp)
+    const dayRecord = await updatePoolDayData(token0Name, token1Name, timestamp)
+    const dexDayRecord = await updateDexDayData(timestamp)
+    const token0DayRecord = await updateTokenDayData(token0Name, timestamp)
+    const token1DayRecord = await updateTokenDayData(token1Name, timestamp)
+
+		hourRecord.volumeUSD = add(hourRecord.volumeUSD, totalVolumeUSD).toChainData()
+		dayRecord.volumeUSD = add(dayRecord.volumeUSD, totalVolumeUSD).toChainData()
+		dexDayRecord.dailyVolumeUSD = add(dayRecord.volumeUSD, totalVolumeUSD).toChainData()
+
+    token0DayRecord.dailyVolumeToken = add(token0DayRecord.dailyVolumeToken, token0Changed).toChainData()
+    token0DayRecord.dailyVolumeUSD = add(token0DayRecord.dailyVolumeUSD, token0VolumeUSD).toChainData()
+    token0DayRecord.dailyTxCount = token0DayRecord.dailyTxCount + BigInt(1)
+
+    token1DayRecord.dailyVolumeToken = add(token1DayRecord.dailyVolumeToken, token1Changed).toChainData()
+    token1DayRecord.dailyVolumeUSD = add(token1DayRecord.dailyVolumeUSD, token1VolumeUSD).toChainData()
+    token1DayRecord.dailyTxCount = token1DayRecord.dailyTxCount + BigInt(1)
+
+    await token0DayRecord.save()
+    await token1DayRecord.save()
+		await hourRecord.save()
+		await dayRecord.save()
+    await dexDayRecord.save()
+  }
+
+  const history = await createSwapHistory({ event, rawEvent })
+
+  await history.save()
+}
+
+export const updatePoolBySwapNew: EventHandler = async ({ rawEvent, event }) => {
+  // [trader, trading_path, supply_currency_amount, target_currency_amount\]
+  const [who, tradingPath, resultPath] = rawEvent.event
+    .data as unknown as [AccountId, CurrencyId[], Balance[]]
+  
+
+	let nextSupplyAmount = FixedPointNumber.ZERO
+
+  for (let i = 0; i < tradingPath.length - 1; i++) {
+    const currency0 = tradingPath[i]
+    const currency1 = tradingPath[i + 1]
+    const result0 = resultPath[i]
+    const result1 = resultPath[i + 1]
+
+		const supplyTokenName = forceToCurrencyIdName(currency0)
+		const targetTokenName = forceToCurrencyIdName(currency1)
+
+    const [, token0Name, token1Name] = getPoolId(currency0, currency1)
+    const token0Record = await getToken(token0Name)
+    const token1Record = await getToken(token1Name)
+    const pool = await getPool(token0Name, token1Name)
+    const dex = await getDex()
+    const timestamp = dayjs(event.timestamp).unix()
+
+    const token0Balance = token0Name === supplyTokenName ? result0.toString() : '-' + result1.toString()
+    const token1Balance = token1Name === supplyTokenName ? result0.toString() : '-' + result1.toString()
+		
 
     const token0Price = await getPrice(token0Record.name)
     const token1Price = await getPrice(token1Record.name)
