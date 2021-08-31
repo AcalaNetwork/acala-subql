@@ -103,6 +103,19 @@ type Transfer @entity {
   isSuccess: Boolean
 }
 
+type NFTAction @entity {
+  id: ID!
+
+  account: Account
+
+  type: String
+  subType: String
+  data: [KVData]
+
+  extrinsic: Extrinsic
+  timestamp: Date
+}
+
 type LoanAction @entity {
   id: ID!
 

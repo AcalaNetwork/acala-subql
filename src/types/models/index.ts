@@ -16,6 +16,8 @@ export {Account} from "./Account"
 
 export {Transfer} from "./Transfer"
 
+export {NFTAction} from "./NFTAction"
+
 export {LoanAction} from "./LoanAction"
 
 export {IncentiveAction} from "./IncentiveAction"

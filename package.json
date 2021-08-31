@@ -9,7 +9,7 @@
     "prepack": "rm -rf dist && npm build",
     "codegen": "./node_modules/.bin/subql codegen",
     "patch:types": "node scripts/patch-types.js",
-    "start": "./node_modules/.bin/subql-node -f . --local --timeout=512 --batch-size=1 --port=3001"
+    "start": "./node_modules/.bin/subql-node -f . --local --timeout=512 --batch-size=1 --port=3123"
   },
   "files": [
     "dist",
@@ -19,8 +19,8 @@
   "author": "qwer951123",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@acala-network/types": "^2.0.2",
-    "@polkadot/api": "^5.5.1",
+    "@acala-network/types": "^2.2.2-0",
+    "@polkadot/api": "^5.6.2-4",
     "@subql/cli": "^0.9.3",
     "@subql/node": "^0.19.1",
     "@subql/types": "^0.8.0",

@@ -18,6 +18,9 @@ import {
   createDepositDexShareHistory,
   createWithdrawDexShareHistory,
   createHomaLiteMintHistory,
+  createNFTTransferHistory,
+  createNFTBurnedHistory,
+  createNFTBurnedWithRemarkHistory,
 } from "./history";
 import { createDexPool, updatePoolByAddLiquidity, updatePoolByRemoveLiquidity, updatePoolBySwap } from "./dex/pool";
 import {
@@ -47,6 +50,10 @@ dispatch.batchRegist([
   // { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
   // { key: 'currencies-Withdrawn', handler: updateCrossedKSM },
   // { key: 'currencies-Transferred', handler: updateCrossedKSM },
+  // nft
+  { key: "nft-TransferredToken", handler: createNFTTransferHistory },
+  { key: "nft-BurnedToken", handler: createNFTBurnedHistory },
+  { key: "nft-BurnedTokenWithRemark", handler: createNFTBurnedWithRemarkHistory },
 
   // loan
   { key: "loans-PositionUpdated", handler: createPositionUpdatedHistory },
