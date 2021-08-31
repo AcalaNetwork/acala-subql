@@ -1,7 +1,7 @@
 import { ProvisionPool } from '../../types/models/ProvisionPool'
 import { EventHandler } from '../types'
 import { add, getPoolId } from '../utils'
-import { Balance, CurrencyId, TradingPair } from '@acala-network/types/interfaces'
+import { Balance, CurrencyId, TradingPair, AccountId } from '@acala-network/types/interfaces'
 import { MaybeCurrency } from '@acala-network/sdk-core'
 import { UserProvision } from '../../types/models'
 import { getToken } from '../tokens'
@@ -95,7 +95,7 @@ export const updateProvisionByEnable: EventHandler = async ({ rawEvent, event })
 
 export const updateUserProvision: EventHandler = async ({ rawEvent, event }) => {
 	// [who, currency_id_0, contribution_0, currency_id_1, contribution_1]
-	const [account, token0, token0Amount, token1, token1Amount] = rawEvent.event.data as unknown as [Account, CurrencyId, Balance, CurrencyId, Balance]
+	const [account, token0, token0Amount, token1, token1Amount] = rawEvent.event.data as unknown as [AccountId, CurrencyId, Balance, CurrencyId, Balance]
 
 	// the pool id also is the lp token name
 	const [id, token0Name, token1Name] = getPoolId(token0, token1)

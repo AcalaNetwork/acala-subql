@@ -69,7 +69,7 @@ async function getLoanParamsRecord (token: MaybeCurrency) {
 	return record
 }
 
-async function getLoanParamsHistoryRecord (token: MaybeCurrency, blockNumber: BigInt, blockId: string) {
+async function getLoanParamsHistoryRecord (token: MaybeCurrency, blockNumber: bigint, blockId: string) {
 	const collateralName = forceToCurrencyIdName(token)
 	const recordId = `${collateralName}-${blockNumber}`
 
@@ -79,7 +79,7 @@ async function getLoanParamsHistoryRecord (token: MaybeCurrency, blockNumber: Bi
 		record = new LoanParamsHistory(recordId)
 
 		// if the history record create, that means the params was end to use
-		record.endAtBlockNumber = BigInt(blockNumber)
+		record.endAtBlockNumber = blockNumber
 		record.endAtBlockId = blockId
 		record.collateralId = collateralName
 		record.maximumTotalDebitValue = '0'
