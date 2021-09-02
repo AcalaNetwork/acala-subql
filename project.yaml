@@ -3,7 +3,7 @@ description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: wss://kusama-1.polkawallet.io:9944
+  endpoint: wss://karura.api.onfinality.io/public-ws
   types:
     CallOf: Call
     DispatchTime:
@@ -318,7 +318,7 @@ network:
 dataSources:
   - name: main
     kind: substrate/Runtime
-    startBlock: 7310
+    startBlock: 0
     mapping:
       handlers:
         - handler: handleBlock
