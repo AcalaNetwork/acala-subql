@@ -28,7 +28,7 @@ services:
       - '--playground'
 
   subquery-node:
-    image: onfinality/subql-node:v0.19.2
+    image: onfinality/subql-node:latest
     depends_on:
       - "postgres"
     restart: always
