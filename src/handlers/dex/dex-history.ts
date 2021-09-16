@@ -14,7 +14,7 @@ import { getPool } from "./pool"
 
 export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
   const record = new DexAction(event.id)
-  const runtimeVersion = Number(api.runtimeVersion.specVersion.toString())
+  const runtimeVersion = Number(rawEvent.block.specVersion.toString());
 
   record.type = "swap"
   record.extrinsicId = event.extrinsicId

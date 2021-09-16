@@ -283,9 +283,9 @@ export const updatePoolByRemoveLiquidity: EventHandler = async ({
 }
 
 export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
-  const runtime = Number(api.runtimeVersion.specVersion.toString());
+  const runtimeVersion = Number(rawEvent.block.specVersion.toString());
 
-  if (runtime >= 1008) {
+  if (runtimeVersion >= 1008) {
     await updatePoolBySwapNew({ rawEvent, event });
 
     return;
