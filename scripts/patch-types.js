@@ -1,4 +1,4 @@
-const { typesAlias, types } = require('@acala-network/types')
+const { typesAlias, types, typesBundle } = require('@acala-network/types')
 const compose = require('lodash/fp/compose')
 const yaml = require('yaml')
 const fs = require('fs')
@@ -20,7 +20,8 @@ function patchTypesToConfig (config) {
     _config['network'] = {
         ...config['network'],
         types,
-        typesAlias
+        typesAlias,
+	typesBundle
     }
 
     return _config
