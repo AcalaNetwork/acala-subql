@@ -10,7 +10,7 @@ export async function createTransferInCurrencies ({ call, extrinsic, rawCall }: 
 
     await ensureCallExist(call.id)
 
-    const currencyId = args[1] as CurrencyId;
+    const currencyId = args[1] as unknown as CurrencyId;
 
     const to = await ensureAccount(args[0].toString())
     const from = await ensureAccount(extrinsic.signerId)
