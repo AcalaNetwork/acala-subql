@@ -37,6 +37,7 @@ import {
   handleRequiredCollateralRatioUpdated,
   updateLoanPosition,
   updateLoanPositionByLiquidate,
+  handleCloseLoanHasDebitByDex,
 } from "./loan/position";
 // import { updateCrossedKSM } from './summary'
 
@@ -70,6 +71,7 @@ dispatch.batchRegist([
   { key: "cdpEngine-GlobalInterestRatePerSecUpdated", handler: handleGlobalInterestRatePerSecUpdated, },
   { key: "cdpEngine-LiquidateUnsafeCDP", handler: createLiquidateUnsafeCDPHistory },
   { key: "cdpEngine-LiquidateUnsafeCDP", handler: updateLoanPositionByLiquidate },
+  { key: "honzon-CloseLoanHasDebitByDex", handler: handleCloseLoanHasDebitByDex},
 
   // // dex
   { key: "dex-ProvisioningToEnabled", handler: createDexPool },
