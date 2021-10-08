@@ -4,7 +4,7 @@ import { TotalLoanPosition } from "../../types/models/TotalLoanPosition"
 import { MaybeAccount, MaybeCurrency, forceToCurrencyIdName } from "@acala-network/sdk-core"
 import { Amount, Balance, CurrencyId, OptionRate } from "@acala-network/types/interfaces"
 import { AccountId } from "@polkadot/types/interfaces"
-import { add } from "../utils"
+import { add, minus } from "../utils"
 import { LoanParams } from "../../types/models"
 import { LoanParamsHistory } from "../../types/models/LoanParamsHistory"
 import { getToken } from "../tokens"
@@ -131,12 +131,13 @@ export const updateLoanPositionByLiquidate: EventHandler = async ({ rawEvent}) =
 	const positionCollateralAmount = record.collateralAmount
 	const positionDebitAmount = record.debitAmount
 
-	// force set position to zero
-	record.collateralAmount = '0'
-	record.debitAmount = '0'
 
 	totalRecord.collateralAmount = add(record.collateralAmount, positionCollateralAmount).toChainData()
 	totalRecord.debitAmount = add(record.debitAmount, positionDebitAmount).toChainData()
+	
+	// force set position to zero
+	record.collateralAmount = '0'
+	record.debitAmount = '0'
 
 	collateralToken.lockedInLoan = '0'
 	// TODO: should handle liquidate information
@@ -192,12 +193,12 @@ export const handleCloseLoanHasDebitByDex: EventHandler = async ({ rawEvent}) =>
 	const positionCollateralAmount = record.collateralAmount
 	const positionDebitAmount = record.debitAmount
 
+	totalRecord.collateralAmount = minus(totalRecord.collateralAmount, positionCollateralAmount).toChainData()
+	totalRecord.debitAmount = minus(totalRecord.debitAmount, positionDebitAmount).toChainData()
+
 	// force set position to zero
 	record.collateralAmount = '0'
 	record.debitAmount = '0'
-
-	totalRecord.collateralAmount = add(record.collateralAmount, positionCollateralAmount).toChainData()
-	totalRecord.debitAmount = add(record.debitAmount, positionDebitAmount).toChainData()
 
 	await record.save();
 	await totalRecord.save();
