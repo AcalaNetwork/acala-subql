@@ -2,9 +2,9 @@ import { EventHandler } from "../types"
 import { LoanPosition } from "../../types/models/LoanPosition"
 import { TotalLoanPosition } from "../../types/models/TotalLoanPosition"
 import { MaybeAccount, MaybeCurrency, forceToCurrencyIdName } from "@acala-network/sdk-core"
-import { Amount, CurrencyId, OptionRate } from "@acala-network/types/interfaces"
+import { Amount, Balance, CurrencyId, OptionRate } from "@acala-network/types/interfaces"
 import { AccountId } from "@polkadot/types/interfaces"
-import { add } from "../utils"
+import { add, minus } from "../utils"
 import { LoanParams } from "../../types/models"
 import { LoanParamsHistory } from "../../types/models/LoanParamsHistory"
 import { getToken } from "../tokens"
@@ -131,12 +131,13 @@ export const updateLoanPositionByLiquidate: EventHandler = async ({ rawEvent}) =
 	const positionCollateralAmount = record.collateralAmount
 	const positionDebitAmount = record.debitAmount
 
-	// force set position to zero
-	record.collateralAmount = '0'
-	record.debitAmount = '0'
 
 	totalRecord.collateralAmount = add(record.collateralAmount, positionCollateralAmount).toChainData()
 	totalRecord.debitAmount = add(record.debitAmount, positionDebitAmount).toChainData()
+	
+	// force set position to zero
+	record.collateralAmount = '0'
+	record.debitAmount = '0'
 
 	collateralToken.lockedInLoan = '0'
 	// TODO: should handle liquidate information
@@ -181,3 +182,25 @@ export const handleLiquidationPenaltyUpdated = createParamsUpdateFN('liquidation
 export const handleRequiredCollateralRatioUpdated = createParamsUpdateFN('requiredCollateralRatio')
 export const handleMaximumTotalDebitValueUpdated = createParamsUpdateFN('maximumTotalDebitValue')
 export const handleGlobalInterestRatePerSecUpdated = createParamsUpdateFN('globalInterestRatePerSec')
+
+// clear user loan position and global position when close loan by dex
+export const handleCloseLoanHasDebitByDex: EventHandler = async ({ rawEvent}) => {
+	// [collateral_type, owner, sold_collateral_amount, refund_collateral_amount, debit_value\]
+	const [collateral_type, owner, sold_collateral_amount, refund_collateral_amount, debit_value] = rawEvent.event.data as unknown as [CurrencyId, AccountId, Balance, Balance, Balance];
+	const record = await getLoanPositionRecord(owner, collateral_type);
+	const totalRecord = await getTotalLoanPositionRecord(collateral_type);
+
+	const positionCollateralAmount = record.collateralAmount
+	const positionDebitAmount = record.debitAmount
+
+	totalRecord.collateralAmount = minus(totalRecord.collateralAmount, positionCollateralAmount).toChainData()
+	totalRecord.debitAmount = minus(totalRecord.debitAmount, positionDebitAmount).toChainData()
+
+	// force set position to zero
+	record.collateralAmount = '0'
+	record.debitAmount = '0'
+
+	await record.save();
+	await totalRecord.save();
+
+}
