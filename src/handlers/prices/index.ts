@@ -26,6 +26,14 @@ export async function getKARPrice () {
 	return karKSMPrice.mul(ksmPrice)
 }
 
+export async function getLKSMPrice () {
+	// get KSM-LKSM pool
+	const lksmKSMPrice = await getPriceFromDexPool('LKSM', 'KSM')
+	const ksmPrice = await getKSMPrice()
+
+	return lksmKSMPrice.mul(ksmPrice)
+}
+
 export async function getKSMPrice () {
 	return getPriceFromDexPool('KSM', 'KUSD')
 }
@@ -43,6 +51,8 @@ export async function getPrice (name: MaybeCurrency) {
 	if(_name === 'KSM') return getKSMPrice()
 
 	if (_name === 'KAR') return getKARPrice()
+
+	if (_name === 'LKSM') return getLKSMPrice()
 
 	return getPriceFromDexPool(_name, 'KUSD')
 }
