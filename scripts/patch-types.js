@@ -19,8 +19,6 @@ function patchTypesToConfig (config) {
 
     _config['network'] = {
         ...config['network'],
-        types,
-        typesAlias,
 	typesBundle
     }
 
