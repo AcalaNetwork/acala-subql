@@ -91,6 +91,7 @@ dispatch.batchRegist([
   { key: "incentives-DepositDexShare", handler: createDepositDexShareHistory },
   { key: "incentives-WithdrawDexShare", handler: createWithdrawDexShareHistory },
   { key: "incentives-PayoutRewards", handler: createClaimRewards },
+  { key: "incentives-ClaimRewards", handler: createClaimRewards },
 
   // homa
   { key: 'homaLite-Minted', handler: createHomaLiteMintHistory },

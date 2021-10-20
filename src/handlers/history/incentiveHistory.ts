@@ -60,7 +60,7 @@ export const createWithdrawDexShareHistory: EventHandler = async ({ event, rawEv
 export const createClaimRewards: EventHandler = async ({ event, rawEvent }) => {
   const record = new IncentiveAction(event.id);
 
-  record.type = 'PayoutRewards';
+  record.type = 'ClaimRewards';
   record.extrinsicId = event.extrinsicId;
   record.timestamp = rawEvent.block.timestamp;
 
