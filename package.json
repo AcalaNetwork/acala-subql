@@ -22,8 +22,8 @@
   "author": "qwer951123",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@acala-network/types": "^3.0.2-4",
-    "@polkadot/api": "^6.2.2-11",
+    "@acala-network/types": "^3.0.2",
+    "@polkadot/api": "^6.5.3",
     "@subql/cli": "^0.13.0",
     "@subql/node": "^0.22.0",
     "@subql/types": "^0.8.5",

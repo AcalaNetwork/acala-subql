@@ -54,6 +54,7 @@ dispatch.batchRegist([
   // { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
   // { key: 'currencies-Withdrawn', handler: updateCrossedKSM },
   // { key: 'currencies-Transferred', handler: updateCrossedKSM },
+
   // nft
   { key: "nft-TransferredToken", handler: createNFTTransferHistory },
   { key: "nft-BurnedToken", handler: createNFTBurnedHistory },
@@ -98,6 +99,7 @@ dispatch.batchRegist([
   { key: 'homaLite-RedeemRequestCancelled', handler: createHomaLiteRedeemCancelHistory },
   { key: 'homaLite-RedeemRequested', handler: createHomaLiteRedeemRequestHistory },
   { key: 'homaLite-Redeemed', handler: createHomaLiteRedeemedHistory },
+
   // { key: "stakingPool-MintLiquid", handler: createMintLiquidHistory },
   // { key: "stakingPool-RedeemByUnbond", handler: createRedeemByUnbondHistory },
   // { key: "stakingPool-RedeemByFreeUnbonded", handler: createRedeemByFreeUnbonded },
