@@ -5,7 +5,6 @@ import {
   MaybeCurrency
 } from "@acala-network/sdk-core";
 import { SystemConsts, Token } from "../types/models";
-import { getChainName } from "./system";
 
 let tokenDecimalMap: Map<string, number>;
 
@@ -75,9 +74,7 @@ export async function initSystemTokens() {
 }
 
 export async function getNativeToken() {
-  const chainName = await getChainName();
-
-  const systemConsts = await SystemConsts.get(chainName);
+  const systemConsts = await SystemConsts.get("SYSTEM");
 
   const token = await Token.get(systemConsts.nativeTokenId);
 
@@ -85,9 +82,7 @@ export async function getNativeToken() {
 }
 
 export async function getStakingToken() {
-  const chainName = await getChainName();
-
-  const systemConsts = await SystemConsts.get(chainName);
+  const systemConsts = await SystemConsts.get("SYSTEM");
 
   const token = await Token.get(systemConsts.stakignTokenId);
 
@@ -95,9 +90,7 @@ export async function getStakingToken() {
 }
 
 export async function getLiquidToken() {
-  const chainName = await getChainName();
-
-  const systemConsts = await SystemConsts.get(chainName);
+  const systemConsts = await SystemConsts.get("SYSTEM");
 
   const token = await Token.get(systemConsts.liquidTokenId);
 
@@ -105,9 +98,7 @@ export async function getLiquidToken() {
 }
 
 export async function getStableToken() {
-  const chainName = await getChainName();
-
-  const systemConsts = await SystemConsts.get(chainName);
+  const systemConsts = await SystemConsts.get("SYSTEM");
 
   const token = await Token.get(systemConsts.stableTokenId);
 

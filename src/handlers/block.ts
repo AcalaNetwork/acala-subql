@@ -7,7 +7,7 @@ import { initSystemTokens } from './tokens'
 let isFirstSync = true
 
 export async function ensureBlock (block: SubstrateBlock) {
-  const recordId = block.block.hash.toString()
+  const recordId = block.block.hash?.toString()
 
   let data = await Block.get(recordId)
 
@@ -32,10 +32,10 @@ export async function createBlock (origin: SubstrateBlock) {
   const block = await ensureBlock(origin)
 
   const blockNumber = origin.block.header.number.toBigInt() || BigInt(0)
-  const parentHash = origin.block.header.parentHash.toString()
-  const stateRoot = origin.block.header.stateRoot.toString()
-  const specVersion = origin.specVersion.toString()
-  const extrinsicsRoot = origin.block.header.extrinsicsRoot.toString()
+  const parentHash = origin.block.header.parentHash?.toString()
+  const stateRoot = origin.block.header.stateRoot?.toString()
+  const specVersion = origin.specVersion?.toString()
+  const extrinsicsRoot = origin.block.header.extrinsicsRoot?.toString()
   const timestamp = getBlockTimestamp(origin.block)
 
   block.number = blockNumber

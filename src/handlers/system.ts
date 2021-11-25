@@ -10,9 +10,7 @@ function getConsts<T> (path: string) {
 }
 
 export async function initSystemConsts () {
-    const chainName = await getChainName() 
-
-    const consts = await SystemConsts.get(chainName)
+    const consts = await SystemConsts.get("SYSTEM")
 
     if (consts) return Promise.resolve(consts)
 
@@ -34,7 +32,7 @@ export async function initSystemConsts () {
         await getToken(stakingTokenId)
     }
 
-    const temp = new SystemConsts(chainName)
+    const temp = new SystemConsts('SYSTEM')
 
     temp.liquidTokenId = liquidTokenId
     temp.stakignTokenId = stakingTokenId
@@ -44,8 +42,4 @@ export async function initSystemConsts () {
     await temp.save()
 
     return temp
-}
-
-export async function getChainName () {
-    return api.runtimeChain.toString()
 }
