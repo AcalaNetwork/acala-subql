@@ -11,23 +11,36 @@
     "patch:types": "node scripts/patch-types.js",
     "start": "./node_modules/.bin/subql-node -f . --local --timeout=512 --batch-size=100 --port=3123"
   },
-   "resolutions": {
-    "@polkadot/api": "^6.2.2-11"
-  },
   "files": [
     "dist",
     "schema.graphql",
     "project.yaml"
   ],
+  "resolutions": {
+    "@polkadot/api": "^6.9.2",
+    "@polkadot/api-contract": "^6.9.2",
+    "@polkadot/hw-ledger": "^7.9.2",
+    "@polkadot/keyring": "^7.9.2",
+    "@polkadot/networks": "^7.9.2",
+    "@polkadot/phishing": "^0.6.452",
+    "@polkadot/rpc-provider": "^6.9.2",
+    "@polkadot/types": "^6.9.2",
+    "@polkadot/types-known": "^6.9.2",
+    "@polkadot/types-support": "^6.9.2",
+    "@polkadot/util": "^7.9.2",
+    "@polkadot/util-crypto": "^7.9.2",
+    "@polkadot/wasm-crypto": "^4.4.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "styled-components": "^5.3.1",
+    "typescript": "^4.5.2"
+  },
   "author": "qwer951123",
   "license": "Apache-2.0",
   "devDependencies": {
     "@acala-network/types": "^3.0.2",
-    "@polkadot/api": "^6.5.3",
-    "@subql/cli": "^0.13.0",
-    "@subql/node": "^0.22.0",
+    "@subql/cli": "^0.16.0",
+    "@subql/node": "^0.25.0",
     "@subql/types": "^0.8.5",
-    "typescript": "^4.1.3",
     "yaml": "^1.10.0"
   },
   "dependencies": {

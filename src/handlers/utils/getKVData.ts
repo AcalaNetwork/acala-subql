@@ -27,3 +27,5 @@ export const getKVData = (data: AnyTuple, keys?: ArgsDef) => {
         }
     })
 }
+
+api.query.system.account.keyPrefix()
