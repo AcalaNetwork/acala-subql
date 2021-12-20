@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class TokenDayData implements Entity {
@@ -46,8 +48,16 @@ export class TokenDayData implements Entity {
     }
 
 
+    static async getByTokenId(tokenId: string): Promise<TokenDayData[] | undefined>{
+      
+      const records = await store.getByField('TokenDayData', 'tokenId', tokenId);
+      return records.map(record => TokenDayData.create(record));
+      
+    }
 
-    static create(record){
+
+    static create(record: Partial<Omit<TokenDayData, FunctionPropertyNames<TokenDayData>>> & Entity): TokenDayData {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new TokenDayData(record.id);
         Object.assign(entity,record);
         return entity;

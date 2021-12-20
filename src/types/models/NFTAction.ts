@@ -1,10 +1,12 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
 
 import {
     KVData,
 } from '../interfaces'
+
+
 
 
 export class NFTAction implements Entity {
@@ -50,8 +52,23 @@ export class NFTAction implements Entity {
     }
 
 
+    static async getByAccountId(accountId: string): Promise<NFTAction[] | undefined>{
+      
+      const records = await store.getByField('NFTAction', 'accountId', accountId);
+      return records.map(record => NFTAction.create(record));
+      
+    }
 
-    static create(record){
+    static async getByExtrinsicId(extrinsicId: string): Promise<NFTAction[] | undefined>{
+      
+      const records = await store.getByField('NFTAction', 'extrinsicId', extrinsicId);
+      return records.map(record => NFTAction.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<NFTAction, FunctionPropertyNames<NFTAction>>> & Entity): NFTAction {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new NFTAction(record.id);
         Object.assign(entity,record);
         return entity;

@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class UserProvision implements Entity {
@@ -44,8 +46,30 @@ export class UserProvision implements Entity {
     }
 
 
+    static async getByPoolId(poolId: string): Promise<UserProvision[] | undefined>{
+      
+      const records = await store.getByField('UserProvision', 'poolId', poolId);
+      return records.map(record => UserProvision.create(record));
+      
+    }
 
-    static create(record){
+    static async getByToken0Id(token0Id: string): Promise<UserProvision[] | undefined>{
+      
+      const records = await store.getByField('UserProvision', 'token0Id', token0Id);
+      return records.map(record => UserProvision.create(record));
+      
+    }
+
+    static async getByToken1Id(token1Id: string): Promise<UserProvision[] | undefined>{
+      
+      const records = await store.getByField('UserProvision', 'token1Id', token1Id);
+      return records.map(record => UserProvision.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<UserProvision, FunctionPropertyNames<UserProvision>>> & Entity): UserProvision {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new UserProvision(record.id);
         Object.assign(entity,record);
         return entity;

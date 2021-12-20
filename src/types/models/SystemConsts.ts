@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class SystemConsts implements Entity {
@@ -42,8 +44,37 @@ export class SystemConsts implements Entity {
     }
 
 
+    static async getByLiquidTokenId(liquidTokenId: string): Promise<SystemConsts[] | undefined>{
+      
+      const records = await store.getByField('SystemConsts', 'liquidTokenId', liquidTokenId);
+      return records.map(record => SystemConsts.create(record));
+      
+    }
 
-    static create(record){
+    static async getByStakignTokenId(stakignTokenId: string): Promise<SystemConsts[] | undefined>{
+      
+      const records = await store.getByField('SystemConsts', 'stakignTokenId', stakignTokenId);
+      return records.map(record => SystemConsts.create(record));
+      
+    }
+
+    static async getByNativeTokenId(nativeTokenId: string): Promise<SystemConsts[] | undefined>{
+      
+      const records = await store.getByField('SystemConsts', 'nativeTokenId', nativeTokenId);
+      return records.map(record => SystemConsts.create(record));
+      
+    }
+
+    static async getByStableTokenId(stableTokenId: string): Promise<SystemConsts[] | undefined>{
+      
+      const records = await store.getByField('SystemConsts', 'stableTokenId', stableTokenId);
+      return records.map(record => SystemConsts.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<SystemConsts, FunctionPropertyNames<SystemConsts>>> & Entity): SystemConsts {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new SystemConsts(record.id);
         Object.assign(entity,record);
         return entity;

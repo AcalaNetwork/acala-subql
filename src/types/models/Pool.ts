@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class Pool implements Entity {
@@ -62,8 +64,23 @@ export class Pool implements Entity {
     }
 
 
+    static async getByToken0Id(token0Id: string): Promise<Pool[] | undefined>{
+      
+      const records = await store.getByField('Pool', 'token0Id', token0Id);
+      return records.map(record => Pool.create(record));
+      
+    }
 
-    static create(record){
+    static async getByToken1Id(token1Id: string): Promise<Pool[] | undefined>{
+      
+      const records = await store.getByField('Pool', 'token1Id', token1Id);
+      return records.map(record => Pool.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<Pool, FunctionPropertyNames<Pool>>> & Entity): Pool {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new Pool(record.id);
         Object.assign(entity,record);
         return entity;

@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class PriceBundle implements Entity {
@@ -37,7 +39,8 @@ export class PriceBundle implements Entity {
 
 
 
-    static create(record){
+    static create(record: Partial<Omit<PriceBundle, FunctionPropertyNames<PriceBundle>>> & Entity): PriceBundle {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new PriceBundle(record.id);
         Object.assign(entity,record);
         return entity;
