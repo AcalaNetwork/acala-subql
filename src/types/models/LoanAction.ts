@@ -1,10 +1,12 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
 
 import {
     KVData,
 } from '../interfaces'
+
+
 
 
 export class LoanAction implements Entity {
@@ -50,8 +52,23 @@ export class LoanAction implements Entity {
     }
 
 
+    static async getByAccountId(accountId: string): Promise<LoanAction[] | undefined>{
+      
+      const records = await store.getByField('LoanAction', 'accountId', accountId);
+      return records.map(record => LoanAction.create(record));
+      
+    }
 
-    static create(record){
+    static async getByExtrinsicId(extrinsicId: string): Promise<LoanAction[] | undefined>{
+      
+      const records = await store.getByField('LoanAction', 'extrinsicId', extrinsicId);
+      return records.map(record => LoanAction.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<LoanAction, FunctionPropertyNames<LoanAction>>> & Entity): LoanAction {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new LoanAction(record.id);
         Object.assign(entity,record);
         return entity;

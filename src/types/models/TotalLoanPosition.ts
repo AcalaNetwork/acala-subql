@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class TotalLoanPosition implements Entity {
@@ -40,8 +42,16 @@ export class TotalLoanPosition implements Entity {
     }
 
 
+    static async getByCollateralId(collateralId: string): Promise<TotalLoanPosition[] | undefined>{
+      
+      const records = await store.getByField('TotalLoanPosition', 'collateralId', collateralId);
+      return records.map(record => TotalLoanPosition.create(record));
+      
+    }
 
-    static create(record){
+
+    static create(record: Partial<Omit<TotalLoanPosition, FunctionPropertyNames<TotalLoanPosition>>> & Entity): TotalLoanPosition {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new TotalLoanPosition(record.id);
         Object.assign(entity,record);
         return entity;

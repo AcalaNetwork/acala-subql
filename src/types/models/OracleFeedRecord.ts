@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class OracleFeedRecord implements Entity {
@@ -46,8 +48,30 @@ export class OracleFeedRecord implements Entity {
     }
 
 
+    static async getByTokenId(tokenId: string): Promise<OracleFeedRecord[] | undefined>{
+      
+      const records = await store.getByField('OracleFeedRecord', 'tokenId', tokenId);
+      return records.map(record => OracleFeedRecord.create(record));
+      
+    }
 
-    static create(record){
+    static async getByAccountId(accountId: string): Promise<OracleFeedRecord[] | undefined>{
+      
+      const records = await store.getByField('OracleFeedRecord', 'accountId', accountId);
+      return records.map(record => OracleFeedRecord.create(record));
+      
+    }
+
+    static async getByBlockId(blockId: string): Promise<OracleFeedRecord[] | undefined>{
+      
+      const records = await store.getByField('OracleFeedRecord', 'blockId', blockId);
+      return records.map(record => OracleFeedRecord.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<OracleFeedRecord, FunctionPropertyNames<OracleFeedRecord>>> & Entity): OracleFeedRecord {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new OracleFeedRecord(record.id);
         Object.assign(entity,record);
         return entity;

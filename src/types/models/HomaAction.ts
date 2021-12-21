@@ -1,10 +1,12 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
 
 import {
     KVData,
 } from '../interfaces'
+
+
 
 
 export class HomaAction implements Entity {
@@ -50,8 +52,23 @@ export class HomaAction implements Entity {
     }
 
 
+    static async getByAccountId(accountId: string): Promise<HomaAction[] | undefined>{
+      
+      const records = await store.getByField('HomaAction', 'accountId', accountId);
+      return records.map(record => HomaAction.create(record));
+      
+    }
 
-    static create(record){
+    static async getByExtrinsicId(extrinsicId: string): Promise<HomaAction[] | undefined>{
+      
+      const records = await store.getByField('HomaAction', 'extrinsicId', extrinsicId);
+      return records.map(record => HomaAction.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<HomaAction, FunctionPropertyNames<HomaAction>>> & Entity): HomaAction {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new HomaAction(record.id);
         Object.assign(entity,record);
         return entity;

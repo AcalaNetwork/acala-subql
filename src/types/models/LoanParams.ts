@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class LoanParams implements Entity {
@@ -54,8 +56,23 @@ export class LoanParams implements Entity {
     }
 
 
+    static async getByCollateralId(collateralId: string): Promise<LoanParams[] | undefined>{
+      
+      const records = await store.getByField('LoanParams', 'collateralId', collateralId);
+      return records.map(record => LoanParams.create(record));
+      
+    }
 
-    static create(record){
+    static async getByStartAtBlockId(startAtBlockId: string): Promise<LoanParams[] | undefined>{
+      
+      const records = await store.getByField('LoanParams', 'startAtBlockId', startAtBlockId);
+      return records.map(record => LoanParams.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<LoanParams, FunctionPropertyNames<LoanParams>>> & Entity): LoanParams {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new LoanParams(record.id);
         Object.assign(entity,record);
         return entity;

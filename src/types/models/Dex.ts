@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class Dex implements Entity {
@@ -41,7 +43,8 @@ export class Dex implements Entity {
 
 
 
-    static create(record){
+    static create(record: Partial<Omit<Dex, FunctionPropertyNames<Dex>>> & Entity): Dex {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new Dex(record.id);
         Object.assign(entity,record);
         return entity;

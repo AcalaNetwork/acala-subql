@@ -4,11 +4,11 @@
 
 export interface KVData {
 
-    key: string;
+    key?: string;
 
-    value: string;
+    value?: string;
 
-    type: string;
+    type?: string;
 
 }
 

@@ -1,10 +1,12 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
 
 import {
     KVData,
 } from '../interfaces'
+
+
 
 
 export class IncentiveAction implements Entity {
@@ -50,8 +52,23 @@ export class IncentiveAction implements Entity {
     }
 
 
+    static async getByAccountId(accountId: string): Promise<IncentiveAction[] | undefined>{
+      
+      const records = await store.getByField('IncentiveAction', 'accountId', accountId);
+      return records.map(record => IncentiveAction.create(record));
+      
+    }
 
-    static create(record){
+    static async getByExtrinsicId(extrinsicId: string): Promise<IncentiveAction[] | undefined>{
+      
+      const records = await store.getByField('IncentiveAction', 'extrinsicId', extrinsicId);
+      return records.map(record => IncentiveAction.create(record));
+      
+    }
+
+
+    static create(record: Partial<Omit<IncentiveAction, FunctionPropertyNames<IncentiveAction>>> & Entity): IncentiveAction {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new IncentiveAction(record.id);
         Object.assign(entity,record);
         return entity;

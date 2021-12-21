@@ -1,6 +1,8 @@
 // Auto-generated , DO NOT EDIT
-import {Entity} from "@subql/types";
+import {Entity, FunctionPropertyNames} from "@subql/types";
 import assert from 'assert';
+
+
 
 
 export class Account implements Entity {
@@ -38,8 +40,16 @@ export class Account implements Entity {
     }
 
 
+    static async getByCreateAtBlockId(createAtBlockId: string): Promise<Account[] | undefined>{
+      
+      const records = await store.getByField('Account', 'createAtBlockId', createAtBlockId);
+      return records.map(record => Account.create(record));
+      
+    }
 
-    static create(record){
+
+    static create(record: Partial<Omit<Account, FunctionPropertyNames<Account>>> & Entity): Account {
+        assert(typeof record.id === 'string', "id must be provided");
         let entity = new Account(record.id);
         Object.assign(entity,record);
         return entity;
