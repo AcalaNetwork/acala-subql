@@ -24,6 +24,11 @@ import {
   createHomaLiteRedeemRequestHistory,
   createHomaLiteRedeemedHistory,
   createHomaLiteRedeemCancelHistory,
+  handleHomaMinted,
+  handleHomaRequestedRedeem,
+  handleHomaRequestedCancelled,
+  handleHomaRedeemedByFastMatch,
+  handleHomaRedeemedByUnbond,
 } from "./history";
 import { createDexPool, updatePoolByAddLiquidity, updatePoolByRemoveLiquidity, updatePoolBySwap } from "./dex/pool";
 import {
@@ -94,11 +99,18 @@ dispatch.batchRegist([
   { key: "incentives-PayoutRewards", handler: createClaimRewards },
   { key: "incentives-ClaimRewards", handler: createClaimRewards },
 
-  // homa
+  // homa lite
   { key: 'homaLite-Minted', handler: createHomaLiteMintHistory },
   { key: 'homaLite-RedeemRequestCancelled', handler: createHomaLiteRedeemCancelHistory },
   { key: 'homaLite-RedeemRequested', handler: createHomaLiteRedeemRequestHistory },
   { key: 'homaLite-Redeemed', handler: createHomaLiteRedeemedHistory },
+
+  // homa
+  { key: 'homa-Minted', handler: handleHomaMinted },
+  { key: 'homa-RequestedRedeem', handler: handleHomaRequestedRedeem},
+  { key: 'homa-RequestedCancelled', handler: handleHomaRequestedCancelled},
+  { key: 'homa-RedeemedByFastMatch', handler: handleHomaRedeemedByFastMatch},
+  { key: 'homa-RedeemedByUnbond', handler: handleHomaRedeemedByUnbond },
 
   // { key: "stakingPool-MintLiquid", handler: createMintLiquidHistory },
   // { key: "stakingPool-RedeemByUnbond", handler: createRedeemByUnbondHistory },
