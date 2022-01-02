@@ -248,6 +248,7 @@ export const handleHomaMinted: EventHandler = async ({ event, rawEvent }) => {
 	const record = new HomaAction(event.id);
 
 	record.type = "Minted";
+	record.subType = 'homa';
 	record.extrinsicId = event.extrinsicId;
 	record.timestamp = rawEvent.block.timestamp;
 
@@ -279,6 +280,7 @@ export const handleHomaRequestedRedeem: EventHandler = async ({
 	const record = new HomaAction(event.id);
 
 	record.type = "RedeemRequest";
+	record.subType = 'homa';
 	record.extrinsicId = event.extrinsicId;
 	record.timestamp = rawEvent.block.timestamp;
 
@@ -309,6 +311,7 @@ export const handleHomaRequestedCancelled: EventHandler = async ({
 	const record = new HomaAction(event.id);
 
 	record.type = "RedeemRequestedCancelled";
+	record.subType = 'homa';
 	record.extrinsicId = event.extrinsicId;
 	record.timestamp = rawEvent.block.timestamp;
 
@@ -335,6 +338,7 @@ export const handleHomaRedeemedByFastMatch: EventHandler = async ({
 	const record = new HomaAction(event.id);
 
 	record.type = "RedeemedByFastMatch";
+	record.subType = 'homa';
 	record.extrinsicId = event.extrinsicId;
 	record.timestamp = rawEvent.block.timestamp;
 
@@ -398,6 +402,7 @@ export const handleHomaWithdrawRedemption: EventHandler = async ({
 	const record = new HomaAction(event.id);
 
 	record.type = "WithdrawRedemption";
+	record.subType = 'homa';
 	record.extrinsicId = event.extrinsicId;
 	record.timestamp = rawEvent.block.timestamp;
 

@@ -24,8 +24,8 @@ services:
       DB_HOST: postgres
       DB_PORT: 5432
     command:
-      - '--name=acala'
-      - '--playground'
+      - --name=acala
+      - --playground
 
   subquery-node:
     image: onfinality/subql-node:latest
@@ -41,7 +41,7 @@ services:
     volumes:
       - ./:/app
     command:
-      - '-f=/app'
-      - '--subquery-name=acala'
-      - '--migrate'
+      - -f=/app
+      - --subquery-name=acala
+      - --migrate
 
