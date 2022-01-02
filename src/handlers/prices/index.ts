@@ -1,4 +1,4 @@
-import { FixedPointNumber, MaybeCurrency, forceToCurrencyIdName } from '@acala-network/sdk-core' 
+import { FixedPointNumber, MaybeCurrency, forceToCurrencyName } from '@acala-network/sdk-core' 
 import { getPool } from '../dex/pool';
 import { getToken } from '../tokens';
 
@@ -44,7 +44,7 @@ export function getKUSDPrice () {
 }
 
 export async function getPrice (name: MaybeCurrency) {
-	const _name = forceToCurrencyIdName(name)
+	const _name = forceToCurrencyName(name)
 
 	if (_name === 'KUSD' || _name === 'AUSD') return getKUSDPrice()
 

@@ -1,7 +1,7 @@
 import { EventHandler } from "../types"
 import { LoanPosition } from "../../types/models/LoanPosition"
 import { TotalLoanPosition } from "../../types/models/TotalLoanPosition"
-import { MaybeCurrency, forceToCurrencyIdName } from "@acala-network/sdk-core"
+import { MaybeCurrency, forceToCurrencyName } from "@acala-network/sdk-core"
 import { Amount, Balance, CurrencyId, OptionRate } from "@acala-network/types/interfaces"
 import { AccountId } from "@polkadot/types/interfaces"
 import { add, minus } from "../utils"
@@ -10,7 +10,7 @@ import { LoanParamsHistory } from "../../types/models/LoanParamsHistory"
 import { getToken } from "../tokens"
 
 async function getLoanPositionRecord (owner: AccountId, token: MaybeCurrency ) {
-	const collateralName = forceToCurrencyIdName(token)
+	const collateralName = forceToCurrencyName(token)
 	const ownerAddress = owner.toString()
 	const key = `${ownerAddress}-${collateralName}`
 
@@ -31,7 +31,7 @@ async function getLoanPositionRecord (owner: AccountId, token: MaybeCurrency ) {
 }
 
 async function getTotalLoanPositionRecord (token: MaybeCurrency) {
-	const collateralName = forceToCurrencyIdName(token)
+	const collateralName = forceToCurrencyName(token)
 
 	let record = await TotalLoanPosition.get(collateralName)
 
@@ -49,7 +49,7 @@ async function getTotalLoanPositionRecord (token: MaybeCurrency) {
 }
 
 async function getLoanParamsRecord (token: MaybeCurrency) {
-	const collateralName = forceToCurrencyIdName(token)
+	const collateralName = forceToCurrencyName(token)
 
 	let record = await LoanParams.get(collateralName)
 
@@ -71,7 +71,7 @@ async function getLoanParamsRecord (token: MaybeCurrency) {
 }
 
 async function getLoanParamsHistoryRecord (token: MaybeCurrency, blockNumber: bigint, blockId: string) {
-	const collateralName = forceToCurrencyIdName(token)
+	const collateralName = forceToCurrencyName(token)
 	const recordId = `${collateralName}-${blockNumber}`
 
 	let record = await LoanParamsHistory.get(recordId)

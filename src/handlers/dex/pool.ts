@@ -1,9 +1,9 @@
 import {
   Token as TokenSDK,
-  createLPCurrencyName,
   FixedPointNumber,
   forceToCurrencyId,
-  forceToCurrencyIdName
+  forceToCurrencyName,
+  createDexShareName
 } from "@acala-network/sdk-core"
 import {
   AccountId,
@@ -24,7 +24,7 @@ import { updateDexDayData, updatePoolDayData, updatePoolHourData, updateTokenDay
 
 export async function getPool(a: string, b: string) {
   const [token0, token1] = TokenSDK.sortTokenNames(a, b)
-  const poolName = createLPCurrencyName(token0, token1)
+  const poolName = createDexShareName(token0, token1)
 
   let record = await Pool.get(poolName)
 
@@ -52,8 +52,8 @@ export const createDexPool: EventHandler = async ({ rawEvent, event }) => {
   const [tradingPair, token0Amount, token1Amount] = rawEvent.event
     .data as unknown as [TradingPair, Balance, Balance, Balance]
 
-  const token0Name = forceToCurrencyIdName(tradingPair[0])
-  const token1Name = forceToCurrencyIdName(tradingPair[1])
+  const token0Name = forceToCurrencyName(tradingPair[0])
+  const token1Name = forceToCurrencyName(tradingPair[1])
 
   const token0Record = await getToken(token0Name)
   const token1Record = await getToken(token1Name)
@@ -131,8 +131,8 @@ export const updatePoolByAddLiquidity: EventHandler = async ({
   ]
 
   const [, token0Name, token1Name] = getPoolId(currency0, currency1)
-  const token0Increment = (token0Name === forceToCurrencyIdName(currency0) ? pool0Increment : pool1Increment).toString()
-  const token1Increment = (token1Name === forceToCurrencyIdName(currency0) ? pool0Increment : pool1Increment).toString()
+  const token0Increment = (token0Name === forceToCurrencyName(currency0) ? pool0Increment : pool1Increment).toString()
+  const token1Increment = (token1Name === forceToCurrencyName(currency0) ? pool0Increment : pool1Increment).toString()
 
   const token0Record = await getToken(token0Name)
   const token1Record = await getToken(token1Name)
@@ -218,8 +218,8 @@ export const updatePoolByRemoveLiquidity: EventHandler = async ({
   ]
 
   const [, token0Name, token1Name] = getPoolId(currency0, currency1)
-  const token0Decrement = (token0Name === forceToCurrencyIdName(currency0) ? pool0Decrement : pool1Decrement).toString()
-  const token1Decrement = (token1Name === forceToCurrencyIdName(currency0) ? pool0Decrement : pool1Decrement).toString()
+  const token0Decrement = (token0Name === forceToCurrencyName(currency0) ? pool0Decrement : pool1Decrement).toString()
+  const token1Decrement = (token1Name === forceToCurrencyName(currency0) ? pool0Decrement : pool1Decrement).toString()
 
   const token0Record = await getToken(token0Name)
   const token1Record = await getToken(token1Name)
@@ -301,8 +301,8 @@ export const updatePoolBySwap: EventHandler = async ({ rawEvent, event }) => {
     const currency0 = tradingPath[i]
     const currency1 = tradingPath[i + 1]
 
-		const supplyTokenName = forceToCurrencyIdName(currency0)
-		const targetTokenName = forceToCurrencyIdName(currency1)
+		const supplyTokenName = forceToCurrencyName(currency0)
+		const targetTokenName = forceToCurrencyName(currency1)
 
     const [, token0Name, token1Name] = getPoolId(currency0, currency1)
     const token0Record = await getToken(token0Name)
@@ -443,8 +443,8 @@ export const updatePoolBySwapNew: EventHandler = async ({ rawEvent, event }) => 
     const result0 = resultPath[i]
     const result1 = resultPath[i + 1]
 
-		const supplyTokenName = forceToCurrencyIdName(currency0)
-		const targetTokenName = forceToCurrencyIdName(currency1)
+		const supplyTokenName = forceToCurrencyName(currency0)
+		const targetTokenName = forceToCurrencyName(currency1)
 
     const [, token0Name, token1Name] = getPoolId(currency0, currency1)
     const token0Record = await getToken(token0Name)

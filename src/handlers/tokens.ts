@@ -1,8 +1,8 @@
 import {
-  getLPCurrenciesFormName,
-  isDexShare,
-  forceToCurrencyIdName,
-  MaybeCurrency
+  forceToCurrencyName,
+  MaybeCurrency,
+  isDexShareName,
+  unzipDexShareName
 } from "@acala-network/sdk-core";
 import { SystemConsts, Token } from "../types/models";
 
@@ -14,7 +14,7 @@ function getDecimal(token: string) {
 
 // get token 
 export async function getToken(currency: MaybeCurrency) {
-  const tokenName = forceToCurrencyIdName(currency);
+  const tokenName = forceToCurrencyName(currency);
 
   let token = await Token.get(tokenName);
 
@@ -35,11 +35,11 @@ export async function getToken(currency: MaybeCurrency) {
     let decimal = 10;
 
     // TODO: handle erc20
-    const isDexShareToken = isDexShare(tokenName);
+    const isDexShareToken = isDexShareName(tokenName);
 
     // trade dex share decimal as token0 decimal
     if (isDexShareToken) {
-      const [token0] = getLPCurrenciesFormName(tokenName);
+      const [token0] = unzipDexShareName(tokenName);
       const decimal0 = getDecimal(token0);
 
       decimal = decimal0;

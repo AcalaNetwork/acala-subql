@@ -1,4 +1,4 @@
-import { forceToCurrencyIdName } from "@acala-network/sdk-core";
+import { forceToCurrencyName } from "@acala-network/sdk-core";
 import { CurrencyId } from "@acala-network/types/interfaces";
 // import { Summary } from "../types/models/Summary"
 // import { SummaryDayData } from "../types/models/SummaryDayData"
@@ -59,7 +59,7 @@ import { EventHandler } from "./types"
 // 	const method = event.method
 // 	const [currency,, amount] = rawEvent.event.data;
 
-// 	if (forceToCurrencyIdName(currency as CurrencyId) !== 'KSM') return;
+// 	if (forceToCurrencyName(currency as CurrencyId) !== 'KSM') return;
 
 // 	if (method === 'Deposit') {
 // 		record.crossedKSMAmount = Number(record.crossedKSMAmount) + Number(amount.toString()) + ''

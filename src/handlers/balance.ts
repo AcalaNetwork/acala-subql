@@ -1,4 +1,4 @@
-import { forceToCurrencyId, forceToCurrencyIdName, isDexShare, mockEventRecord } from '@acala-network/sdk-core';
+import { forceToCurrencyId, forceToCurrencyName, isDexShareName, mockEventRecord } from '@acala-network/sdk-core';
 import { CurrencyId, Position } from '@acala-network/types/interfaces';
 import { Share } from '@open-web3/orml-types/interfaces/rewards';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces/tokens';
@@ -96,7 +96,7 @@ import { EventHandler } from './types';
 // 	record.blockId = block
 // 	record.balance = balance
 
-// 	if (isDexShare(token)) {
+// 	if (isDexShareName(token)) {
 // 		const incentive = await getDexIncentiveShare(account, token)
 
 // 		record.incentive = incentive
@@ -127,7 +127,7 @@ import { EventHandler } from './types';
 
 // 	record.balance = balance
 
-// 	if (isDexShare(token)) {
+// 	if (isDexShareName(token)) {
 // 		const incentive = await getDexIncentiveShare(account, token);
 
 // 		record.incentive = incentive;
@@ -154,7 +154,7 @@ import { EventHandler } from './types';
 
 // 	const fromAccount = from.toString()
 // 	const toAccount = to.toString()
-// 	const currencyName = forceToCurrencyIdName(currency as CurrencyId)
+// 	const currencyName = forceToCurrencyName(currency as CurrencyId)
 
 // 	await updateBalanceRecord(fromAccount, currencyName)
 // 	await updateBalanceRecord(toAccount, currencyName)
@@ -172,7 +172,7 @@ import { EventHandler } from './types';
 // 	await getToken(currency as CurrencyId)
 
 // 	const whoAccount = who.toString()
-// 	const currencyName = forceToCurrencyIdName(currency as CurrencyId)
+// 	const currencyName = forceToCurrencyName(currency as CurrencyId)
 
 // 	await updateBalanceRecord(whoAccount, currencyName)
 // 	await createBalanceChangedRcord(whoAccount, currencyName, blockNumber, block )
@@ -189,7 +189,7 @@ import { EventHandler } from './types';
 // 	await ensureAccount(who.toString())
 
 // 	const whoAccount = who.toString()
-// 	const currencyName = forceToCurrencyIdName(currency as CurrencyId)
+// 	const currencyName = forceToCurrencyName(currency as CurrencyId)
 
 // 	await updateBalanceRecord(whoAccount, currencyName)
 // 	await createBalanceChangedRcord(whoAccount, currencyName, blockNumber, block )
@@ -206,7 +206,7 @@ import { EventHandler } from './types';
 // 	await ensureAccount(who.toString())
 
 // 	const whoAccount = who.toString()
-// 	const currencyName = forceToCurrencyIdName(currency as CurrencyId)
+// 	const currencyName = forceToCurrencyName(currency as CurrencyId)
 
 // 	await updateBalanceRecord(whoAccount, currencyName)
 // 	await createBalanceChangedRcord(whoAccount, currencyName, blockNumber, block )

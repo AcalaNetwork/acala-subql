@@ -1,7 +1,7 @@
-import { MaybeCurrency, Token, forceToCurrencyIdName, createLPCurrencyName } from '@acala-network/sdk-core'
+import { MaybeCurrency, Token, forceToCurrencyName, createDexShareName } from '@acala-network/sdk-core'
 
 export function getPoolId (tokenA: MaybeCurrency, tokenB: MaybeCurrency): [string, string, string] {
-	const [token0, token1] = Token.sortTokenNames(forceToCurrencyIdName(tokenA), forceToCurrencyIdName(tokenB))
+	const [token0, token1] = Token.sortTokenNames(forceToCurrencyName(tokenA), forceToCurrencyName(tokenB))
 
-	return [createLPCurrencyName(token0, token1), token0, token1];
+	return [createDexShareName(token0, token1), token0, token1];
 }
