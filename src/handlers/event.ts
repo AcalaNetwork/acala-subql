@@ -108,7 +108,7 @@ dispatch.batchRegist([
   // homa
   { key: 'homa-Minted', handler: handleHomaMinted },
   { key: 'homa-RequestedRedeem', handler: handleHomaRequestedRedeem},
-  { key: 'homa-RequestedCancelled', handler: handleHomaRequestedCancelled},
+  { key: 'homa-RedeemRequestCancelled', handler: handleHomaRequestedCancelled},
   { key: 'homa-RedeemedByFastMatch', handler: handleHomaRedeemedByFastMatch},
   { key: 'homa-RedeemedByUnbond', handler: handleHomaRedeemedByUnbond },
 

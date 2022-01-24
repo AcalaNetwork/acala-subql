@@ -310,7 +310,7 @@ export const handleHomaRequestedCancelled: EventHandler = async ({
 }) => {
 	const record = new HomaAction(event.id);
 
-	record.type = "RedeemRequestedCancelled";
+	record.type = "RedeemRequestCancelled";
 	record.subType = 'homa';
 	record.extrinsicId = event.extrinsicId;
 	record.timestamp = rawEvent.block.timestamp;
