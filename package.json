@@ -9,7 +9,7 @@
     "prepack": "rm -rf dist && npm build",
     "codegen": "./node_modules/.bin/subql codegen",
     "patch:types": "node scripts/patch-types.js",
-    "start": "./node_modules/.bin/subql-node -f . --local --timeout=512 --batch-size=100 --port=3123"
+    "start": "rm -rf ./dist && yarn build && ./node_modules/.bin/subql-node -f . --debug --timeout=512 --batch-size=100 --port=3123"
   },
   "files": [
     "dist",
@@ -30,20 +30,19 @@
     "@polkadot/util-crypto": "^7.9.2",
     "@polkadot/wasm-crypto": "^4.4.1",
     "babel-core": "^7.0.0-bridge.0",
-    "styled-components": "^5.3.1",
     "typescript": "^4.5.2"
   },
   "author": "qwer951123",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@acala-network/types": "^3.0.2",
+    "@acala-network/types": "^4.0.2-7",
     "@subql/cli": "^0.16.0",
     "@subql/node": "^0.25.0",
     "@subql/types": "^0.11.0",
     "yaml": "^1.10.0"
   },
   "dependencies": {
-    "@acala-network/sdk-core": "3.0.3-21",
+    "@acala-network/sdk-core": "4.0.2-7",
     "@open-web3/orml-types": "^0.9.3",
     "dayjs": "^1.10.6"
   }

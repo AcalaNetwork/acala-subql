@@ -19,33 +19,3 @@ export async function ensureBlock (block: SubstrateBlock) {
 
   return data
 }
-
-export async function createBlock (origin: SubstrateBlock) {
-  // when the program start, initialize the tokens information and system consts
-  if (isFirstSync) {
-    await initSystemTokens()
-    await initSystemConsts()
-
-    isFirstSync = false
-  }
-
-  const block = await ensureBlock(origin)
-
-  const blockNumber = origin.block.header.number.toBigInt() || BigInt(0)
-  const parentHash = origin.block.header.parentHash?.toString()
-  const stateRoot = origin.block.header.stateRoot?.toString()
-  const specVersion = origin.specVersion?.toString()
-  const extrinsicsRoot = origin.block.header.extrinsicsRoot?.toString()
-  const timestamp = getBlockTimestamp(origin.block)
-
-  block.number = blockNumber
-  block.parentHash = parentHash
-  block.stateRoot = stateRoot
-  block.extrinsicRoot = extrinsicsRoot
-  block.specVersion = specVersion
-  block.timestamp = timestamp
-
-  await block.save()
-
-  return block
-}

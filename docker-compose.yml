@@ -24,7 +24,7 @@ services:
       DB_HOST: postgres
       DB_PORT: 5432
     command:
-      - --name=acala
+      - --name=acala-subql
       - --playground
 
   subquery-node:
@@ -41,7 +41,8 @@ services:
     volumes:
       - ./:/app
     command:
-      - -f=/app
-      - --subquery-name=acala
-      - --migrate
+      - --subquery=/app
+      - --db-schema=acala-subql
+      - --schema=acala-subql
+      - --force-clean
 
