@@ -1,5 +1,5 @@
 specVersion: 0.2.0
-name: acala-loans
+name: acala-subql
 version: 1.0.0
 description: ''
 repository: ''
@@ -17,9 +17,168 @@ dataSources:
     mapping:
       file: "./dist/index.js"
       handlers:
-        - handler: handleBlock
-          kind: substrate/BlockHandler
         - handler: handleEvent
           kind: substrate/EventHandler
-        - handler: handleCall
-          kind: substrate/CallHandler
+          filter:
+            module: nft
+            method: TransferredToken
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: nft
+            method: BurnedToken
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: nft
+            method: BurnedTokenWithRemark
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: loans
+            method: PositionUpdated
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: loans
+            method: ConfiscateCollateralAndDebit
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: loans
+            method: transferLoan
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: cdpEngine
+            method: InterestRatePerSecUpdated
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: cdpEngine
+            method: LiquidationRatioUpdated
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: cdpEngine
+            method: LiquidationPenaltyUpdated
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: cdpEngine
+            method: RequiredCollateralRatioUpdated
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: cdpEngine
+            method: MaximumTotalDebitValueUpdated
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: cdpEngine
+            method: GlobalInterestRatePerSecUpdated
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: cdpEngine
+            method: LiquidateUnsafeCDP
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: honzon
+            method: CloseLoanHasDebitByDex
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: ProvisioningToEnabled
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: AddLiquidity
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: RemoveLiquidity
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: Swap
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: ListProvision
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: AddProvision
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: incentives
+            method: DepositDexShare
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: incentives
+            method: WithdrawDexShare
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: incentives
+            method: PayoutRewards
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: incentives
+            method: ClaimRewards
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homaLite
+            method: Minted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homaLite
+            method: RedeemRequestCancelled
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homaLite
+            method: RedeemRequested
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homaLite
+            method: Redeemed
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homa
+            method: Minted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homa
+            method: RequestedRedeem
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homa
+            method: RedeemRequestCancelled
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homa
+            method: RedeemedByFastMatch
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: homa
+            method: RedeemedByUnbond

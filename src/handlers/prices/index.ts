@@ -1,14 +1,14 @@
-import { FixedPointNumber, MaybeCurrency, forceToCurrencyName } from '@acala-network/sdk-core' 
+import { FixedPointNumber, MaybeCurrency, forceToCurrencyName, Token } from '@acala-network/sdk-core' 
 import { getPool } from '../dex/pool';
 import { getToken } from '../tokens';
 
 async function getPriceFromDexPool (tokenA: string, tokenB: string) {
+	const [_t0, _t1] = Token.sortTokenNames(tokenA, tokenB);
+	const token0 = await getToken(_t0)
+	const token1 = await getToken(_t1)
 	const pool = await getPool(tokenA, tokenB)
 
 	if (!pool) return FixedPointNumber.ZERO
-
-	const token0 = await getToken(pool.token0Id)
-	const token1 = await getToken(pool.token1Id)
 
 	const amount0 = FixedPointNumber.fromInner(pool.token0Amount || '0', token0.decimal)
 	const amount1 = FixedPointNumber.fromInner(pool.token1Amount || '0', token1.decimal)
