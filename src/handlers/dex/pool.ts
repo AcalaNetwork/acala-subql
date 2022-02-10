@@ -50,8 +50,7 @@ export async function getPool(a: string, b: string) {
 
 export const createDexPool: EventHandler = async ({ rawEvent, event }) => {
   // [trading_pair, pool_0_amount, pool_1_amount, total_share_amount\]
-  const [tradingPair, token0Amount, token1Amount] = rawEvent.event
-    .data as unknown as [TradingPair, Balance, Balance, Balance]
+  const [tradingPair, token0Amount, token1Amount] = rawEvent.event.data as unknown as [TradingPair, Balance, Balance, Balance]
 
   const token0Name = forceToCurrencyName(tradingPair[0])
   const token1Name = forceToCurrencyName(tradingPair[1])

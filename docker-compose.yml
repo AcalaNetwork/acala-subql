@@ -44,5 +44,4 @@ services:
       - --subquery=/app
       - --db-schema=acala-subql
       - --schema=acala-subql
-      - --force-clean
 

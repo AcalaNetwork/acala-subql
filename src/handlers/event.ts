@@ -119,19 +119,16 @@ dispatch.batchRegist([
 ]);
 
 export async function ensureEvnet(event: SubstrateEvent) {
-  const block = await ensureBlock(event.block);
-
   const idx = event.idx;
-  const recordId = `${block.number}-${idx}`;
+  const recordId = `${event.block.block.header.number}-${idx}`;
 
   let data = await Event.get(recordId);
 
   if (!data) {
     data = new Event(recordId);
     data.index = idx;
-    data.blockId = block.id;
-    data.blockNumber = block.number;
-    data.timestamp = block.timestamp;
+    data.blockNumber = event.block.block.header.number.toBigInt();
+    data.timestamp = event.block.timestamp;
 
     await data.save();
   }
