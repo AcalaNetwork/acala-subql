@@ -182,3 +182,8 @@ dataSources:
           filter:
             module: homa
             method: RedeemedByUnbond
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: currencies
+            method: Transferred

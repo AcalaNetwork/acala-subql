@@ -58,3 +58,9 @@ export {DexDayData} from "./DexDayData"
 
 export {DexAction} from "./DexAction"
 
+export {Balance} from "./Balance"
+
+export {BalanceChangedRecord} from "./BalanceChangedRecord"
+
+export {TotalBalanceChangedRecord} from "./TotalBalanceChangedRecord"
+
