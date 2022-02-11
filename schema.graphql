@@ -484,3 +484,36 @@ type DexAction @entity {
   extrinsic: Extrinsic
   timestamp: Date
 }
+
+type Balance @entity {
+  id: ID!
+
+  account: Account
+  collateral: String
+  total: String
+  token: Token
+  balance: String
+  incentive: String
+}
+
+type BalanceChangedRecord @entity {
+  id: ID!
+
+  account: Account
+  token: Token
+  collateral: String
+  blockNumber: BigInt
+  total: String
+  timestamp: Date
+  balance: String
+  incentive: String
+}
+
+type TotalBalanceChangedRecord @entity {
+  id: ID!
+
+  token: Token
+  balance: String
+  blockNumber: BigInt
+  timestamp: Date
+}

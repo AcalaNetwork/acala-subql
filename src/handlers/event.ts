@@ -1,9 +1,7 @@
 import { SubstrateEvent } from "@subql/types";
 import { Dispatcher } from "./utils/dispatcher";
-import { ensureBlock } from "./block";
 import { Event } from "../types/models";
 import { getKVData } from "./utils";
-import { ensuerExtrinsic } from "./extrinsic";
 import { DispatchedEventData } from "./types";
 import {
   createMintLiquidHistory,
@@ -47,6 +45,7 @@ import {
   updateLoanPositionByLiquidate,
   handleCloseLoanHasDebitByDex,
 } from "./loan/position";
+import { updateBalanceByTransferred } from "./balance";
 // import { updateCrossedKSM } from './summary'
 
 const dispatch = new Dispatcher<DispatchedEventData>();
@@ -56,7 +55,7 @@ dispatch.batchRegist([
   // { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
   // { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
   // { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
-  // { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
+  { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
   // { key: 'currencies-Withdrawn', handler: updateCrossedKSM },
   // { key: 'currencies-Transferred', handler: updateCrossedKSM },
 
@@ -137,10 +136,6 @@ export async function ensureEvnet(event: SubstrateEvent) {
 }
 
 export async function createEvent(event: SubstrateEvent) {
-  const extrinsic = await (event.extrinsic
-    ? ensuerExtrinsic(event.extrinsic)
-    : undefined);
-
   const data = await ensureEvnet(event);
 
   const section = event.event.section;
@@ -150,10 +145,6 @@ export async function createEvent(event: SubstrateEvent) {
   data.section = section;
   data.method = method;
   data.data = eventData;
-
-  if (extrinsic) {
-    data.extrinsicId = extrinsic.id;
-  }
 
   await dispatch.dispatch(`${section}-${data.method}`, {
     event: data,
