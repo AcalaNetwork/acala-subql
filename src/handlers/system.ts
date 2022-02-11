@@ -5,10 +5,6 @@ import { CurrencyId } from "@acala-network/types/interfaces"
 import{ getToken } from './tokens'
 import { SystemConsts } from '../types/models'
 
-function getConsts (path: string) {
-    return get(api.consts, path)
-}
-
 export async function initSystemConsts () {
     const consts = await SystemConsts.get("SYSTEM")
 
@@ -16,13 +12,11 @@ export async function initSystemConsts () {
 
     const liquidToken =  (api.consts.homaLite?.liquidCurrencyId || api.consts.homa?.liquidCurrencyId) as unknown as CurrencyId;
     const stakingToken =  (api.consts.homaLite?.stakingCurrencyId || api.consts.homa?.stakingCurrencyId) as unknown as CurrencyId;
-    const nativeToken = getConsts('transactionPayment.nativeCurrencyId');
-    const stableToken =  getConsts('cdpEngine.getStableCurrencyId');
 
     const liquidTokenId = liquidToken?.asToken.toString()
     const stakingTokenId = stakingToken?.asToken.toString()
-    const nativeTokenId = nativeToken?.asToken.toString()
-    const stableTokenId = stableToken?.asToken.toString()
+    const nativeTokenId = (api.consts.transactionPayment.nativeCurrencyId as unknown as CurrencyId).asToken.toString()
+    const stableTokenId = (api.consts.cdpEngine.getStableCurrencyId as unknown as CurrencyId).asToken.toString()
 
     await getToken(stableTokenId)
     await getToken(nativeTokenId)
