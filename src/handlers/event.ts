@@ -27,6 +27,7 @@ import {
   handleHomaRequestedCancelled,
   handleHomaRedeemedByFastMatch,
   handleHomaRedeemedByUnbond,
+  createTransferInCurrencies,
 } from "./history";
 import { createDexPool, updatePoolByAddLiquidity, updatePoolByRemoveLiquidity, updatePoolBySwap } from "./dex/pool";
 import {
@@ -45,7 +46,7 @@ import {
   updateLoanPositionByLiquidate,
   handleCloseLoanHasDebitByDex,
 } from "./loan/position";
-import { updateBalanceByTransferred } from "./balance";
+// import { updateBalanceByTransferred } from "./balance";
 // import { updateCrossedKSM } from './summary'
 
 const dispatch = new Dispatcher<DispatchedEventData>();
@@ -55,9 +56,11 @@ dispatch.batchRegist([
   // { key: 'currencies-BalanceUpdated', handler: updateBalanceByUpdate },
   // { key: 'currencies-Deposited', handler: updateBalanceByDeposit },
   // { key: 'currencies-Withdrawn', handler: updateBalanceByWithdrawn },
-  { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
+  // { key: 'currencies-Transferred', handler: updateBalanceByTransferred },
   // { key: 'currencies-Withdrawn', handler: updateCrossedKSM },
   // { key: 'currencies-Transferred', handler: updateCrossedKSM },
+
+  { key: 'currencies-Transferred', handler: createTransferInCurrencies },
 
   // nft
   { key: "nft-TransferredToken", handler: createNFTTransferHistory },

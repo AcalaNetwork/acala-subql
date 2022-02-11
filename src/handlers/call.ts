@@ -4,14 +4,14 @@ import { AnyCall, DispatchedCallData } from './types'
 
 import { SubstrateExtrinsic } from "@subql/types";
 import { Dispatcher, getBatchInterruptedIndex, getKVData } from './utils';
-import { createTranserInBalances, createTransferInCurrencies } from './history';
+// import { createTranserInBalances, createTransferInCurrencies } from './history';
 
 const dispatcher = new Dispatcher<DispatchedCallData>()
 
-dispatcher.batchRegist([
-  { key: 'currencies-transfer', handler: createTransferInCurrencies },
-  { key: 'balances-transferKeepAlive', handler: createTranserInBalances },
-])
+// dispatcher.batchRegist([
+//   { key: 'currencies-transfer', handler: createTransferInCurrencies },
+//   { key: 'balances-transferKeepAlive', handler: createTranserInBalances },
+// ])
 
 async function traverExtrinsic(extrinsic: Extrinsic, raw: SubstrateExtrinsic): Promise<Call[]> {
   const list = []

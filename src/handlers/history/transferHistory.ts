@@ -1,58 +1,28 @@
-import { CurrencyId } from "@acala-network/types/interfaces"
-import { Transfer } from "../../types"
+import { forceToCurrencyName } from "@acala-network/sdk-core"
+import { AccountId, CurrencyId } from "@acala-network/types/interfaces"
+import { Balance, Transfer } from "../../types"
 import { ensureAccount } from "../account"
 import { ensureCallExist } from "../call"
 import { getNativeToken, getToken } from "../tokens"
-import { DispatchedCallData } from "../types"
+import { DispatchedCallData, EventHandler } from "../types"
 
-export async function createTransferInCurrencies ({ call, extrinsic, rawCall }: DispatchedCallData) {
-    const args = rawCall.args
+export const createTransferInCurrencies: EventHandler = async ({ event, rawEvent }) => {
+    const [currency, from, to, amount] = rawEvent.event.data as unknown as [CurrencyId, AccountId, AccountId, any];
+    
+    const tokenName = forceToCurrencyName(currency);
 
-    await ensureCallExist(call.id)
+    await getToken(tokenName)
+	await ensureAccount(from.toString())
+	await ensureAccount(to.toString())
 
-    const currencyId = args[1] as unknown as CurrencyId;
+    const transfer = new Transfer(`${rawEvent.block.block.header.number}-${rawEvent.event.index}-${from.toString()}-${to.toString()}-${rawEvent.block.timestamp}`)
 
-    const to = await ensureAccount(args[0].toString())
-    const from = await ensureAccount(extrinsic.signerId)
-    const token = await getToken(currencyId);
-
-    const amount = (args[2] as any).toString()
-    const extrinsicHash = extrinsic.id
-    const transfer = new Transfer(call.id)
-
-    transfer.amount = amount
-    transfer.timestamp = extrinsic.timestamp
-    transfer.isSuccess = call.isSuccess
-    transfer.toId = to.id
-    transfer.fromId = from.id
-    transfer.tokenId = token.id
-    transfer.extrinsicId = extrinsicHash
-    transfer.callId = call.id
-
-    await transfer.save()
-}
-
-export async function createTranserInBalances({ call, extrinsic, rawCall }: DispatchedCallData) {
-    const args = rawCall.args
-
-    await ensureCallExist(call.id)
-
-    const token = await getNativeToken()
-    const to = await ensureAccount(args[0].toString())
-    const from = await ensureAccount(extrinsic.signerId)
-
-    const amount = (args[1] as any).toString()
-    const extrinsicHash = extrinsic.id
-    const transfer = new Transfer(call.id)
-
-    transfer.amount = amount
-    transfer.timestamp = extrinsic.timestamp
-    transfer.isSuccess = call.isSuccess
-    transfer.toId = to.id
-    transfer.fromId = from.id
-    transfer.tokenId = token.id
-    transfer.extrinsicId = extrinsicHash
-    transfer.callId = call.id
+    transfer.amount = amount.toString()
+    transfer.timestamp = rawEvent.block.timestamp
+    transfer.isSuccess = true
+    transfer.toId = to.toString()
+    transfer.fromId = from.toString()
+    transfer.tokenId = tokenName
 
     await transfer.save()
 }

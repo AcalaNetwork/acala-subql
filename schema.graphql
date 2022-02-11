@@ -97,8 +97,6 @@ type Transfer @entity {
   amount: String
   amountInUSD: String
 
-  extrinsic: Extrinsic
-  call: Call
   timestamp: Date
   isSuccess: Boolean
 }
