@@ -10,7 +10,7 @@ network:
   endpoint: wss://acala-polkadot.api.onfinality.io/public-ws
   dictionary: https://api.subquery.network/sq/subquery/acala-dictionary
   chaintypes:
-    file: './src/types.json'
+    file: './src/chain-types.js'
 dataSources:
   - kind: substrate/Runtime
     startBlock: 1

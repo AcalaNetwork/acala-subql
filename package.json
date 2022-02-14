@@ -36,7 +36,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@acala-network/types": "^4.0.2-7",
-    "@subql/cli": "^0.16.0",
+    "@subql/cli": "^0.20.0",
     "@subql/node": "^0.25.0",
     "@subql/types": "^0.11.0",
     "yaml": "^1.10.0"
