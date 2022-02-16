@@ -43,6 +43,26 @@ export function getKUSDPrice () {
 	return new FixedPointNumber(1, 12)
 }
 
+export async function getDOTPrice () {
+	// get ACA-LC://13 pool
+	const dotLCPrice = await getPriceFromDexPool('DOT', 'lc://13')
+	const lc13Price = await getLC13Price()
+
+	return dotLCPrice.mul(lc13Price)
+}
+
+export async function getACAPrice () {
+	// get ACA-LC://13 pool
+	const acaLCPrice = await getPriceFromDexPool('ACA', 'lc://13')
+	const lc13Price = await getLC13Price()
+
+	return acaLCPrice.mul(lc13Price)
+}
+
+export async function getLC13Price () {
+	return getPriceFromDexPool('lc://13', 'AUSD')
+}
+
 export async function getPrice (name: MaybeCurrency) {
 	const _name = forceToCurrencyName(name)
 
@@ -53,6 +73,12 @@ export async function getPrice (name: MaybeCurrency) {
 	if (_name === 'KAR') return getKARPrice()
 
 	if (_name === 'LKSM') return getLKSMPrice()
+
+	if(_name === 'DOT') return getDOTPrice()
+
+	if(_name === 'ACA') return getACAPrice()
+
+	if(_name === 'lc://13') return getLC13Price()
 
 	return getPriceFromDexPool(_name, 'KUSD')
 }

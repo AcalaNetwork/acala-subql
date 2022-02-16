@@ -39,8 +39,8 @@ export async function getToken(currency: MaybeCurrency) {
 
     // trade dex share decimal as token0 decimal
     if (isDexShareToken) {
-      const [token0] = unzipDexShareName(tokenName);
-      const decimal0 = getDecimal(token0);
+      const [token0, token1] = unzipDexShareName(tokenName);
+      const decimal0 = getDecimal(token0) || getDecimal(token1);
 
       decimal = decimal0;
     } else {

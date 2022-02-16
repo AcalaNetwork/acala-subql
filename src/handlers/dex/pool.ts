@@ -4,7 +4,8 @@ import {
   forceToCurrencyId,
   forceToCurrencyName,
   createDexShareName,
-  getCurrencyObject
+  getCurrencyObject,
+  CurrencyObject
 } from "@acala-network/sdk-core"
 import {
   AccountId,
@@ -32,8 +33,11 @@ export async function getPool(a: string, b: string) {
   if (!record) {
     record = new Pool(poolName)
 
+    const currencyObject0: CurrencyObject = token0 === 'lc://13' ? {LiquidCroadloan: 13} : getCurrencyObject(token0)
+    const currencyObject1: CurrencyObject = token1 === 'lc://13' ? {LiquidCroadloan: 13} : getCurrencyObject(token1)
+
     // query the old data
-    const position = await api.query.dex.liquidityPool([getCurrencyObject(token0), getCurrencyObject(token1)]) as unknown as Position;
+    const position = await api.query.dex.liquidityPool([currencyObject0, currencyObject1]);
 
     record.token0Id = token0
     record.token1Id = token1
