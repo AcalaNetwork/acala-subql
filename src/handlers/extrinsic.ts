@@ -16,7 +16,7 @@ export async function ensureExtrinsic (extrinsic: SubstrateExtrinsic) {
     record.method = extrinsic.extrinsic.method.method;
     record.section = extrinsic.extrinsic.method.section;
     record.args = getKVData(extrinsic.extrinsic.args);
-    record.signerId  = this.extrinsic?.extrinsic?.signer?.toString()
+    record.signerId  = extrinsic?.extrinsic?.signer?.toString()
     record.isSigned = extrinsic.extrinsic.isSigned;
     record.nonce = extrinsic.extrinsic.nonce.toBigInt();
     record.timestamp = extrinsic.block.timestamp;
