@@ -7,7 +7,7 @@ schema:
   file: ./schema.graphql
 network:
   genesisHash: '0xfc41b9bd8ef8fe53d58c7ea67c794c7ec9a73daf05e6d54b14ff6342c99ba64c'
-  endpoint: wss://acala-polkadot.api.onfinality.io/public-ws
+  endpoint: wss://acala-fullnode-01.bdnodes.net:8443/parachain?auth=fmxRFPt9l5OB5Yu42TOmdT25VTSKr0ixx5YDzgrN1n0
   dictionary: https://api.subquery.network/sq/subquery/acala-dictionary
   chaintypes:
     file: './src/chain-types.js'
