@@ -134,8 +134,6 @@ export async function ensureEvnet(event: SubstrateEvent) {
     data.index = idx;
     data.blockNumber = event.block.block.header.number.toBigInt();
     data.timestamp = event.block.timestamp;
-
-    await data.save();
   }
 
   return data;
@@ -153,7 +151,6 @@ export async function createEvent(event: SubstrateEvent) {
   data.method = method;
   data.data = eventData;
   data.blockId = block.id;
-  data.timestamp = block.timestamp;
 
   if (event.extrinsic.extrinsic.hash.toString()) {
     const call = await ensureExtrinsic(event.extrinsic);
