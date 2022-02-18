@@ -46,6 +46,9 @@ import {
   updateLoanPositionByLiquidate,
   handleCloseLoanHasDebitByDex,
 } from "./loan/position";
+import { ensureCallExist } from "./call";
+import { ensureExtrinsic } from "./extrinsic";
+import { ensureBlock } from "./block";
 // import { updateBalanceByTransferred } from "./balance";
 // import { updateCrossedKSM } from './summary'
 
@@ -140,6 +143,7 @@ export async function ensureEvnet(event: SubstrateEvent) {
 
 export async function createEvent(event: SubstrateEvent) {
   const data = await ensureEvnet(event);
+  const block = await ensureBlock(event.block);
 
   const section = event.event.section;
   const method = event.event.method;
@@ -148,6 +152,14 @@ export async function createEvent(event: SubstrateEvent) {
   data.section = section;
   data.method = method;
   data.data = eventData;
+  data.blockId = block.id;
+  data.timestamp = block.timestamp;
+
+  if (event.extrinsic.extrinsic.hash.toString()) {
+    const call = await ensureExtrinsic(event.extrinsic);
+
+    data.extrinsicId = call.id;
+  }
 
   await dispatch.dispatch(`${section}-${data.method}`, {
     event: data,

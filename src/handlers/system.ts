@@ -6,7 +6,7 @@ import{ getToken } from './tokens'
 import { SystemConsts } from '../types/models'
 
 function getConsts<T> (path: string) {
-    return get(api.consts, path) as T
+    return get(api.consts, path) as unknown as T
 }
 
 export async function initSystemConsts () {
