@@ -25,7 +25,7 @@ export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
     let targetAmount
     let tradingPath
     let who
-
+    let pathLength
 
     if (runtimeVersion >= 1008) {
       const [_who, _tradingPath, resultPath] = rawEvent.event
@@ -35,6 +35,7 @@ export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
         supplyAmount = resultPath[0]
         targetAmount = resultPath[resultPath.length - 1]
         tradingPath = _tradingPath
+        pathLength = resultPath.length
     } else {
       const [_who, _tradingPath, _supplyAmount, _targetAmount] = rawEvent.event
         .data as unknown as [AccountId, CurrencyId[], Balance, Balance]
@@ -43,6 +44,7 @@ export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
         supplyAmount = _supplyAmount
         targetAmount = _targetAmount
         tradingPath = _tradingPath
+        pathLength = 1
     }
 
     const supplyToken = tradingPath[0]
@@ -62,7 +64,7 @@ export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
     ).times(supplyPrice)
     const targetVolume = FixedPointNumber.fromInner(
       targetAmount.toString(),
-      _supplyToken.decimal
+      _targetToken.decimal
     ).times(targetPrice)
 
     record.accountId = accountRecord.id
@@ -71,16 +73,26 @@ export const createSwapHistory: EventHandler = async ({ event, rawEvent }) => {
     record.token1Id = _targetToken.id
     record.token0Amount = supplyAmount.toString()
     record.token1Amount = targetAmount.toString()
+    record.token0Price = supplyPrice.toString()
+    record.token1Price = targetPrice.toString()
+    record.token0Decimal = _supplyToken.decimal
+    record.token1Decimal = _targetToken.decimal
+    record.pathLength = pathLength
 
     // swap volume should divide 2
     const volumeUSD = supplyVolume
       .add(targetVolume)
       .times(new FixedPointNumber(0.5))
     
-    volumeUSD.setPrecision(18)
+      volumeUSD.setPrecision(18)
+      //volume0USD.setPrecision(18)
+      //volume1USD.setPrecision(18)
 
-    record.volumeUSD = volumeUSD.toChainData()
-  }
+      record.volumeUSD = volumeUSD.toChainData()
+      record.volume0USD = supplyVolume.toChainData()
+      record.volume1USD = targetVolume.toChainData()
+      
+    }
 
   if (event.data) {
     const keyArray = [

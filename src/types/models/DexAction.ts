@@ -36,7 +36,21 @@ export class DexAction implements Entity {
 
     public token1Amount?: string;
 
+    public token0Decimal?: number;
+
+    public token1Decimal?: number;
+
     public volumeUSD?: string;
+
+    public token0Price?: string;
+
+    public token1Price?: string;
+
+    public volume0USD?: string;
+
+    public volume1USD?: string;
+
+    public pathLength?: number;
 
     public extrinsicId?: string;
 

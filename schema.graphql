@@ -477,8 +477,14 @@ type DexAction @entity {
   token1: Token
   token0Amount: String
   token1Amount: String
+  token0Decimal: Int
+  token1Decimal: Int
   volumeUSD: String
-
+  token0Price: String
+  token1Price: String
+  volume0USD: String
+  volume1USD: String
+  pathLength: Int
   extrinsic: Extrinsic
   timestamp: Date
 }
