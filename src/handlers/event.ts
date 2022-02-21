@@ -152,7 +152,7 @@ export async function createEvent(event: SubstrateEvent) {
   data.data = eventData;
   data.blockId = block.id;
 
-  if (event.extrinsic.extrinsic.hash.toString()) {
+  if (event?.extrinsic?.extrinsic?.hash.toString()) {
     const call = await ensureExtrinsic(event.extrinsic);
 
     data.extrinsicId = call.id;
