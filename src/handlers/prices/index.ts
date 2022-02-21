@@ -53,10 +53,9 @@ export async function getDOTPrice () {
 
 export async function getACAPrice () {
 	// get ACA-LC://13 pool
-	const acaLCPrice = await getPriceFromDexPool('ACA', 'lc://13')
-	const lc13Price = await getLC13Price()
+	const acalaPrice = await getPriceFromDexPool('ACA', 'AUSD')
 
-	return acaLCPrice.mul(lc13Price)
+	return acalaPrice
 }
 
 export async function getLC13Price () {
